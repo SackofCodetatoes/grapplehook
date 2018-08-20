@@ -99,36 +99,16 @@ const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/gam
 
 
 class Display {
-  constructor(options){
-    // this.game = options.game;    
+  constructor(game){
+    this.game = game;    
   }
   
   render(){  
-    window.player = Player;
-    const canvas = document.getElementById('game-canvas');
-    let context = canvas.getContext('2d');
-    
-    const playerOptions = {
-      x: 25,
-      y: 25,
-      context: context,
-      color: 'blue',
-      x_len: 25,
-      y_len: 25,
-    };
-    const staticOptions = {
-      x: 0,
-      y: 0,
-      context: context,
-      color: 'red',
-      x_len: 40,
-      y_len: 40,
-    };
-    
-    window.newPlayer = new Player(playerOptions);
-    window.move_dir = 1;
-    window.staticEntity = new GameEntity(staticOptions);
-
+    const canvas = this.game.canvas;
+    const context = this.game.context;
+    let newPlayer = this.game.entities.newPlayer;
+    let staticEntity = this.game.entities.staticEntity;
+    let move_dir = this.game.entities.move_dir;
 
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
@@ -138,12 +118,12 @@ class Display {
       requestAnimationFrame(newPlayer.draw);
 
       //Test Purposes
-      if (window.staticEntity.y > 200) {
-        window.move_dir = -4;
-      } else if (window.staticEntity.y < 100) {
-        window.move_dir = 4;
+      if (staticEntity.y > 200) {
+        move_dir = -4;
+      } else if (staticEntity.y < 100) {
+        move_dir = 4;
       }
-      staticEntity.y += window.move_dir;
+      staticEntity.y += move_dir;
       requestAnimationFrame(staticEntity.draw);
 
     }, 1000 / 60);
@@ -167,25 +147,32 @@ const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/gam
 class Game {
   constructor() {
     this.entities = {};
+    this.canvas = document.getElementById('game-canvas');
+    this.context = this.canvas.getContext('2d');
   }
-  // start() {
-  //   const playerOptions = {
-  //     x: 25,
-  //     y: 25,
-  //     context: context,
-  //     color: 'blue',
-  //     x_len: 25,
-  //     y_len: 25,
-  //   };
-  //   const staticOptions = {
-  //     x: 0,
-  //     y: 0,
-  //     context: context,
-  //     color: 'red',
-  //     x_len: 40,
-  //     y_len: 40,
-  //   };
-  // }
+  init() {
+    //testing purposes
+    const playerOptions = {
+      x: 25,
+      y: 25,
+      context: this.context,
+      color: 'blue',
+      x_len: 25,
+      y_len: 25,
+    };
+    const staticOptions = {
+      x: 0,
+      y: 0,
+      context: this.context,
+      color: 'red',
+      x_len: 40,
+      y_len: 40,
+    };
+
+    this.entities['newPlayer'] = new Player(playerOptions);
+    this.move_dir = 1;
+    this.entities['staticEntity'] = new GameEntity(staticOptions);
+  }
 }
 
 module.exports = Game;
@@ -231,7 +218,10 @@ const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
 
 
 console.log('all is dandy!');
-const testDisplay = new Display();
+const game = new Game();
+game.init();
+debugger
+const testDisplay = new Display(game);
 testDisplay.render();
 
 

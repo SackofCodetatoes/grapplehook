@@ -4,36 +4,16 @@ const GameEntity = require("./game_entity.js");
 
 
 class Display {
-  constructor(options){
-    // this.game = options.game;    
+  constructor(game){
+    this.game = game;    
   }
   
   render(){  
-    window.player = Player;
-    const canvas = document.getElementById('game-canvas');
-    let context = canvas.getContext('2d');
-    
-    const playerOptions = {
-      x: 25,
-      y: 25,
-      context: context,
-      color: 'blue',
-      x_len: 25,
-      y_len: 25,
-    };
-    const staticOptions = {
-      x: 0,
-      y: 0,
-      context: context,
-      color: 'red',
-      x_len: 40,
-      y_len: 40,
-    };
-    
-    window.newPlayer = new Player(playerOptions);
-    window.move_dir = 1;
-    window.staticEntity = new GameEntity(staticOptions);
-
+    const canvas = this.game.canvas;
+    const context = this.game.context;
+    let newPlayer = this.game.entities.newPlayer;
+    let staticEntity = this.game.entities.staticEntity;
+    let move_dir = this.game.entities.move_dir;
 
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
@@ -43,12 +23,12 @@ class Display {
       requestAnimationFrame(newPlayer.draw);
 
       //Test Purposes
-      if (window.staticEntity.y > 200) {
-        window.move_dir = -4;
-      } else if (window.staticEntity.y < 100) {
-        window.move_dir = 4;
+      if (staticEntity.y > 200) {
+        move_dir = -4;
+      } else if (staticEntity.y < 100) {
+        move_dir = 4;
       }
-      staticEntity.y += window.move_dir;
+      staticEntity.y += move_dir;
       requestAnimationFrame(staticEntity.draw);
 
     }, 1000 / 60);
