@@ -44,7 +44,7 @@ The included scripts will be:
 - [ ] Create fixed platforms and walls to allow player traversal
 - [ ] Style the sandbox level to be visually appealing
 
-### Day 2: 
+### Day 2: Game Logic
 Write out game logic to allow proper physics interactions between player and fixed platforms and walls (collision)
 - [ ] Player collision with floors and walls are correct
 
