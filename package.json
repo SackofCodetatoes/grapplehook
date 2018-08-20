@@ -1,0 +1,25 @@
+{
+  "name": "graple-hookz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --watch javascript/grapple_hookz.js -o javascript/bundle.js --mode=development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SackofCodetatoes/grapple-hookz.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SackofCodetatoes/grapple-hookz/issues"
+  },
+  "homepage": "https://github.com/SackofCodetatoes/grapple-hookz#readme",
+  "devDependencies": {
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
+  }
+}
