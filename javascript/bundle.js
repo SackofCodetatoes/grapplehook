@@ -86,6 +86,30 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/game_entity.js":
+/*!***********************************!*\
+  !*** ./javascript/game_entity.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+class GameEntity {
+  constructor(options){
+    this.x = options.x;
+    this.y = options.y;
+    this.context = options.context;
+    this.draw = this.draw.bind(this);
+  }
+  draw() {
+    // this.context.clearRect(0, 0, 640, 480);
+    this.context.fillStyle = 'red';
+    this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+  }
+}
+module.exports = GameEntity;
+
+/***/ }),
+
 /***/ "./javascript/grapplehook.js":
 /*!***********************************!*\
   !*** ./javascript/grapplehook.js ***!
@@ -93,8 +117,8 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js")
-
+const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 window.player = Player;
 console.log('all is dandy!');
 
@@ -102,11 +126,23 @@ const canvas = document.getElementById('game-canvas');
 let context = canvas.getContext('2d');
 const playerOptions = { x: 25, y: 25, context: context };
 
+window.move_dir = 1;
 window.newPlayer = new Player(playerOptions);
+window.staticEntity = new GameEntity(playerOptions);
+ requestAnimationFrame(window.staticEntity.draw);
 
 setInterval(function () {
+  context.clearRect(0, 0, 640, 480);
   requestAnimationFrame(newPlayer.draw);
   // animiate something
+  if(window.staticEntity.y > 200){
+    window.move_dir = -1;
+  }else
+  if(window.staticEntity.y < 100) {
+    window.move_dir = 1;
+  }
+  window.staticEntity.y += window.move_dir;
+  requestAnimationFrame(window.staticEntity.draw);
 }, 1000 / 60);
 
 /***/ }),
@@ -116,15 +152,14 @@ setInterval(function () {
   !*** ./javascript/player.js ***!
   \******************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js")
 const PLAYER_KEYS = ['w', 'a', 's', 'd', " "];
-class Player {
+class Player extends GameEntity {
   constructor(options) {
     //arbitrary start
-    this.x = options.x;
-    this.y = options.y;
-    this.context = options.context
+    super(options);
     this.x_len = 25;
     this.y_len = 25;
     this.keyBind();
@@ -156,7 +191,7 @@ class Player {
     });
   }
   draw() {
-    this.context.clearRect(0, 0, 640, 480);
+    // this.context.clearRect(0, 0, 640, 480);
     this.context.fillStyle = 'blue';
     this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
   }
