@@ -17,7 +17,7 @@ This application screen will consist of the game title, game information, social
 
 The game canvas will display an entire level with the player sprite and an objective point. Users will use 'A' and 'S' to move the player left and right, 'space' to jump, and the mouse to aim and fire the grappling hook. 
 
-![Image Here] ()
+![Wireframe](https://github.com/SackofCodetatoes/grapplehook/blob/master/wireframe.png)
 
 ## Architecture and Technologies
 The project will implement the following technologies:
