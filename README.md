@@ -36,17 +36,18 @@ The included scripts will be:
 
 ## Implementation Timeline
 ### Over the weekend: Setup and create game skeleton
-- [ ] Setup project repo and configure webpack appropriately
-- [ ] Render a movable player sprite with keyboard keys
-- [ ] Create a physics system that player sprite abides by
+- [x] Setup project repo and configure webpack appropriately
+- [x] Render a movable player sprite with keyboard keys
+- [x] Revisit Asteroids project to review how canvas works + review JavaScript
+
 
 ### Day 1: Create a level
-- [ ] Create fixed platforms and walls to allow player traversal
-- [ ] Style the sandbox level to be visually appealing
+- [ ] Create a physics system that player sprite abides by
 
 ### Day 2: Game Logic
 Write out game logic to allow proper physics interactions between player and fixed platforms and walls (collision)
-- [ ] Player collision with floors and walls are correct
+- [ ] Player collision on x-axis and y-axis
+- [ ] Create fixed platforms and walls to allow player traversal
 
 ### Day 3: Create a grappling hook
 - [ ] Learn how to and add mouse to aim and fire grappling hook, drawing a line between point and player
