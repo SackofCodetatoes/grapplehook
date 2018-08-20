@@ -86,6 +86,112 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/display.js":
+/*!*******************************!*\
+  !*** ./javascript/display.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
+const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+
+class Display {
+  constructor(options){
+    // this.game = options.game;    
+  }
+  
+  render(){  
+    window.player = Player;
+    const canvas = document.getElementById('game-canvas');
+    let context = canvas.getContext('2d');
+    
+    const playerOptions = {
+      x: 25,
+      y: 25,
+      context: context,
+      color: 'blue',
+      x_len: 25,
+      y_len: 25,
+    };
+    const staticOptions = {
+      x: 0,
+      y: 0,
+      context: context,
+      color: 'red',
+      x_len: 40,
+      y_len: 40,
+    };
+    
+    window.newPlayer = new Player(playerOptions);
+    window.move_dir = 1;
+    window.staticEntity = new GameEntity(staticOptions);
+
+
+    setInterval(function () {
+      context.clearRect(0, 0, 640, 480);
+      context.fillStyle = 'orange';
+      context.fillRect(0, 0, 640, 480);
+      newPlayer.getInput();
+      requestAnimationFrame(newPlayer.draw);
+
+      //Test Purposes
+      if (window.staticEntity.y > 200) {
+        window.move_dir = -4;
+      } else if (window.staticEntity.y < 100) {
+        window.move_dir = 4;
+      }
+      staticEntity.y += window.move_dir;
+      requestAnimationFrame(staticEntity.draw);
+
+    }, 1000 / 60);
+  }
+}
+
+module.exports = Display;
+
+/***/ }),
+
+/***/ "./javascript/game.js":
+/*!****************************!*\
+  !*** ./javascript/game.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+class Game {
+  constructor() {
+    this.entities = {};
+  }
+  // start() {
+  //   const playerOptions = {
+  //     x: 25,
+  //     y: 25,
+  //     context: context,
+  //     color: 'blue',
+  //     x_len: 25,
+  //     y_len: 25,
+  //   };
+  //   const staticOptions = {
+  //     x: 0,
+  //     y: 0,
+  //     context: context,
+  //     color: 'red',
+  //     x_len: 40,
+  //     y_len: 40,
+  //   };
+  // }
+}
+
+module.exports = Game;
+
+/***/ }),
+
 /***/ "./javascript/game_entity.js":
 /*!***********************************!*\
   !*** ./javascript/game_entity.js ***!
@@ -119,55 +225,21 @@ module.exports = GameEntity;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
-window.player = Player;
+const Display = __webpack_require__(/*! ./display.js */ "./javascript/display.js");
+const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
+
+
+
 console.log('all is dandy!');
+const testDisplay = new Display();
+testDisplay.render();
 
-const canvas = document.getElementById('game-canvas');
-let context = canvas.getContext('2d');
-const playerOptions = {
-  x: 25,
-  y: 25,
-  context: context,
-  color: 'blue',
-  x_len: 25,
-  y_len: 25,
-};
-const staticOptions = {
-  x: 0,
-  y: 0,
-  context: context,
-  color: 'red',
-  x_len: 40,
-  y_len: 40,
-};
 
-window.move_dir = 1;
-window.newPlayer = new Player(playerOptions);
-window.staticEntity = new GameEntity(staticOptions);
-// requestAnimationFrame(staticEntity.draw);
-// requestAnimationFrame(newPlayer.draw);
-// requestAnimationFrame(newPlayer2.draw);
 
-setInterval(function () {
-  context.clearRect(0, 0, 640, 480);
-  context.fillStyle =  'orange';
-  context.fillRect(0,0, 640, 480);
-  newPlayer.getInput();
-  requestAnimationFrame(newPlayer.draw);
 
-  //Test Purposes
-  if(window.staticEntity.y > 200){
-    window.move_dir = -4;
-  }
-  else if(window.staticEntity.y < 100) {
-    window.move_dir = 4;
-  }
-  staticEntity.y += window.move_dir;
-  requestAnimationFrame(staticEntity.draw);
 
-}, 1000 / 60);
+
+
 
 /***/ }),
 
