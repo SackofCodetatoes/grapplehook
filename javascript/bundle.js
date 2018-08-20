@@ -81,19 +81,48 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./javascript/grapple_hookz.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./javascript/grapplehook.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./javascript/grapple_hookz.js":
-/*!*************************************!*\
-  !*** ./javascript/grapple_hookz.js ***!
-  \*************************************/
+/***/ "./javascript/grapplehook.js":
+/*!***********************************!*\
+  !*** ./javascript/grapplehook.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js")
+
+window.player = Player;
+console.log('all is dandy!');
+
+const canvas = document.getElementById('game-canvas');
+let context = canvas.getContext('2d');
+context.fillStyle = 'red';
+context.fillRect(100,100,100,200);
+
+
+/***/ }),
+
+/***/ "./javascript/player.js":
+/*!******************************!*\
+  !*** ./javascript/player.js ***!
+  \******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-console.log('all is dandy!');
+class Player {
+  constructor(options) {
+    this.x = 25;
+    this.y = 25;
+
+  }
+}
+
+module.exports = Player;
+
 
 /***/ })
 

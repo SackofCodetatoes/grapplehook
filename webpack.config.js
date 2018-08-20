@@ -1,5 +1,5 @@
 module.exports = {
-  entry: "./javascript/grapple_hookz.js",
+  entry: "./javascript/grapplehook.js",
   output: {
     filename: "./javascript/bundle.js"
   },
