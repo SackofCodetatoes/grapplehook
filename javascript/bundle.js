@@ -96,40 +96,15 @@
 const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js")
 
 window.player = Player;
-window.newPlayer = new Player();
 console.log('all is dandy!');
 
 const canvas = document.getElementById('game-canvas');
 let context = canvas.getContext('2d');
+const playerOptions = { x: 25, y: 25, context: context };
 
-const draw = function (context, newPlayer) {
-  // context.fillStyle = 'red';
-  // content.fillRect()
-  // context.fillRect(newPlayer.x, newPlayer.y, newPlayer.x + 25, newPlayer.y + 25);
-};
-// context.fillStyle = 'red';
-// draw(context, window.newPlayer);
+window.newPlayer = new Player(playerOptions);
 
-
-document.addEventListener('keydown', (event) => {
-  const keyName = event.key;
-  if (event.key === 'a' || event.key === 's') {
-    // alert(`we have input ${keyName}`);
-    if(event.key === 'a'){
-      window.newPlayer.x -= 5;
-    } 
-    if(event.key === 's'){
-      window.newPlayer.x += 5;
-    }
-    context.clearRect(0,0, 640, 480);
-    context.fillStyle = 'red';
-    // context.fillRect()
-    context.fillRect(newPlayer.x, newPlayer.y, 25, 25);
-
-    
-  }
-});
-
+requestAnimationFrame(newPlayer.draw);
 
 /***/ }),
 
@@ -143,11 +118,40 @@ document.addEventListener('keydown', (event) => {
 class Player {
   constructor(options) {
     //arbitrary start
-    this.x = 25;
-    this.y = 25;
-    // this.context = 
+    this.x = options.x;
+    this.y = options.y;
+    this.context = options.context
+    this.x_len = 25;
+    this.y_len = 25;
+    this.keyBind();
+
+    this.draw =  () => {
+      this.context.clearRect(0, 0, 640, 480);
+      this.context.fillStyle = 'blue';
+      this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+    }
   }
-  // draw
+  keyBind() {
+    document.addEventListener('keydown', (event) => {
+      const keyName = event.key;
+      if (event.key === 'a' || event.key === 's') {
+        if (event.key === 'a') {
+          this.x -= 5;
+        }
+        if (event.key === 's') {
+          this.x += 5;
+        }
+        requestAnimationFrame(this.draw);
+        // this.draw();
+      }
+    });
+  }
+  // draw(){
+  //   this.context.clearRect(0, 0, 640, 480);
+  //   this.context.fillStyle = 'blue';
+  //   this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+
+  // }
   getInput(){
     //check keyboard movements
 
