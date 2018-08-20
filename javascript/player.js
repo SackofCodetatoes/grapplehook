@@ -1,47 +1,51 @@
 const GameEntity = require("./game_entity.js")
 const PLAYER_KEYS = ['w', 'a', 's', 'd', " "];
+// const KEY_LEFT = (event.key === 'a');
 class Player extends GameEntity {
   constructor(options) {
-    //arbitrary start
     super(options);
-    this.x_len = 25;
-    this.y_len = 25;
+    this.player_moves = {
+      a: false,
+      d: false,
+      w: false,
+      s: false,
+      Space: false,
+    }
+
     this.keyBind();
-    this.draw = this.draw.bind(this);
+    this.move_spd = 2;
   }
-
-
+//source of inspiration for omni-directional movement/fluidity
+//https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
     document.addEventListener('keydown', (event) => {
       const keyName = event.key;
       if (PLAYER_KEYS.includes(event.key)) {
-        if (event.key === 'a') {
-          this.x -= 1;
-        }
-        if (event.key === 'd') {
-          this.x += 1;
-        }
-        if (event.key === 'w') {
-          this.y -= 1;
-        }
-        if (event.key === 's') {
-          this.y += 1;
-        }
-        if (event.key === ' '){
-          this.y -= 10;
-        }
-        // requestAnimationFrame(this.draw);
+        this.player_moves[event.key] = true;
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if (PLAYER_KEYS.includes(event.key)) {
+        this.player_moves[event.key] = false;
       }
     });
   }
-  draw() {
-    // this.context.clearRect(0, 0, 640, 480);
-    this.context.fillStyle = 'blue';
-    this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
-  }
-  getInput(){
 
+  getInput(){
+    if (this.player_moves['a'] === true) {
+      this.x -= this.move_spd;
+    }
+    if (this.player_moves['d'] === true) {
+      this.x += this.move_spd;
+    }
+    if (this.player_moves['w'] === true) {
+      this.y -= this.move_spd;
+    }
+    if (this.player_moves['s'] === true) {
+      this.y += this.move_spd;
+    }
   }
 }
+
 
 module.exports = Player;
