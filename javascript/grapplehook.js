@@ -9,4 +9,7 @@ const playerOptions = { x: 25, y: 25, context: context };
 
 window.newPlayer = new Player(playerOptions);
 
-requestAnimationFrame(newPlayer.draw);
+setInterval(function () {
+  requestAnimationFrame(newPlayer.draw);
+  // animiate something
+}, 1000 / 60);

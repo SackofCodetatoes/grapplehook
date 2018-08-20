@@ -104,7 +104,10 @@ const playerOptions = { x: 25, y: 25, context: context };
 
 window.newPlayer = new Player(playerOptions);
 
-requestAnimationFrame(newPlayer.draw);
+setInterval(function () {
+  requestAnimationFrame(newPlayer.draw);
+  // animiate something
+}, 1000 / 60);
 
 /***/ }),
 
@@ -115,6 +118,7 @@ requestAnimationFrame(newPlayer.draw);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+const PLAYER_KEYS = ['w', 'a', 's', 'd', " "];
 class Player {
   constructor(options) {
     //arbitrary start
@@ -124,36 +128,39 @@ class Player {
     this.x_len = 25;
     this.y_len = 25;
     this.keyBind();
-
-    this.draw =  () => {
-      this.context.clearRect(0, 0, 640, 480);
-      this.context.fillStyle = 'blue';
-      this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
-    }
+    this.draw = this.draw.bind(this);
   }
+
+
   keyBind() {
     document.addEventListener('keydown', (event) => {
       const keyName = event.key;
-      if (event.key === 'a' || event.key === 's') {
+      if (PLAYER_KEYS.includes(event.key)) {
         if (event.key === 'a') {
-          this.x -= 5;
+          this.x -= 1;
+        }
+        if (event.key === 'd') {
+          this.x += 1;
+        }
+        if (event.key === 'w') {
+          this.y -= 1;
         }
         if (event.key === 's') {
-          this.x += 5;
+          this.y += 1;
         }
-        requestAnimationFrame(this.draw);
-        // this.draw();
+        if (event.key === ' '){
+          this.y -= 10;
+        }
+        // requestAnimationFrame(this.draw);
       }
     });
   }
-  // draw(){
-  //   this.context.clearRect(0, 0, 640, 480);
-  //   this.context.fillStyle = 'blue';
-  //   this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
-
-  // }
+  draw() {
+    this.context.clearRect(0, 0, 640, 480);
+    this.context.fillStyle = 'blue';
+    this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+  }
   getInput(){
-    //check keyboard movements
 
   }
 }
