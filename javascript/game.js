@@ -54,7 +54,7 @@ class Game {
   }
   gravStep(obj){
     obj.vspd += 2;
-    console.log(obj);
+    // console.log(obj);
     return obj;
   }
   collisionCheck(obj) {
