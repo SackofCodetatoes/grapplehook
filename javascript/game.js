@@ -29,7 +29,7 @@ class Game {
       context: this.context,
     };
     const platformOptions = {
-      x: 0,
+      x: 100,
       y: 400,
       color: 'black',
       context: this.context,
@@ -43,12 +43,13 @@ class Game {
     this.platforms.push(this.entities.platform); 
   }
 
-  collisionCheck(checkPos) {
+  collisionCheck(obj) {
+    // debugger
     let platforms = this.platforms;
     for(let i = 0; i < platforms.length; i++){
       if( 
-        ((checkPos.x > platforms[i].x) && (checkPos.x < (platforms[i].x + platforms[i].x_len))) && 
-        ((checkPos.y > platforms[i].y) && (checkPos.y < (platforms[i].y + platforms[i].y_len)))
+        ((obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+          (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
         ) {
           return true;
       }

@@ -130,23 +130,53 @@ class Display {
   }
   getInput() {
     let player = this.game.entities.newPlayer;
+    let next;
     if (this.playerInput['a'] === true) {
-      if(!this.game.collisionCheck({x: player.x-player.moveSpd, y: player.y })){
+      next = {
+        x: player.x - player.moveSpd,
+        y: player.y
+      }
+      // console.log(next)
+      // debugger
+      if(!this.game.collisionCheck(Object.assign({}, player, next))){
         this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
       }
     }
+
     if (this.playerInput['d'] === true) {
-      this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      next = {
+        x: player.x + player.moveSpd,
+        y: player.y
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
+        this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      }
     }
+
     if (this.playerInput['w'] === true) {
+      next = {
+        x: player.x,
+        y: player.y - player.moveSpd
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
       this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
+      }
     }
+    
     if (this.playerInput['s'] === true) {
+      next = {
+        x: player.x,
+        y: player.y + player.moveSpd
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
       this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+      }
     }
-    if (this.playerInput[' '] === true) {
-      this.game.collisionCheck();
-    }
+
+    // if (this.playerInput[' '] === true) {
+    //   this.game.collisionCheck();
+    // }
+    
 
   }
 
@@ -229,7 +259,7 @@ class Game {
       context: this.context,
     };
     const platformOptions = {
-      x: 0,
+      x: 100,
       y: 400,
       color: 'black',
       context: this.context,
@@ -243,12 +273,13 @@ class Game {
     this.platforms.push(this.entities.platform); 
   }
 
-  collisionCheck(checkPos) {
+  collisionCheck(obj) {
+    // debugger
     let platforms = this.platforms;
     for(let i = 0; i < platforms.length; i++){
       if( 
-        ((checkPos.x > platforms[i].x) && (checkPos.x < (platforms[i].x + platforms[i].x_len))) && 
-        ((checkPos.y > platforms[i].y) && (checkPos.y < (platforms[i].y + platforms[i].y_len)))
+        ((obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+          (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
         ) {
           return true;
       }

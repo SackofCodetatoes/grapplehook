@@ -35,23 +35,53 @@ class Display {
   }
   getInput() {
     let player = this.game.entities.newPlayer;
+    let next;
     if (this.playerInput['a'] === true) {
-      if(!this.game.collisionCheck({x: player.x-player.moveSpd, y: player.y })){
+      next = {
+        x: player.x - player.moveSpd,
+        y: player.y
+      }
+      // console.log(next)
+      // debugger
+      if(!this.game.collisionCheck(Object.assign({}, player, next))){
         this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
       }
     }
+
     if (this.playerInput['d'] === true) {
-      this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      next = {
+        x: player.x + player.moveSpd,
+        y: player.y
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
+        this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      }
     }
+
     if (this.playerInput['w'] === true) {
+      next = {
+        x: player.x,
+        y: player.y - player.moveSpd
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
       this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
+      }
     }
+    
     if (this.playerInput['s'] === true) {
+      next = {
+        x: player.x,
+        y: player.y + player.moveSpd
+      }
+      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
       this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+      }
     }
-    if (this.playerInput[' '] === true) {
-      this.game.collisionCheck();
-    }
+
+    // if (this.playerInput[' '] === true) {
+    //   this.game.collisionCheck();
+    // }
+    
 
   }
 
