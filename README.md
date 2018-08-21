@@ -42,8 +42,8 @@ The included scripts will be:
 
 ### Day 1: Game Logic
 Write out game logic to allow proper physics interactions between player and fixed platforms and walls (collision)
-- [ ] Player collision on x-axis and y-axis
-- [ ] Create fixed platforms and walls to allow player traversal
+- [x] Player collision on x-axis and y-axis
+- [x] Create fixed platforms and walls to allow player traversal
 
 ### Day 2: Create a physics level
 - [ ] Create a physics system that player sprite abides by

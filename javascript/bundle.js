@@ -111,7 +111,7 @@ class Display {
     }
     this.keyBind();
     this.getInput = this.getInput.bind(this);
-
+    this.applyPhysics = this.applyPhysics.bind(this);
   }
   //source of inspiration for omni-directional movement/fluidity
   //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
@@ -171,25 +171,46 @@ class Display {
       else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
     
-    if (this.playerInput['s'] === true) {
-      next = {
-        y: player.y + player.moveSpd
+    if(this.playerInput['s'] === true) {
+      if (player.vspd < 4) {
+        this.game.entities.newPlayer.vspd = 2;
       }
-      if (this.game.collisionCheck(Object.assign({}, player, next))) {
-        while (!this.game.collisionCheck(player)) {
-          this.game.entities.newPlayer.y += 1;
-        }
-        this.game.entities.newPlayer.y -= 1;
-      }
-      else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
     }
+    // if (this.playerInput['s'] === true) {
+    //   next = {
+    //     y: player.y + player.moveSpd
+    //   }
+    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
+    //     while (!this.game.collisionCheck(player)) {
+    //       this.game.entities.newPlayer.y += 1;
+    //     }
+    //     this.game.entities.newPlayer.y -= 1;
+    //   }
+    //   else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+    // }
   }
 
     // if (this.playerInput[' '] === true) {
     //   this.game.collisionCheck();
     // }
     
+  applyPhysics(obj){
+    let nextStep = obj;
+    //  debugger
+    if (obj.vspd < 2 && !this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+      nextStep = this.game.gravStep(obj);
+      //fall
+    } else {
+      if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+        while (!this.game.collisionCheck(obj)) {
+          this.game.entities.newPlayer.y += 1;
+        }
+        this.game.entities.newPlayer.y -= 1;
+        obj.vspd = 0;
+      }
+    }
 
+  }
   
 
   
@@ -202,14 +223,16 @@ class Display {
     let move_dir = this.game.entities.move_dir;
     let entities = this.game.entities;
     let getInput = this.getInput;
-    
+    let applyPhysics = this.applyPhysics;
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
 
       context.fillStyle = 'orange'; //background 
       context.fillRect(0, 0, 640, 480);
       getInput();
-      
+      newPlayer.move();
+      applyPhysics(newPlayer);
+
     //Test Purposes
       if (entities.staticEntity.y > 200) {
         move_dir = -2;
@@ -294,7 +317,11 @@ class Game {
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
   }
-
+  gravStep(obj){
+    obj.vspd += 2;
+    console.log(obj);
+    return obj;
+  }
   collisionCheck(obj) {
     // debugger
     let platforms = this.platforms;
@@ -332,12 +359,18 @@ class GameEntity {
     this.x_len = options.x_len;
     this.y_len = options.y_len;
     this.draw = this.draw.bind(this);
+    this.hspd = 0;
+    this.vspd = 0;
   }
   draw() {
     this.context.fillStyle = this.color;
     this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
   }
 
+  move() {
+    this.x += this.hspd;
+    this.y += this.vspd;
+  }
 }
 module.exports = GameEntity;
 

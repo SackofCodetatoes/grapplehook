@@ -7,11 +7,17 @@ class GameEntity {
     this.x_len = options.x_len;
     this.y_len = options.y_len;
     this.draw = this.draw.bind(this);
+    this.hspd = 0;
+    this.vspd = 0;
   }
   draw() {
     this.context.fillStyle = this.color;
     this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
   }
 
+  move() {
+    this.x += this.hspd;
+    this.y += this.vspd;
+  }
 }
 module.exports = GameEntity;

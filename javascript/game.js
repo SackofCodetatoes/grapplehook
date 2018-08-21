@@ -52,7 +52,11 @@ class Game {
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
   }
-
+  gravStep(obj){
+    obj.vspd += 2;
+    console.log(obj);
+    return obj;
+  }
   collisionCheck(obj) {
     // debugger
     let platforms = this.platforms;
