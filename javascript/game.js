@@ -7,6 +7,7 @@ class Game {
     this.entities = {};
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
+    this.platforms = [];
   }
   init() {
     //testing purposes
@@ -39,8 +40,23 @@ class Game {
     this.entities['platform'] = new Platform(platformOptions);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
-    
+    this.platforms.push(this.entities.platform); 
   }
-}
+
+  collisionCheck(checkPos) {
+    let platforms = this.platforms;
+    for(let i = 0; i < platforms.length; i++){
+      if( 
+        ((checkPos.x > platforms[i].x) && (checkPos.x < (platforms[i].x + platforms[i].x_len))) && 
+        ((checkPos.y > platforms[i].y) && (checkPos.y < (platforms[i].y + platforms[i].y_len)))
+        ) {
+          return true;
+      }
+    }
+    return false;
+  }
+
+
+} //end of scope
 
 module.exports = Game;

@@ -34,18 +34,25 @@ class Display {
     });
   }
   getInput() {
+    let player = this.game.entities.newPlayer;
     if (this.playerInput['a'] === true) {
-      this.game.entities.newPlayer.x -= this.game.entities.newPlayer.move_spd;
+      if(!this.game.collisionCheck({x: player.x-player.moveSpd, y: player.y })){
+        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+      }
     }
     if (this.playerInput['d'] === true) {
-      this.game.entities.newPlayer.x += this.game.entities.newPlayer.move_spd;
+      this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
     }
     if (this.playerInput['w'] === true) {
-      this.game.entities.newPlayer.y -= this.game.entities.newPlayer.move_spd;
+      this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
     if (this.playerInput['s'] === true) {
-      this.game.entities.newPlayer.y += this.game.entities.newPlayer.move_spd;
+      this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
     }
+    if (this.playerInput[' '] === true) {
+      this.game.collisionCheck();
+    }
+
   }
 
   

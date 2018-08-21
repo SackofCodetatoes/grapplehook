@@ -12,5 +12,6 @@ class GameEntity {
     this.context.fillStyle = this.color;
     this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
   }
+
 }
 module.exports = GameEntity;
