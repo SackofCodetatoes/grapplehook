@@ -40,14 +40,14 @@ The included scripts will be:
 - [x] Render a movable player sprite with keyboard keys
 - [x] Revisit Asteroids project to review how canvas works + review JavaScript
 
-
-### Day 1: Create a level
-- [ ] Create a physics system that player sprite abides by
-
-### Day 2: Game Logic
+### Day 1: Game Logic
 Write out game logic to allow proper physics interactions between player and fixed platforms and walls (collision)
 - [ ] Player collision on x-axis and y-axis
 - [ ] Create fixed platforms and walls to allow player traversal
+
+### Day 2: Create a physics level
+- [ ] Create a physics system that player sprite abides by
+- [ ] Allow player to jump and fall
 
 ### Day 3: Create a grappling hook
 - [ ] Learn how to and add mouse to aim and fire grappling hook, drawing a line between point and player
