@@ -29,7 +29,7 @@ class Game {
       context: this.context,
     };
     const platformOptions = {
-      x: 100,
+      x: 0,
       y: 400,
       color: 'black',
       context: this.context,

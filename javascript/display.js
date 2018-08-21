@@ -34,9 +34,6 @@ class Display {
     });
     document.addEventListener('keydown', (event) => {
       if(event.key === ' '){
-        // if(this.playerInput[' '] === false){
-        //   this.playerInput[' '] = true;
-        // }
         console.log('HARD PRESSED');
         this.game.entities.newPlayer.vspd = -10;
       }
@@ -113,30 +110,34 @@ class Display {
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
-    checkStep.y = checkStep.y + 2;
+    checkStep.y = checkStep.y + checkStep.vspd + 4;
     // console.log('check me out', Object.assign({}, obj, checkStep));
     //  debugger
-    if (obj.vspd < 5 && !this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+    obj.vspd += 1
+    if (obj.vspd < 10 && !this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
       // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
       // nextStep = this.game.gravStep(obj);
-      obj.vspd += 1;
       // if(nextStep.vspd < 0){
       //   // console.log('slow down!')
       //   nextStep.vsp += 1;
       //   // console.log(nextStep.vspd)
       // }
       nextStep.y += nextStep.vspd;
+      console.log(nextStep.vspd);
       // obj['test'] = 'value';
       // obj.move();
       //fall
     } else {
+      obj.vspd = 0;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+
         // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 1;
         }
-        this.game.entities.newPlayer.y -= 1;
-        obj.vspd = 0;
+        console.log(this.game.collisionCheck(obj))
+        // this.game.entities.newPlayer.y -= 5;
+
       }
     }
 

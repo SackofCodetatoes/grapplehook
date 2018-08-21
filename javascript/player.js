@@ -4,7 +4,7 @@ const GameEntity = require("./game_entity.js")
 class Player extends GameEntity {
   constructor(options) {
     super(options);
-    this.moveSpd = 2;
+    this.moveSpd = 4;
   }
 }
 
