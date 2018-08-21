@@ -39,51 +39,63 @@ class Display {
     if (this.playerInput['a'] === true) {
       next = {
         x: player.x - player.moveSpd,
-        y: player.y
       }
-      // console.log(next)
-      // debugger
-      if(!this.game.collisionCheck(Object.assign({}, player, next))){
+      if(this.game.collisionCheck(Object.assign({}, player, next))){
+        while (!this.game.collisionCheck(player)){
+          this.game.entities.newPlayer.x -= 1;
+        }
+        this.game.entities.newPlayer.x += 1;
+      } 
+      else 
         this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
-      }
     }
 
     if (this.playerInput['d'] === true) {
       next = {
         x: player.x + player.moveSpd,
-        y: player.y
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-        this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.x += 1;
+        }
+        this.game.entities.newPlayer.x -= 1;
       }
+      else this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
     }
 
     if (this.playerInput['w'] === true) {
       next = {
-        x: player.x,
         y: player.y - player.moveSpd
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-      this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.y -= 1;
+        }
+        this.game.entities.newPlayer.y+=1;
       }
+      else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
     
     if (this.playerInput['s'] === true) {
       next = {
-        x: player.x,
         y: player.y + player.moveSpd
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-      this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.y += 1;
+        }
+        this.game.entities.newPlayer.y -= 1;
       }
+      else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
     }
+  }
 
     // if (this.playerInput[' '] === true) {
     //   this.game.collisionCheck();
     // }
     
 
-  }
+  
 
   
   render(){  

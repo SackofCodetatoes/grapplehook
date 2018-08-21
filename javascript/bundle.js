@@ -134,51 +134,63 @@ class Display {
     if (this.playerInput['a'] === true) {
       next = {
         x: player.x - player.moveSpd,
-        y: player.y
       }
-      // console.log(next)
-      // debugger
-      if(!this.game.collisionCheck(Object.assign({}, player, next))){
+      if(this.game.collisionCheck(Object.assign({}, player, next))){
+        while (!this.game.collisionCheck(player)){
+          this.game.entities.newPlayer.x -= 1;
+        }
+        this.game.entities.newPlayer.x += 1;
+      } 
+      else 
         this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
-      }
     }
 
     if (this.playerInput['d'] === true) {
       next = {
         x: player.x + player.moveSpd,
-        y: player.y
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-        this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.x += 1;
+        }
+        this.game.entities.newPlayer.x -= 1;
       }
+      else this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
     }
 
     if (this.playerInput['w'] === true) {
       next = {
-        x: player.x,
         y: player.y - player.moveSpd
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-      this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.y -= 1;
+        }
+        this.game.entities.newPlayer.y+=1;
       }
+      else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
     
     if (this.playerInput['s'] === true) {
       next = {
-        x: player.x,
         y: player.y + player.moveSpd
       }
-      if (!this.game.collisionCheck(Object.assign({}, player, next))) {
-      this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+      if (this.game.collisionCheck(Object.assign({}, player, next))) {
+        while (!this.game.collisionCheck(player)) {
+          this.game.entities.newPlayer.y += 1;
+        }
+        this.game.entities.newPlayer.y -= 1;
       }
+      else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
     }
+  }
 
     // if (this.playerInput[' '] === true) {
     //   this.game.collisionCheck();
     // }
     
 
-  }
+  
 
   
   render(){  
@@ -266,11 +278,21 @@ class Game {
       x_len: 300,
       y_len: 20,
     }
+    const platformOptions2 = {
+      x: 70,
+      y: 120,
+      color: 'black',
+      context: this.context,
+      x_len: 100,
+      y_len: 50,
+    }
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
+    this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.platforms.push(this.entities.platform); 
+    this.platforms.push(this.entities.platform2); 
   }
 
   collisionCheck(obj) {

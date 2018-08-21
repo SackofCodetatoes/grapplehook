@@ -36,11 +36,21 @@ class Game {
       x_len: 300,
       y_len: 20,
     }
+    const platformOptions2 = {
+      x: 70,
+      y: 120,
+      color: 'black',
+      context: this.context,
+      x_len: 100,
+      y_len: 50,
+    }
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
+    this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.platforms.push(this.entities.platform); 
+    this.platforms.push(this.entities.platform2); 
   }
 
   collisionCheck(obj) {
