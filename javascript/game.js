@@ -1,5 +1,6 @@
 const Player = require("./player.js");
 const GameEntity = require("./game_entity.js");
+const Platform = require("./platform.js");
 
 class Game {
   constructor() {
@@ -24,11 +25,21 @@ class Game {
       color: 'red',
       x_len: 40,
       y_len: 40,
+      context: this.context,
     };
-
-    this.entities['newPlayer'] = new Player(playerOptions);
-    this.move_dir = 1;
+    const platformOptions = {
+      x: 0,
+      y: 400,
+      color: 'black',
+      context: this.context,
+      x_len: 300,
+      y_len: 20,
+    }
+    // this.move_dir = 1;
+    this.entities['platform'] = new Platform(platformOptions);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
+    this.entities['newPlayer'] = new Player(playerOptions);
+    
   }
 }
 

@@ -15,6 +15,7 @@ class Player extends GameEntity {
     this.keyBind();
     this.move_spd = 2;
   }
+
 //source of inspiration for omni-directional movement/fluidity
 //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
@@ -30,7 +31,7 @@ class Player extends GameEntity {
       }
     });
   }
-
+  //check move spd with 
   getInput(){
     if (this.player_moves['a'] === true) {
       this.x -= this.move_spd;

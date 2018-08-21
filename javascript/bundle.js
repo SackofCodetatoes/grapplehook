@@ -100,7 +100,8 @@ const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/gam
 
 class Display {
   constructor(game){
-    this.game = game;    
+    this.game = game;  
+    this.game = this.game  
   }
   
   render(){  
@@ -109,22 +110,28 @@ class Display {
     let newPlayer = this.game.entities.newPlayer;
     let staticEntity = this.game.entities.staticEntity;
     let move_dir = this.game.entities.move_dir;
-
+    let entities = this.game.entities;
+    
+    
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
-      context.fillStyle = 'orange';
+      context.fillStyle = 'orange'; //background
       context.fillRect(0, 0, 640, 480);
-      newPlayer.getInput();
-      requestAnimationFrame(newPlayer.draw);
-
-      //Test Purposes
-      if (staticEntity.y > 200) {
-        move_dir = -4;
-      } else if (staticEntity.y < 100) {
-        move_dir = 4;
+      entities.newPlayer.getInput();
+    //Test Purposes
+      if (entities.staticEntity.y > 200) {
+        move_dir = -2;
+      } else if (entities.staticEntity.y < 100) {
+        move_dir = 2;
       }
-      staticEntity.y += move_dir;
-      requestAnimationFrame(staticEntity.draw);
+
+      entities.staticEntity.y += move_dir;
+
+      for(let i = 0; i < Object.values(entities).length; i++){
+        requestAnimationFrame(Object.values(entities)[i].draw);
+      }
+      // requestAnimationFrame(entities.staticEntity.draw);
+      // requestAnimationFrame(entities.newPlayer.draw);
 
     }, 1000 / 60);
   }
@@ -143,6 +150,7 @@ module.exports = Display;
 
 const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+const Platform = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
 
 class Game {
   constructor() {
@@ -167,11 +175,21 @@ class Game {
       color: 'red',
       x_len: 40,
       y_len: 40,
+      context: this.context,
     };
-
-    this.entities['newPlayer'] = new Player(playerOptions);
-    this.move_dir = 1;
+    const platformOptions = {
+      x: 0,
+      y: 400,
+      color: 'black',
+      context: this.context,
+      x_len: 300,
+      y_len: 20,
+    }
+    // this.move_dir = 1;
+    this.entities['platform'] = new Platform(platformOptions);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
+    this.entities['newPlayer'] = new Player(playerOptions);
+    
   }
 }
 
@@ -220,7 +238,6 @@ const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
 console.log('all is dandy!');
 const game = new Game();
 game.init();
-debugger
 const testDisplay = new Display(game);
 testDisplay.render();
 
@@ -230,6 +247,27 @@ testDisplay.render();
 
 
 
+
+/***/ }),
+
+/***/ "./javascript/platform.js":
+/*!********************************!*\
+  !*** ./javascript/platform.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameEntity = __webpack_require__(/*! ./game_entity */ "./javascript/game_entity.js");
+
+class Platform extends GameEntity {
+  constructor(options){
+    super(options);
+    // this.color = 'black';
+    //replace the above with sprite dimensions
+  }
+  
+}
+module.exports = Platform;
 
 /***/ }),
 
@@ -257,6 +295,7 @@ class Player extends GameEntity {
     this.keyBind();
     this.move_spd = 2;
   }
+
 //source of inspiration for omni-directional movement/fluidity
 //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
@@ -272,7 +311,7 @@ class Player extends GameEntity {
       }
     });
   }
-
+  //check move spd with 
   getInput(){
     if (this.player_moves['a'] === true) {
       this.x -= this.move_spd;

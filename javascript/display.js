@@ -5,7 +5,8 @@ const GameEntity = require("./game_entity.js");
 
 class Display {
   constructor(game){
-    this.game = game;    
+    this.game = game;  
+    this.game = this.game  
   }
   
   render(){  
@@ -14,22 +15,28 @@ class Display {
     let newPlayer = this.game.entities.newPlayer;
     let staticEntity = this.game.entities.staticEntity;
     let move_dir = this.game.entities.move_dir;
-
+    let entities = this.game.entities;
+    
+    
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
-      context.fillStyle = 'orange';
+      context.fillStyle = 'orange'; //background
       context.fillRect(0, 0, 640, 480);
-      newPlayer.getInput();
-      requestAnimationFrame(newPlayer.draw);
-
-      //Test Purposes
-      if (staticEntity.y > 200) {
-        move_dir = -4;
-      } else if (staticEntity.y < 100) {
-        move_dir = 4;
+      entities.newPlayer.getInput();
+    //Test Purposes
+      if (entities.staticEntity.y > 200) {
+        move_dir = -2;
+      } else if (entities.staticEntity.y < 100) {
+        move_dir = 2;
       }
-      staticEntity.y += move_dir;
-      requestAnimationFrame(staticEntity.draw);
+
+      entities.staticEntity.y += move_dir;
+
+      for(let i = 0; i < Object.values(entities).length; i++){
+        requestAnimationFrame(Object.values(entities)[i].draw);
+      }
+      // requestAnimationFrame(entities.staticEntity.draw);
+      // requestAnimationFrame(entities.newPlayer.draw);
 
     }, 1000 / 60);
   }
