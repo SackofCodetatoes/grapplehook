@@ -109,8 +109,10 @@ class Display {
       s: false,
       ' ': false,
       canJump: 'true',
+      mousePos: {x: 0, y: 0}
     }
     this.keyBind();
+    debugger
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
@@ -134,6 +136,14 @@ class Display {
         this.playerInput.canJump = false;
         this.game.entities.newPlayer.vspd = -4;
       }
+    })
+    document.addEventListener('mousemove', (event) => {
+      let rect = this.game.canvas.getBoundingClientRect();
+      // this.playerInput.mousePos = { x: event.clientX - rect.left, y: event.clientY-rect.top };
+      this.playerInput.mousePos.x = event.clientX;
+      this.playerInput.mousePos.y = event.clientY;
+      // console.log(this.playerInput.mousePos);
+      // console.log('y: ', event.clientY);
     })
 
   }
@@ -223,7 +233,7 @@ class Display {
       //   // console.log(nextStep.vspd)
       // }
       nextStep.y += nextStep.vspd;
-      console.log(nextStep.vspd);
+      // console.log(nextStep.vspd);
       // obj['test'] = 'value';
       // obj.move();
       //fall
@@ -255,22 +265,34 @@ class Display {
     let move_dir = this.game.entities.move_dir;
     let entities = this.game.entities;
     let getInput = this.getInput;
+    let mousePos = this.playerInput.mousePos;
+    console.log(this.playerInput.mousePos);
     let applyPhysics = this.applyPhysics;
+    
+    
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
-
       context.fillStyle = 'orange'; //background 
       context.fillRect(0, 0, 640, 480);
+
+
+      
       getInput();
       applyPhysics(newPlayer);
       newPlayer.move();
       // debugger;
-    //Test Purposes
+      //Test Purposes
       if (entities.staticEntity.y > 200) {
         move_dir = -2;
       } else if (entities.staticEntity.y < 100) {
         move_dir = 2;
       }
+
+      context.fillStyle = 'black';
+      // console.log(mousePos);
+      context.beginPath();
+      context.arc(mousePos.x, mousePos.y, 20, 0, 2* Math.PI);
+      context.stroke();
 
       entities.staticEntity.y += move_dir;
 
