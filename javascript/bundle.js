@@ -295,19 +295,12 @@ class Display {
         move_dir = 2;
       }
       
-
-
-      context.fillStyle = 'black';
-      context.beginPath();
-      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
-      context.stroke();
-
+      
       hook.x = newPlayer.x + newPlayer.x_len/2;
       hook.y = newPlayer.y + newPlayer.y_len/2;
       if(!hookPoint.active){
         hookPoint.x = newPlayer.x;
         hookPoint.y = newPlayer.y;
-        // hookPoint.target = mousePos;
       }
       hookPoint.move();
 
@@ -318,6 +311,10 @@ class Display {
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
       }
+      context.beginPath();
+      context.strokeStyle = 'red';
+      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
+      context.stroke();
     }, 1000 / 60);
   }
 }
@@ -514,7 +511,7 @@ class GrappleHook extends GameEntity {
   }
 
   draw(){
-    this.context.fillStyle = 'black';
+    this.context.strokeStyle = 'black';
     this.context.beginPath();
     this.context.moveTo(this.x, this.y);
     this.context.lineTo(this.targetX, this.targetY);
