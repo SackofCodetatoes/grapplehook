@@ -156,6 +156,7 @@ class Display {
     })
 
   }
+
   getInput() {
     let player = this.game.entities.newPlayer;
     let next;
@@ -205,28 +206,21 @@ class Display {
     }
 
     if(this.playerInput.shootHook === true){
-      this.game.entities.hook.targetX = this.playerInput.hookTarget.x;
-      this.game.entities.hook.targetY = this.playerInput.hookTarget.y;
+      let hookPoint = this.game.entities.hookPoint;
+      this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
+      this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
       this.game.entities.hookPoint.vspd = -1;
+
+      if(this.game.collisionCheck(this.game.entities.hookPoint)){
+        this.game.entities.hookPoint.collided = true;
+
+      }
+
       this.game.entities.hook.draw();
     }
-    // if (this.playerInput['s'] === true) {
-    //   next = {
-    //     y: player.y + player.moveSpd
-    //   }
-    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
-    //     while (!this.game.collisionCheck(player)) {
-    //       this.game.entities.newPlayer.y += 1;
-    //     }
-    //     this.game.entities.newPlayer.y -= 1;
-    //   }
-    //   else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
-    // }
+
   }
 
-    // if (this.playerInput[' '] === true) {
-    //   this.game.collisionCheck();
-    // }
     
   applyPhysics(obj){
     let nextStep = obj;
@@ -305,11 +299,11 @@ class Display {
 
       context.fillStyle = 'black';
       context.beginPath();
-      context.arc(mousePos.x, mousePos.y, 20, 0, 2* Math.PI);
+      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
       context.stroke();
 
-      hook.x = newPlayer.x;
-      hook.y = newPlayer.y;
+      hook.x = newPlayer.x + newPlayer.x_len/2;
+      hook.y = newPlayer.y + newPlayer.y_len/2;
       if(!hookPoint.active){
         hookPoint.x = newPlayer.x;
         hookPoint.y = newPlayer.y;
@@ -544,9 +538,9 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
-    this.moveSpd = 10;
+    this.moveSpd = 20;
     this.target = {x: 0, y: 0};
-
+    this.collided = false;
   }
   draw() {
     this.context.fillStyle = 'yellow';
@@ -559,6 +553,7 @@ class HookPoint extends GameEntity {
     this.y = y;
     this.hspd = 0;
     this.vspd = 0;
+    this.collided = false;
   }
   calcSpd(){
     let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
@@ -569,7 +564,12 @@ class HookPoint extends GameEntity {
   }
   move(){
     // https: //gist.github.com/conorbuck/2606166
-    this.calcSpd();
+    if(!this.collided){
+      this.calcSpd();
+    } else {
+      this.hspd = 0;
+      this.vspd = 0;
+    }
     this.x += this.hspd;
     this.y += this.vspd;
   }

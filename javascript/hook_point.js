@@ -4,9 +4,9 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
-    this.moveSpd = 10;
+    this.moveSpd = 20;
     this.target = {x: 0, y: 0};
-
+    this.collided = false;
   }
   draw() {
     this.context.fillStyle = 'yellow';
@@ -19,6 +19,7 @@ class HookPoint extends GameEntity {
     this.y = y;
     this.hspd = 0;
     this.vspd = 0;
+    this.collided = false;
   }
   calcSpd(){
     let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
@@ -29,7 +30,12 @@ class HookPoint extends GameEntity {
   }
   move(){
     // https: //gist.github.com/conorbuck/2606166
-    this.calcSpd();
+    if(!this.collided){
+      this.calcSpd();
+    } else {
+      this.hspd = 0;
+      this.vspd = 0;
+    }
     this.x += this.hspd;
     this.y += this.vspd;
   }
