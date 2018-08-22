@@ -16,9 +16,10 @@ class Display {
       canJump: 'true',
       mousePos: {x: 0, y: 0},
       shootHook: false,
+      hookTarget: {},
     }
     this.keyBind();
-    // debugger
+
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
@@ -48,18 +49,12 @@ class Display {
       this.playerInput.mousePos.y = event.clientY;
     })
     document.addEventListener('mousedown', (event) => {
-      // let shootHook = this.playerInput.shootHook;
       this.playerInput.shootHook = true;
-      console.log('down')
-      timer = setInterval(() => {this.playerInput['shootHook'] = true}, 50)
-      console.log(this.playerInput.shootHook);
-      // this.playerInput.shootHook = true;
+      this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      console.log('target location: ', event.clientX, ', ', event.clientY);
     })
     document.addEventListener('mouseup', (event) => {
       this.playerInput['shootHook'] = false;
-      console.log('up')
-      clearInterval(timer);
-      console.log(this.playerInput.shootHook);
     })
 
   }
@@ -108,10 +103,12 @@ class Display {
     
     if(this.playerInput['f'] === true) {   
         this.game.entities.newPlayer.vspd = 1;
-        // console.log('space');
     }
 
     if(this.playerInput.shootHook === true){
+      this.game.entities.hook.targetX = this.playerInput.hookTarget.x;
+      this.game.entities.hook.targetY = this.playerInput.hookTarget.y;
+
       this.game.entities.hook.draw();
     }
     // if (this.playerInput['s'] === true) {
@@ -136,8 +133,7 @@ class Display {
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
     checkStep.y = checkStep.y + checkStep.vspd + 1;
-    // console.log('check me out', Object.assign({}, obj, checkStep));
-    //  debugger
+
     if(obj.vspd < 8){
       obj.vspd += 0.2;
     }
@@ -146,12 +142,9 @@ class Display {
       // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
       // nextStep = this.game.gravStep(obj);
       // if(nextStep.vspd < 0){
-      //   // console.log('slow down!')
       //   nextStep.vsp += 1;
-      //   // console.log(nextStep.vspd)
       // }
       nextStep.y += nextStep.vspd;
-      // console.log(nextStep.vspd);
       // obj['test'] = 'value';
       // obj.move();
       //fall
@@ -187,6 +180,8 @@ class Display {
     console.log(this.playerInput.mousePos);
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
+    let hookTarget = this.playerInput.hookTarget;
+
     debugger
     let hook = this.game.entities.hook;
     
@@ -200,14 +195,12 @@ class Display {
       getInput();
       applyPhysics(newPlayer);
       newPlayer.move();
-      // debugger;
       //Test Purposes
       if (entities.staticEntity.y > 200) {
         move_dir = -2;
       } else if (entities.staticEntity.y < 100) {
         move_dir = 2;
       }
-      console.log('Hook Value', shootHook);
       
 
 
@@ -217,21 +210,19 @@ class Display {
       context.stroke();
       hook.x = newPlayer.x;
       hook.y = newPlayer.y;
-      hook.targetX = mousePos.x;
-      hook.targetY = mousePos.y;
+      console.log('target', hookTarget);
+      // if(hookTarget){
+      //   debugger
+      //   hook.targetX = hookTarget.x;
+      //   hook.targetY = hookTarget.y;
+      // }
       entities.staticEntity.y += move_dir;
       
       for(let i = 0; i < Object.values(entities).length; i++){
-        // debugger
-
-        // if(Object.values(entities)[i].constructor.name != 'GrappleHook'){
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
       }
-      // requestAnimationFrame(entities.staticEntity.draw);
-      // requestAnimationFrame(entities.newPlayer.draw);
-
     }, 1000 / 60);
   }
 }
