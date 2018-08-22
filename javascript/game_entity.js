@@ -9,6 +9,7 @@ class GameEntity {
     this.draw = this.draw.bind(this);
     this.hspd = 0;
     this.vspd = 0;
+    this.active = true;
   }
   draw() {
     this.context.fillStyle = this.color;

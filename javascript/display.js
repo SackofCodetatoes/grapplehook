@@ -15,7 +15,7 @@ class Display {
       ' ': false,
       canJump: 'true',
       mousePos: {x: 0, y: 0},
-      // shootHook: false,
+      shootHook: false,
     }
     this.keyBind();
     // debugger
@@ -52,12 +52,14 @@ class Display {
       this.playerInput.shootHook = true;
       console.log('down')
       timer = setInterval(() => {this.playerInput['shootHook'] = true}, 50)
+      console.log(this.playerInput.shootHook);
       // this.playerInput.shootHook = true;
     })
     document.addEventListener('mouseup', (event) => {
       this.playerInput['shootHook'] = false;
       console.log('up')
       clearInterval(timer);
+      console.log(this.playerInput.shootHook);
     })
 
   }
@@ -107,6 +109,10 @@ class Display {
     if(this.playerInput['f'] === true) {   
         this.game.entities.newPlayer.vspd = 1;
         // console.log('space');
+    }
+
+    if(this.playerInput.shootHook === true){
+      this.game.entities.hook.draw();
     }
     // if (this.playerInput['s'] === true) {
     //   next = {
@@ -217,7 +223,9 @@ class Display {
       
       for(let i = 0; i < Object.values(entities).length; i++){
         // debugger
-        if(Object.values(entities)[i].constructor.name != 'GrappleHook'){
+
+        // if(Object.values(entities)[i].constructor.name != 'GrappleHook'){
+        if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
       }

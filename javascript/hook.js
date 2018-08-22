@@ -5,6 +5,7 @@ class GrappleHook extends GameEntity {
     super(options);
     this.targetX = 0;
     this.targetY = 0;
+    this.active = false;
   }
 
   draw(){
