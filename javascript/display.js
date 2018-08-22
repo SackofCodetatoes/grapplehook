@@ -120,10 +120,10 @@ class Display {
         this.game.entities.hookPoint.collided = true;
         let hook = this.game.entities.hook;
         let hookPoint = this.game.entities.hookPoint;
-        this.playerInput.ropeLen = 
-        Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+        // this.playerInput.ropeLen = 
+        // Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
       }
-
+      //set hsnapshopt
       this.game.entities.hook.draw();
     }
 
@@ -220,7 +220,7 @@ class Display {
         }
       }
       if(hookPoint.collided){
-        if()
+        // if()
         context.beginPath();
         context.strokeStyle = 'white';
         context.arc(hookPoint.x, hookPoint.y, 
