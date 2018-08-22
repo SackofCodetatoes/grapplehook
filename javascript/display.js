@@ -13,6 +13,7 @@ class Display {
       w: false,
       s: false,
       ' ': false,
+      canJump: 'true',
     }
     this.keyBind();
     this.getInput = this.getInput.bind(this);
@@ -33,9 +34,10 @@ class Display {
       }
     });
     document.addEventListener('keydown', (event) => {
-      if(event.key === ' '){
+      if(event.key === ' ' && this.playerInput.canJump === true){
         console.log('HARD PRESSED');
-        this.game.entities.newPlayer.vspd = -10;
+        this.playerInput.canJump = false;
+        this.game.entities.newPlayer.vspd = -4;
       }
     })
 
@@ -89,18 +91,18 @@ class Display {
         // console.log('space');
       
     }
-    if (this.playerInput['s'] === true) {
-      next = {
-        y: player.y + player.moveSpd
-      }
-      if (this.game.collisionCheck(Object.assign({}, player, next))) {
-        while (!this.game.collisionCheck(player)) {
-          this.game.entities.newPlayer.y += 1;
-        }
-        this.game.entities.newPlayer.y -= 1;
-      }
-      else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
-    }
+    // if (this.playerInput['s'] === true) {
+    //   next = {
+    //     y: player.y + player.moveSpd
+    //   }
+    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
+    //     while (!this.game.collisionCheck(player)) {
+    //       this.game.entities.newPlayer.y += 1;
+    //     }
+    //     this.game.entities.newPlayer.y -= 1;
+    //   }
+    //   else this.game.entities.newPlayer.y += this.game.entities.newPlayer.moveSpd;
+    // }
   }
 
     // if (this.playerInput[' '] === true) {
@@ -110,11 +112,14 @@ class Display {
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
-    checkStep.y = checkStep.y + checkStep.vspd + 4;
+    checkStep.y = checkStep.y + checkStep.vspd + 1;
     // console.log('check me out', Object.assign({}, obj, checkStep));
     //  debugger
-    obj.vspd += 1
-    if (obj.vspd < 10 && !this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+    if(obj.vspd < 8){
+      obj.vspd += 0.2;
+    }
+
+    if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
       // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
       // nextStep = this.game.gravStep(obj);
       // if(nextStep.vspd < 0){
@@ -129,14 +134,15 @@ class Display {
       //fall
     } else {
       obj.vspd = 0;
+      this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
 
         // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
         while (!this.game.collisionCheck(obj)) {
-          this.game.entities.newPlayer.y += 1;
+          this.game.entities.newPlayer.y += 2;
         }
         console.log(this.game.collisionCheck(obj))
-        // this.game.entities.newPlayer.y -= 5;
+        this.game.entities.newPlayer.y -= 2;
 
       }
     }
