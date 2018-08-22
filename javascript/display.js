@@ -51,6 +51,7 @@ class Display {
     document.addEventListener('mousedown', (event) => {
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      this.game.entities.hookPoint.target = this.playerInput.hookTarget;
       this.game.entities.hookPoint.active = true;
     })
     document.addEventListener('mouseup', (event) => {
@@ -91,6 +92,7 @@ class Display {
     }
 
     if (this.playerInput['w'] === true) {
+      this.game.entities.newPlayer.y -= 10;
       next = {
         y: player.y - player.moveSpd
       }
@@ -216,6 +218,7 @@ class Display {
       if(!hookPoint.active){
         hookPoint.x = newPlayer.x;
         hookPoint.y = newPlayer.y;
+        // hookPoint.target = mousePos;
       }
       hookPoint.move();
 

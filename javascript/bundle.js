@@ -146,6 +146,7 @@ class Display {
     document.addEventListener('mousedown', (event) => {
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      this.game.entities.hookPoint.target = this.playerInput.hookTarget;
       this.game.entities.hookPoint.active = true;
     })
     document.addEventListener('mouseup', (event) => {
@@ -186,6 +187,7 @@ class Display {
     }
 
     if (this.playerInput['w'] === true) {
+      this.game.entities.newPlayer.y -= 10;
       next = {
         y: player.y - player.moveSpd
       }
@@ -311,6 +313,7 @@ class Display {
       if(!hookPoint.active){
         hookPoint.x = newPlayer.x;
         hookPoint.y = newPlayer.y;
+        // hookPoint.target = mousePos;
       }
       hookPoint.move();
 
@@ -458,6 +461,7 @@ class GameEntity {
     this.hspd = 0;
     this.vspd = 0;
     this.active = true;
+    this.faceDir = 1;
   }
   draw() {
     this.context.fillStyle = this.color;
@@ -540,6 +544,9 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
+    this.moveSpd = 10;
+    this.target = {x: 0, y: 0};
+
   }
   draw() {
     this.context.fillStyle = 'yellow';
@@ -550,6 +557,21 @@ class HookPoint extends GameEntity {
   reset(x, y){
     this.x = x;
     this.y = y;
+    this.hspd = 0;
+    this.vspd = 0;
+  }
+  calcSpd(){
+    let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+    // console.log('heres an angle', angle);
+    this.hspd = this.moveSpd * Math.cos(angle);
+    this.vspd = this.moveSpd * Math.sin(angle);
+
+  }
+  move(){
+    // https: //gist.github.com/conorbuck/2606166
+    this.calcSpd();
+    this.x += this.hspd;
+    this.y += this.vspd;
   }
 }
 module.exports = HookPoint;

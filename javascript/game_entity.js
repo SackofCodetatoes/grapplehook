@@ -10,6 +10,7 @@ class GameEntity {
     this.hspd = 0;
     this.vspd = 0;
     this.active = true;
+    this.faceDir = 1;
   }
   draw() {
     this.context.fillStyle = this.color;
