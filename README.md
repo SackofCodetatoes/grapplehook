@@ -46,8 +46,8 @@ Write out game logic to allow proper physics interactions between player and fix
 - [x] Create fixed platforms and walls to allow player traversal
 
 ### Day 2: Create a physics level
-- [ ] Create a physics system that player sprite abides by
-- [ ] Allow player to jump and fall
+- [~] Create a physics system that player sprite abides by
+- [x] Allow player to jump and fall
 
 ### Day 3: Create a grappling hook
 - [ ] Learn how to and add mouse to aim and fire grappling hook, drawing a line between point and player

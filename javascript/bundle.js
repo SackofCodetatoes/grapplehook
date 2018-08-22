@@ -112,7 +112,7 @@ class Display {
       mousePos: {x: 0, y: 0}
     }
     this.keyBind();
-    debugger
+    // debugger
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
