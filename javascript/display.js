@@ -51,10 +51,12 @@ class Display {
     document.addEventListener('mousedown', (event) => {
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
-      console.log('target location: ', event.clientX, ', ', event.clientY);
+      this.game.entities.hookPoint.active = true;
     })
     document.addEventListener('mouseup', (event) => {
       this.playerInput['shootHook'] = false;
+      this.game.entities.hookPoint.active = false;
+      this.game.entities.hookPoint.reset(this.game.entities.newPlayer.x, this.game.entities.newPlayer.y)
     })
 
   }
@@ -181,9 +183,9 @@ class Display {
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
     let hookTarget = this.playerInput.hookTarget;
-
-    debugger
     let hook = this.game.entities.hook;
+    let hookPoint = this.game.entities.hookPoint;
+    // debugger
     
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
@@ -208,14 +210,12 @@ class Display {
       context.beginPath();
       context.arc(mousePos.x, mousePos.y, 20, 0, 2* Math.PI);
       context.stroke();
+
       hook.x = newPlayer.x;
       hook.y = newPlayer.y;
-      console.log('target', hookTarget);
-      // if(hookTarget){
-      //   debugger
-      //   hook.targetX = hookTarget.x;
-      //   hook.targetY = hookTarget.y;
-      // }
+      hookPoint.x = newPlayer.x;
+      hookPoint.y = newPlayer.y;
+
       entities.staticEntity.y += move_dir;
       
       for(let i = 0; i < Object.values(entities).length; i++){

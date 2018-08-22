@@ -2,6 +2,7 @@ const Player = require("./player.js");
 const GameEntity = require("./game_entity.js");
 const Platform = require("./platform.js");
 const Hook = require("./hook.js");
+const HookPoint = require("./hook_point.js");
 
 class Game {
   constructor() {
@@ -37,22 +38,6 @@ class Game {
       x_len: 640,
       y_len: 20,
     }
-    const platformOptions3 = {
-      x: 640,
-      y: 0,
-      color: 'black',
-      context: this.context,
-      x_len: 640,
-      y_len: 20,
-    }
-      const platformOptions4 = {
-        x: 0,
-        y: 450,
-        color: 'black',
-        context: this.context,
-        x_len: 640,
-        y_len: 20,
-      }
     const platformOptions2 = {
       x: 200,
       y: 220,
@@ -69,6 +54,14 @@ class Game {
       x_len: 0,
       y_len: 0,
     }
+    const hookPointOptions = {
+      x: playerOptions.x,
+      y: playerOptions.y,
+      color: 'yellow',
+      context: this.context,
+      x_len: 10,
+      y_len: 10,
+    }
 
 
     // this.move_dir = 1;
@@ -77,8 +70,10 @@ class Game {
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
+    this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
+    // debugger
   }
   gravStep(obj){
     obj.vspd += 2;

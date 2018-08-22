@@ -146,10 +146,12 @@ class Display {
     document.addEventListener('mousedown', (event) => {
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
-      console.log('target location: ', event.clientX, ', ', event.clientY);
+      this.game.entities.hookPoint.active = true;
     })
     document.addEventListener('mouseup', (event) => {
       this.playerInput['shootHook'] = false;
+      this.game.entities.hookPoint.active = false;
+      this.game.entities.hookPoint.reset(this.game.entities.newPlayer.x, this.game.entities.newPlayer.y)
     })
 
   }
@@ -276,9 +278,9 @@ class Display {
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
     let hookTarget = this.playerInput.hookTarget;
-
-    debugger
     let hook = this.game.entities.hook;
+    let hookPoint = this.game.entities.hookPoint;
+    // debugger
     
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
@@ -303,14 +305,12 @@ class Display {
       context.beginPath();
       context.arc(mousePos.x, mousePos.y, 20, 0, 2* Math.PI);
       context.stroke();
+
       hook.x = newPlayer.x;
       hook.y = newPlayer.y;
-      console.log('target', hookTarget);
-      // if(hookTarget){
-      //   debugger
-      //   hook.targetX = hookTarget.x;
-      //   hook.targetY = hookTarget.y;
-      // }
+      hookPoint.x = newPlayer.x;
+      hookPoint.y = newPlayer.y;
+
       entities.staticEntity.y += move_dir;
       
       for(let i = 0; i < Object.values(entities).length; i++){
@@ -337,6 +337,7 @@ const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 const Platform = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
 const Hook = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+const HookPoint = __webpack_require__(/*! ./hook_point.js */ "./javascript/hook_point.js");
 
 class Game {
   constructor() {
@@ -372,22 +373,6 @@ class Game {
       x_len: 640,
       y_len: 20,
     }
-    const platformOptions3 = {
-      x: 640,
-      y: 0,
-      color: 'black',
-      context: this.context,
-      x_len: 640,
-      y_len: 20,
-    }
-      const platformOptions4 = {
-        x: 0,
-        y: 450,
-        color: 'black',
-        context: this.context,
-        x_len: 640,
-        y_len: 20,
-      }
     const platformOptions2 = {
       x: 200,
       y: 220,
@@ -404,6 +389,14 @@ class Game {
       x_len: 0,
       y_len: 0,
     }
+    const hookPointOptions = {
+      x: playerOptions.x,
+      y: playerOptions.y,
+      color: 'yellow',
+      context: this.context,
+      x_len: 10,
+      y_len: 10,
+    }
 
 
     // this.move_dir = 1;
@@ -412,8 +405,10 @@ class Game {
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
+    this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
+    // debugger
   }
   gravStep(obj){
     obj.vspd += 2;
@@ -514,8 +509,6 @@ const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/gam
 class GrappleHook extends GameEntity {
   constructor(options){
     super(options);
-    this.targetX = 0;
-    this.targetY = 0;
     this.active = false;
   }
 
@@ -528,6 +521,35 @@ class GrappleHook extends GameEntity {
   }
 }
 module.exports = GrappleHook;
+
+/***/ }),
+
+/***/ "./javascript/hook_point.js":
+/*!**********************************!*\
+  !*** ./javascript/hook_point.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+class HookPoint extends GameEntity {
+  constructor(options){
+    super(options);
+    this.active = false;
+  }
+  draw() {
+    this.context.fillStyle = 'yellow';
+    this.context.fillRect(this.x, this.y, 10, 10);
+    // this.context.rotate(0.3);
+    // this.context.restore();
+  }
+  reset(x, y){
+    this.x = x;
+    this.y = y;
+  }
+}
+module.exports = HookPoint;
 
 /***/ }),
 

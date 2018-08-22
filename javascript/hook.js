@@ -3,8 +3,6 @@ const GameEntity = require("./game_entity.js");
 class GrappleHook extends GameEntity {
   constructor(options){
     super(options);
-    this.targetX = 0;
-    this.targetY = 0;
     this.active = false;
   }
 
