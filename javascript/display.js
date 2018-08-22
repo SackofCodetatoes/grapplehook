@@ -110,7 +110,7 @@ class Display {
     if(this.playerInput.shootHook === true){
       this.game.entities.hook.targetX = this.playerInput.hookTarget.x;
       this.game.entities.hook.targetY = this.playerInput.hookTarget.y;
-
+      this.game.entities.hookPoint.vspd = -1;
       this.game.entities.hook.draw();
     }
     // if (this.playerInput['s'] === true) {
@@ -213,8 +213,11 @@ class Display {
 
       hook.x = newPlayer.x;
       hook.y = newPlayer.y;
-      hookPoint.x = newPlayer.x;
-      hookPoint.y = newPlayer.y;
+      if(!hookPoint.active){
+        hookPoint.x = newPlayer.x;
+        hookPoint.y = newPlayer.y;
+      }
+      hookPoint.move();
 
       entities.staticEntity.y += move_dir;
       
