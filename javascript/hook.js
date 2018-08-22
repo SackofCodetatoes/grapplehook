@@ -13,5 +13,8 @@ class GrappleHook extends GameEntity {
     this.context.lineTo(this.targetX, this.targetY);
     this.context.stroke();
   }
+  snapshot(){
+    return {x: this.x, y: this.y}
+  }
 }
 module.exports = GrappleHook;

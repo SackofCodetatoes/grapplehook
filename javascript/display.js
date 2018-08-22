@@ -118,7 +118,10 @@ class Display {
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
         this.game.entities.hookPoint.collided = true;
-
+        let hook = this.game.entities.hook;
+        let hookPoint = this.game.entities.hookPoint;
+        this.playerInput.ropeLen = 
+        Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
       }
 
       this.game.entities.hook.draw();
@@ -215,6 +218,14 @@ class Display {
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
+      }
+      if(hookPoint.collided){
+        if()
+        context.beginPath();
+        context.strokeStyle = 'white';
+        context.arc(hookPoint.x, hookPoint.y, 
+          Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2))), 0, 2 * Math.PI);
+        context.stroke();
       }
       context.beginPath();
       context.strokeStyle = 'red';
