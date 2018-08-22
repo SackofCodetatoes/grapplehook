@@ -109,7 +109,8 @@ class Display {
       s: false,
       ' ': false,
       canJump: 'true',
-      mousePos: {x: 0, y: 0}
+      mousePos: {x: 0, y: 0},
+      // shootHook: false,
     }
     this.keyBind();
     // debugger
@@ -119,6 +120,7 @@ class Display {
   //source of inspiration for omni-directional movement/fluidity
   //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
+    let timer;
     document.addEventListener('keydown', (event) => {
       const keyName = event.key;
       if (PLAYER_KEYS.includes(event.key)) {
@@ -132,18 +134,25 @@ class Display {
     });
     document.addEventListener('keydown', (event) => {
       if(event.key === ' ' && this.playerInput.canJump === true){
-        console.log('HARD PRESSED');
         this.playerInput.canJump = false;
         this.game.entities.newPlayer.vspd = -4;
       }
     })
     document.addEventListener('mousemove', (event) => {
-      let rect = this.game.canvas.getBoundingClientRect();
-      // this.playerInput.mousePos = { x: event.clientX - rect.left, y: event.clientY-rect.top };
       this.playerInput.mousePos.x = event.clientX;
       this.playerInput.mousePos.y = event.clientY;
-      // console.log(this.playerInput.mousePos);
-      // console.log('y: ', event.clientY);
+    })
+    document.addEventListener('mousedown', (event) => {
+      // let shootHook = this.playerInput.shootHook;
+      this.playerInput.shootHook = true;
+      console.log('down')
+      timer = setInterval(() => {this.playerInput['shootHook'] = true}, 50)
+      // this.playerInput.shootHook = true;
+    })
+    document.addEventListener('mouseup', (event) => {
+      this.playerInput['shootHook'] = false;
+      console.log('up')
+      clearInterval(timer);
     })
 
   }
@@ -190,11 +199,9 @@ class Display {
       else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
     
-    if(this.playerInput['f'] === true) {
-      
+    if(this.playerInput['f'] === true) {   
         this.game.entities.newPlayer.vspd = 1;
         // console.log('space');
-      
     }
     // if (this.playerInput['s'] === true) {
     //   next = {
@@ -268,7 +275,9 @@ class Display {
     let mousePos = this.playerInput.mousePos;
     console.log(this.playerInput.mousePos);
     let applyPhysics = this.applyPhysics;
-    
+    let shootHook = this.playerInput.shootHook;
+    debugger
+    let hook = this.game.entities.hook;
     
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
@@ -287,17 +296,25 @@ class Display {
       } else if (entities.staticEntity.y < 100) {
         move_dir = 2;
       }
+      console.log('Hook Value', shootHook);
+      
+
 
       context.fillStyle = 'black';
-      // console.log(mousePos);
       context.beginPath();
       context.arc(mousePos.x, mousePos.y, 20, 0, 2* Math.PI);
       context.stroke();
-
+      hook.x = newPlayer.x;
+      hook.y = newPlayer.y;
+      hook.targetX = mousePos.x;
+      hook.targetY = mousePos.y;
       entities.staticEntity.y += move_dir;
-
+      
       for(let i = 0; i < Object.values(entities).length; i++){
-        requestAnimationFrame(Object.values(entities)[i].draw);
+        // debugger
+        if(Object.values(entities)[i].constructor.name != 'GrappleHook'){
+          requestAnimationFrame(Object.values(entities)[i].draw);
+        }
       }
       // requestAnimationFrame(entities.staticEntity.draw);
       // requestAnimationFrame(entities.newPlayer.draw);
@@ -320,6 +337,7 @@ module.exports = Display;
 const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 const Platform = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+const Hook = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
 
 class Game {
   constructor() {
@@ -349,25 +367,52 @@ class Game {
     };
     const platformOptions = {
       x: 0,
-      y: 400,
+      y: 450,
       color: 'black',
       context: this.context,
-      x_len: 300,
+      x_len: 640,
       y_len: 20,
     }
+    const platformOptions3 = {
+      x: 640,
+      y: 0,
+      color: 'black',
+      context: this.context,
+      x_len: 640,
+      y_len: 20,
+    }
+      const platformOptions4 = {
+        x: 0,
+        y: 450,
+        color: 'black',
+        context: this.context,
+        x_len: 640,
+        y_len: 20,
+      }
     const platformOptions2 = {
-      x: 70,
-      y: 120,
+      x: 200,
+      y: 220,
       color: 'black',
       context: this.context,
       x_len: 100,
       y_len: 50,
     }
+    const grappleHookOptions = {
+      x: playerOptions.x,
+      y: playerOptions.y,
+      color: 'black',
+      context: this.context,
+      x_len: 0,
+      y_len: 0,
+    }
+
+
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
+    this.entities['hook'] = new Hook(grappleHookOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
   }
@@ -454,6 +499,34 @@ testDisplay.render();
 
 
 
+
+/***/ }),
+
+/***/ "./javascript/hook.js":
+/*!****************************!*\
+  !*** ./javascript/hook.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+class GrappleHook extends GameEntity {
+  constructor(options){
+    super(options);
+    this.targetX = 0;
+    this.targetY = 0;
+  }
+
+  draw(){
+    this.context.fillStyle = 'black';
+    this.context.beginPath();
+    this.context.moveTo(this.x, this.y);
+    this.context.lineTo(this.targetX, this.targetY);
+    this.context.stroke();
+  }
+}
+module.exports = GrappleHook;
 
 /***/ }),
 

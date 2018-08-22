@@ -1,6 +1,7 @@
 const Player = require("./player.js");
 const GameEntity = require("./game_entity.js");
 const Platform = require("./platform.js");
+const Hook = require("./hook.js");
 
 class Game {
   constructor() {
@@ -30,25 +31,52 @@ class Game {
     };
     const platformOptions = {
       x: 0,
-      y: 400,
+      y: 450,
       color: 'black',
       context: this.context,
-      x_len: 300,
+      x_len: 640,
       y_len: 20,
     }
+    const platformOptions3 = {
+      x: 640,
+      y: 0,
+      color: 'black',
+      context: this.context,
+      x_len: 640,
+      y_len: 20,
+    }
+      const platformOptions4 = {
+        x: 0,
+        y: 450,
+        color: 'black',
+        context: this.context,
+        x_len: 640,
+        y_len: 20,
+      }
     const platformOptions2 = {
-      x: 70,
-      y: 120,
+      x: 200,
+      y: 220,
       color: 'black',
       context: this.context,
       x_len: 100,
       y_len: 50,
     }
+    const grappleHookOptions = {
+      x: playerOptions.x,
+      y: playerOptions.y,
+      color: 'black',
+      context: this.context,
+      x_len: 0,
+      y_len: 0,
+    }
+
+
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
+    this.entities['hook'] = new Hook(grappleHookOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
   }
