@@ -114,7 +114,7 @@ class Display {
       hookTarget: {},
     }
     this.keyBind();
-
+    this.render = this.render.bind(this);
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
@@ -153,6 +153,7 @@ class Display {
       this.playerInput['shootHook'] = false;
       this.game.entities.hookPoint.active = false;
       this.game.entities.hookPoint.reset(this.game.entities.newPlayer.x, this.game.entities.newPlayer.y)
+      this.game.entities.newPlayer.state = 'move';
     })
 
   }
@@ -171,7 +172,10 @@ class Display {
         this.game.entities.newPlayer.x += 1;
       } 
       else 
-        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+        this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+        // this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+    } else if(this.playerInput['a'] === false){
+      this.game.entities.newPlayer.hspd = 0;
     }
 
     if (this.playerInput['d'] === true) {
@@ -184,7 +188,9 @@ class Display {
         }
         this.game.entities.newPlayer.x -= 1;
       }
-      else this.game.entities.newPlayer.x += this.game.entities.newPlayer.moveSpd;
+      else this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+    } else if(this.playerInput['d'] === false){
+      this.game.entities.hspd = 0;
     }
 
     if (this.playerInput['w'] === true) {
@@ -207,16 +213,28 @@ class Display {
 
     if(this.playerInput.shootHook === true){
       let hookPoint = this.game.entities.hookPoint;
+      let hook = this.game.entities.hook;
+
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
       this.game.entities.hookPoint.vspd = -1;
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
+        if(!this.game.entities.hookPoint.collided){
+          this.playerInput['ropeLen'] = 
+            Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
+          }
+        // console.log('collsion chek', this.playerInput.ropeLen)
         this.game.entities.hookPoint.collided = true;
-        let hook = this.game.entities.hook;
-        let hookPoint = this.game.entities.hookPoint;
-        // this.playerInput.ropeLen = 
-        // Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+        this.game.entities.newPlayer.state = 'swing';
+        this.game.context.beginPath();
+        this.game.context.strokeStyle = 'white';
+        this.game.context.arc(hookPoint.x, hookPoint.y,
+        this.playerInput.ropeLen, 0, 2 * Math.PI);
+        this.game.context.stroke();
+        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
+        // console.log(this.game.entities.newPlayer.hspd, this.game.entities.newPlayer.vspd)
       }
       //set hsnapshopt
       this.game.entities.hook.draw();
@@ -224,7 +242,6 @@ class Display {
 
   }
 
-    
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
@@ -235,25 +252,16 @@ class Display {
     }
 
     if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-      // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
-      // nextStep = this.game.gravStep(obj);
-      // if(nextStep.vspd < 0){
-      //   nextStep.vsp += 1;
-      // }
       nextStep.y += nextStep.vspd;
-      // obj['test'] = 'value';
-      // obj.move();
       //fall
     } else {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-
-        // console.log(this.game.collisionCheck(Object.assign({}, obj, checkStep)))
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }
-        console.log(this.game.collisionCheck(obj))
+        // console.log(this.game.collisionCheck(obj))
         this.game.entities.newPlayer.y -= 2;
 
       }
@@ -262,7 +270,7 @@ class Display {
   }
   
 
-  
+
   render(){  
     const canvas = this.game.canvas;
 
@@ -273,30 +281,31 @@ class Display {
     let entities = this.game.entities;
     let getInput = this.getInput;
     let mousePos = this.playerInput.mousePos;
-    console.log(this.playerInput.mousePos);
+
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
     let hookTarget = this.playerInput.hookTarget;
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
-    // debugger
+    let ropeLen = this.playerInput.ropeLen;
+
     
     setInterval(function () {
       context.clearRect(0, 0, 640, 480);
       context.fillStyle = 'orange'; //background 
       context.fillRect(0, 0, 640, 480);
 
-
-      
       getInput();
       applyPhysics(newPlayer);
       newPlayer.move();
+      
       //Test Purposes
       if (entities.staticEntity.y > 200) {
         move_dir = -2;
       } else if (entities.staticEntity.y < 100) {
         move_dir = 2;
       }
+      entities.staticEntity.y += move_dir;
       
       
       hook.x = newPlayer.x + newPlayer.x_len/2;
@@ -307,21 +316,13 @@ class Display {
       }
       hookPoint.move();
 
-      entities.staticEntity.y += move_dir;
       
       for(let i = 0; i < Object.values(entities).length; i++){
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
       }
-      if(hookPoint.collided){
-        // if()
-        context.beginPath();
-        context.strokeStyle = 'white';
-        context.arc(hookPoint.x, hookPoint.y, 
-          Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2))), 0, 2 * Math.PI);
-        context.stroke();
-      }
+
       context.beginPath();
       context.strokeStyle = 'red';
       context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
@@ -618,12 +619,42 @@ module.exports = Platform;
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js")
-
+const MOVE_STATES = ['move', 'fixed']
 // const KEY_LEFT = (event.key === 'a');
 class Player extends GameEntity {
   constructor(options) {
     super(options);
     this.moveSpd = 4;
+    this.state = 'move';
+    this.ropeLen = 0;
+    this.ropeAngle;
+    this.targetPoint = {}
+  }
+
+  move(){
+    switch (this.state) {
+      case 'move':
+        this.x += this.hspd;
+        this.y += this.vspd;
+        break;
+
+      case 'swing':
+        this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
+        if(this.y + this.vspd > this.ropeLen){
+          while(!this.y > this.ropeLen ){
+            this.y+=1;
+          }
+          this.vspd = 0;
+        }
+        this.x += this.ropeLen * Math.cos(this.ropeAngle);
+        this.y += this.ropeLen * Math.sin(this.ropeAngle);
+        
+        console.log(this.ropeLen);
+        break;
+
+      default:
+        break;
+    }
   }
 }
 
