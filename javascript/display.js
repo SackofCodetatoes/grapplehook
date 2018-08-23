@@ -99,7 +99,7 @@ class Display {
     } else if(this.playerInput['d'] === false){
       this.game.entities.hspd = 0;
     }
-
+//for debuggerin
     if (this.playerInput['w'] === true) {
       this.game.entities.newPlayer.y -= 10;
       next = {
@@ -137,10 +137,8 @@ class Display {
           this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
           if(newPlayer.x < newPlayer.targetPoint.x) {
             newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
-            console.log('left!')
           } 
           else {
-            console.log(newPlayer.x, newPlayer.targetPoint.x)
             newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
           }
         }

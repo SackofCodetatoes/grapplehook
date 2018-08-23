@@ -9,12 +9,13 @@ class Player extends GameEntity {
     this.ropeLen = 0;
     this.ropeAngle;
     this.targetPoint = {}
-    this.rotateSpd = .1;
+    this.rotateSpd = .06;
   }
 
   move(){
+    // console.log('spds', this.hspd, this.vspd)
     if(this.collided === true){
-      console.log('set!');
+      // console.log('set!');
     }
     switch (this.state) {
       case 'move':
@@ -39,9 +40,16 @@ class Player extends GameEntity {
         // console.log('cur x and y pos', this.x, this.y);
         // console.log('nexts', nextX, nextY);
         // debugger
+        if(nextY < this.y && this.vspd > -4){
+          this.vspd -= 1;
+          this.hspd -= 1;
+        }
+        //set conditional for left and right
+        // if(nextX )
         this.x = nextX;
         this.y = nextY;
-        // console.log('x and y pos', this.x, this.y );
+        
+        // console.log('x and y spd', this.hspd, this.vspd );
         break;
 
       default:
