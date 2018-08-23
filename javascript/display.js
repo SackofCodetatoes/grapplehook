@@ -67,6 +67,7 @@ class Display {
     let player = this.game.entities.newPlayer;
     let next;
     if (this.playerInput['a'] === true) {
+      this.game.entities.newPlayer.faceDir = -1;
       next = {
         x: player.x - player.moveSpd,
       }
@@ -84,6 +85,7 @@ class Display {
     }
 
     if (this.playerInput['d'] === true) {
+      this.game.entities.newPlayer.faceDir = 1;
       next = {
         x: player.x + player.moveSpd,
       }
@@ -119,17 +121,29 @@ class Display {
     if(this.playerInput.shootHook === true){
       let hookPoint = this.game.entities.hookPoint;
       let hook = this.game.entities.hook;
+      let newPlayer = this.game.entities.newPlayer;
+
 
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
       this.game.entities.hookPoint.vspd = -1;
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
+        //on collide
+        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         if(!this.game.entities.hookPoint.collided){
           this.playerInput['ropeLen'] = 
             Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
+          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
+          if(newPlayer.x < newPlayer.targetPoint.x) {
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            console.log('left!')
+          } 
+          else {
+            console.log(newPlayer.x, newPlayer.targetPoint.x)
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
           }
+        }
         // console.log('collsion chek', this.playerInput.ropeLen)
         this.game.entities.hookPoint.collided = true;
         this.game.entities.newPlayer.state = 'swing';
@@ -138,7 +152,6 @@ class Display {
         this.game.context.arc(hookPoint.x, hookPoint.y,
         this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
-        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         // console.log(this.game.entities.newPlayer.hspd, this.game.entities.newPlayer.vspd)
       }
       //set hsnapshopt
@@ -163,6 +176,7 @@ class Display {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+        console.log('ahh im stuck');
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }

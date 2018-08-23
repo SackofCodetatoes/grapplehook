@@ -162,6 +162,7 @@ class Display {
     let player = this.game.entities.newPlayer;
     let next;
     if (this.playerInput['a'] === true) {
+      this.game.entities.newPlayer.faceDir = -1;
       next = {
         x: player.x - player.moveSpd,
       }
@@ -179,6 +180,7 @@ class Display {
     }
 
     if (this.playerInput['d'] === true) {
+      this.game.entities.newPlayer.faceDir = 1;
       next = {
         x: player.x + player.moveSpd,
       }
@@ -214,17 +216,29 @@ class Display {
     if(this.playerInput.shootHook === true){
       let hookPoint = this.game.entities.hookPoint;
       let hook = this.game.entities.hook;
+      let newPlayer = this.game.entities.newPlayer;
+
 
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
       this.game.entities.hookPoint.vspd = -1;
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
+        //on collide
+        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         if(!this.game.entities.hookPoint.collided){
           this.playerInput['ropeLen'] = 
             Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
+          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
+          if(newPlayer.x < newPlayer.targetPoint.x) {
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            console.log('left!')
+          } 
+          else {
+            console.log(newPlayer.x, newPlayer.targetPoint.x)
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
           }
+        }
         // console.log('collsion chek', this.playerInput.ropeLen)
         this.game.entities.hookPoint.collided = true;
         this.game.entities.newPlayer.state = 'swing';
@@ -233,7 +247,6 @@ class Display {
         this.game.context.arc(hookPoint.x, hookPoint.y,
         this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
-        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         // console.log(this.game.entities.newPlayer.hspd, this.game.entities.newPlayer.vspd)
       }
       //set hsnapshopt
@@ -258,6 +271,7 @@ class Display {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+        console.log('ahh im stuck');
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }
@@ -550,7 +564,7 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
-    this.moveSpd = 20;
+    this.moveSpd = 50;
     this.target = {x: 0, y: 0};
     this.collided = false;
   }
@@ -629,27 +643,39 @@ class Player extends GameEntity {
     this.ropeLen = 0;
     this.ropeAngle;
     this.targetPoint = {}
+    this.rotateSpd = .1;
   }
 
   move(){
+    if(this.collided === true){
+      console.log('set!');
+    }
     switch (this.state) {
       case 'move':
         this.x += this.hspd;
         this.y += this.vspd;
         break;
 
+
       case 'swing':
+
+        let center = this.targetPoint;
         this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
         if(this.y + this.vspd > this.ropeLen){
           while(!this.y > this.ropeLen ){
             this.y+=1;
           }
-          this.vspd = 0;
         }
-        this.x += this.ropeLen * Math.cos(this.ropeAngle);
-        this.y += this.ropeLen * Math.sin(this.ropeAngle);
-        
-        console.log(this.ropeLen);
+        //to the mathman i never could be:
+        //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
+        let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
+        let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
+        // console.log('cur x and y pos', this.x, this.y);
+        // console.log('nexts', nextX, nextY);
+        // debugger
+        this.x = nextX;
+        this.y = nextY;
+        // console.log('x and y pos', this.x, this.y );
         break;
 
       default:
