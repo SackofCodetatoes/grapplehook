@@ -83,7 +83,10 @@ class Game {
 
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
+    platformOptions2.y = 550; 
     this.entities['platform2'] = new Platform(platformOptions2);
+    platformOptions2.y = 250;
+
     this.entities['platform3'] = new Platform(platformOptions3);
     platformOptions.x = 800;
     this.entities['platform4'] = new Platform(platformOptions);
