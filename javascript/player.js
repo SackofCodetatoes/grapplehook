@@ -68,15 +68,15 @@ class Player extends GameEntity {
       let count = 0;
       let x;
       let y;
-      if(this.faceDir === -1){
-        // this.context.scale(-1,1);
-      }
-      else {
-        // this.context.scale(1,1);
-      }
+      // if(this.faceDir === -1){
+      //   this.context.scale(-1,1);
+      // }
+      // else {
+      //   this.context.scale(1,1);
+      // }
     
       // this.context.scale(-1, 1);
-      // this.context.translate(-14, 0)
+
       this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
       
     }

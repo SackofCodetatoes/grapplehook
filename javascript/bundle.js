@@ -474,20 +474,70 @@ class Game {
 
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
-    platformOptions.x = 800;
-    this.entities['platform4'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['platform3'] = new Platform(platformOptions3);
+    platformOptions.x = 800;
+    this.entities['platform4'] = new Platform(platformOptions);
+    
+    platformOptions2.x = 800;
+    this.entities['platform5'] = new Platform(platformOptions2);
+    platformOptions2.x = 1200;
+    this.entities['platform6'] = new Platform(platformOptions2);
+    platformOptions2.x = 1600;
+    this.entities['platform7'] = new Platform(platformOptions2);
+    platformOptions2.x = 2000;
+    this.entities['platform8'] = new Platform(platformOptions2);
+    platformOptions2.x = 2400;
+    this.entities['platform9'] = new Platform(platformOptions2)
+    platformOptions.x = 2500;
+    this.entities['platform10'] = new Platform(platformOptions);
+    platformOptions3.x = 2700;
+    this.entities['platform11'] = new Platform(platformOptions3);
+    platformOptions2.x = 2900;
+    this.entities['platform12'] = new Platform(platformOptions2);
+    platformOptions3.x = 3200;
+    this.entities['platform13'] = new Platform(platformOptions2);
+
+    this.entities['platform14'] = new Platform(platformOptions2);
+    this.entities['platform15'] = new Platform(platformOptions2);
+    this.entities['platform16'] = new Platform(platformOptions2);
+    this.entities['platform17'] = new Platform(platformOptions2);
+    this.entities['platform18'] = new Platform(platformOptions2);
+
+
+
+
+
+
     // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
+    
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
     this.platforms.push(this.entities.platform3); 
     this.platforms.push(this.entities.platform4); 
-    this.entities.newPlayer.collisionCheck = this.collisionCheck;
+    this.platforms.push(this.entities.platform5); 
+    this.platforms.push(this.entities.platform6); 
+    this.platforms.push(this.entities.platform7); 
+    this.platforms.push(this.entities.platform8); 
+    this.platforms.push(this.entities.platform9); 
+    this.platforms.push(this.entities.platform10); 
+    this.platforms.push(this.entities.platform11); 
+    this.platforms.push(this.entities.platform12); 
+    this.platforms.push(this.entities.platform13); 
+    this.platforms.push(this.entities.platform14); 
+    this.platforms.push(this.entities.platform15); 
+    this.platforms.push(this.entities.platform16); 
+    this.platforms.push(this.entities.platform17); 
+    this.platforms.push(this.entities.platform18); 
 
+
+
+
+    this.entities.newPlayer.collisionCheck = this.collisionCheck;
+    // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
   }
   gravStep(obj){
     obj.vspd += 2;
@@ -805,15 +855,15 @@ class Player extends GameEntity {
       let count = 0;
       let x;
       let y;
-      if(this.faceDir === -1){
-        // this.context.scale(-1,1);
-      }
-      else {
-        // this.context.scale(1,1);
-      }
+      // if(this.faceDir === -1){
+      //   this.context.scale(-1,1);
+      // }
+      // else {
+      //   this.context.scale(1,1);
+      // }
     
       // this.context.scale(-1, 1);
-      // this.context.translate(-14, 0)
+
       this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
       
     }
