@@ -10,10 +10,12 @@ class Game {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.platforms = [];
+    this.spriteSheet;
+    // this.spriteSheet.onload = draw;
   }
   init() {
     //testing purposes
-    debugger
+    // debugger
     const playerOptions = {
       x: 25,
       y: 25,
@@ -22,6 +24,7 @@ class Game {
       x_len: 25,
       y_len: 25,
       game: this,
+      image: this.spriteSheet,
     };
     const staticOptions = {
       x: 0,
@@ -39,6 +42,7 @@ class Game {
       context: this.context,
       x_len: 640,
       y_len: 100,
+      image: this.spriteSheet,
     }
     const platformOptions2 = {
       x: 320,
@@ -47,6 +51,7 @@ class Game {
       context: this.context,
       x_len: 100,
       y_len: 50,
+      image: this.spriteSheet,
     }
     const platformOptions3 = {
       x: 400,
@@ -55,6 +60,7 @@ class Game {
       context: this.context,
       x_len: 20,
       y_len: 400,
+      image: this.spriteSheet,
     }
     const grappleHookOptions = {
       x: playerOptions.x,
@@ -76,15 +82,18 @@ class Game {
 
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
+    platformOptions.x = 800;
+    this.entities['platform4'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['platform3'] = new Platform(platformOptions3);
-    this.entities['staticEntity'] = new GameEntity(staticOptions);
+    // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
     this.platforms.push(this.entities.platform3); 
+    this.platforms.push(this.entities.platform4); 
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
 
   }

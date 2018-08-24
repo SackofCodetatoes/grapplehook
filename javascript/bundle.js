@@ -155,14 +155,17 @@ class Display {
       this.game.entities.hookPoint.calcSpd();
     })
     document.addEventListener('mouseup', (event) => {
-      let player = this.game.entities.newPlayer;
-      this.playerInput['shootHook'] = false;
-      this.game.entities.hookPoint.active = false;
-      this.game.entities.hookPoint.reset(player.x + player.x_len/2, player.y + player.y_len/2);
-      this.game.entities.newPlayer.state = 'move';
-      this.game.entities.hookPoint['fired'] = false;
+      this.hookOff();
     })
-
+  }
+  hookOff(){
+    let player = this.game.entities.newPlayer;
+    this.playerInput['shootHook'] = false;
+    this.game.entities.hookPoint.active = false;
+    this.game.entities.hookPoint.reset(player.x + player.x_len / 2, player.y + player.y_len / 2);
+    this.game.entities.newPlayer.state = 'move';
+    this.game.entities.hookPoint['fired'] = false;
+ 
   }
 
   getInput() {
@@ -221,19 +224,28 @@ class Display {
       let hookPoint = this.game.entities.hookPoint;
       let hook = this.game.entities.hook;
       let newPlayer = this.game.entities.newPlayer;
-
-
+      
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
-      // this.game.entities.hookPoint.vspd = -1;
-
+      
+      let checkLen = Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+      
+      if(checkLen > 500){
+        this.hookOff();
+      }
+      
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
         //on collide
         this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         if(!this.game.entities.hookPoint.collided){
           this.playerInput['ropeLen'] = 
-            Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
+          Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
+
+          if (this.playerInput.ropeLen > 100) {
+            console.log('exceed max capacity');
+          }
+
           if(newPlayer.x < newPlayer.targetPoint.x) {
             console.log('spds', newPlayer.hspd, newPlayer.vspd);
             // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
@@ -287,7 +299,12 @@ class Display {
     }
 
   }
-  
+  newGame(){
+    // this.game.constructor();
+    this.game.init();
+    this.render();
+    // console.log(this)
+  }
 
 
   render(){  
@@ -307,30 +324,27 @@ class Display {
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
+    let newGame = this.newGame.bind(this);
     // debugger
     
     let run = setInterval(function () {
       if(newPlayer.y > 700){
-        alert('outa here');
+        // alert('git outa here');
+        newGame();
         clearInterval(run);
       }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      context.fillStyle = 'orange'; //background 
+      context.fillStyle = 'gray'; //background 
+      // context.scale(2,2);
       context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      applyPhysics(newPlayer);
-      
+      // if(!hookPoint.collided){
+
+        applyPhysics(newPlayer);
+      // }
+
       newPlayer.move();
-      
-      //Test Purposes
-      if (entities.staticEntity.y > 200) {
-        move_dir = -2;
-      } else if (entities.staticEntity.y < 100) {
-        move_dir = 2;
-      }
-      entities.staticEntity.y += move_dir;
-      
       
       hook.x = newPlayer.x + newPlayer.x_len/2;
       hook.y = newPlayer.y + newPlayer.y_len/2;
@@ -359,6 +373,14 @@ class Display {
 
 module.exports = Display;
 
+      //Test Purposes
+      // if (entities.staticEntity.y > 200) {
+      //   move_dir = -2;
+      // } else if (entities.staticEntity.y < 100) {
+      //   move_dir = 2;
+      // }
+      // entities.staticEntity.y += move_dir;
+
 /***/ }),
 
 /***/ "./javascript/game.js":
@@ -380,10 +402,12 @@ class Game {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.platforms = [];
+    this.spriteSheet;
+    // this.spriteSheet.onload = draw;
   }
   init() {
     //testing purposes
-    debugger
+    // debugger
     const playerOptions = {
       x: 25,
       y: 25,
@@ -392,6 +416,7 @@ class Game {
       x_len: 25,
       y_len: 25,
       game: this,
+      image: this.spriteSheet,
     };
     const staticOptions = {
       x: 0,
@@ -409,6 +434,7 @@ class Game {
       context: this.context,
       x_len: 640,
       y_len: 100,
+      image: this.spriteSheet,
     }
     const platformOptions2 = {
       x: 320,
@@ -417,6 +443,7 @@ class Game {
       context: this.context,
       x_len: 100,
       y_len: 50,
+      image: this.spriteSheet,
     }
     const platformOptions3 = {
       x: 400,
@@ -425,6 +452,7 @@ class Game {
       context: this.context,
       x_len: 20,
       y_len: 400,
+      image: this.spriteSheet,
     }
     const grappleHookOptions = {
       x: playerOptions.x,
@@ -446,15 +474,18 @@ class Game {
 
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
+    platformOptions.x = 800;
+    this.entities['platform4'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
     this.entities['platform3'] = new Platform(platformOptions3);
-    this.entities['staticEntity'] = new GameEntity(staticOptions);
+    // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
     this.platforms.push(this.entities.platform3); 
+    this.platforms.push(this.entities.platform4); 
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
 
   }
@@ -545,10 +576,14 @@ const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
 
 
 console.log('all is dandy!');
+let spriteSheet = new Image();
+spriteSheet.src = "./images/industrial.v2.png";
 const game = new Game();
+game.spriteSheet = spriteSheet;
 game.init();
 const testDisplay = new Display(game);
-testDisplay.render();
+spriteSheet.onload = testDisplay.render;
+
 
 
 
@@ -636,7 +671,7 @@ class HookPoint extends GameEntity {
        this.y += this.vspd;
       }
       else if(this.collided){
-        // this.x -= 1;
+        this.x -= 1;
       }
     }
 
@@ -671,12 +706,21 @@ const GameEntity = __webpack_require__(/*! ./game_entity */ "./javascript/game_e
 class Platform extends GameEntity {
   constructor(options){
     super(options);
-    // this.color = 'black';
-    //replace the above with sprite dimensions
+    this.color = 'darkgray';
+    this.image = options.image;
+
+  }
+  draw(){
+    // if(this.y_len > this.x_len){
+      // this.context.drawImage(this.image, 214, 128, 14, 81, this.x, this.y, 14, 81);
+    // } else {
+      this.context.fillStyle = this.color;
+      this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+    // }
   }
 
   move(){
-    // this.x -= 1;
+    this.x -= 1;
   }
   
 }
@@ -706,7 +750,8 @@ class Player extends GameEntity {
     this.rotateSpd = .05;
     this.collsionCheck;
     this.game = options.game;
-    debugger
+    this.image = options.image;
+    // debugger
   }
   
   move(){
@@ -744,8 +789,8 @@ class Player extends GameEntity {
         if(!this.game.collisionCheck(test)){
           
           this.y += this.vspd;
+          this.x += this.hspd;
         }
-        this.x += this.hspd;
         
         
         // console.log('x and y spd', this.hspd, this.vspd );
@@ -756,6 +801,23 @@ class Player extends GameEntity {
     }
     // console.log('avg spds', this.hspd, this.vspd)
   }
+    draw(){
+      let count = 0;
+      let x;
+      let y;
+      if(this.faceDir === -1){
+        // this.context.scale(-1,1);
+      }
+      else {
+        // this.context.scale(1,1);
+      }
+    
+      // this.context.scale(-1, 1);
+      // this.context.translate(-14, 0)
+      this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
+      
+    }
+
 }
 
 

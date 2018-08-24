@@ -13,7 +13,8 @@ class Player extends GameEntity {
     this.rotateSpd = .05;
     this.collsionCheck;
     this.game = options.game;
-    debugger
+    this.image = options.image;
+    // debugger
   }
   
   move(){
@@ -51,8 +52,8 @@ class Player extends GameEntity {
         if(!this.game.collisionCheck(test)){
           
           this.y += this.vspd;
+          this.x += this.hspd;
         }
-        this.x += this.hspd;
         
         
         // console.log('x and y spd', this.hspd, this.vspd );
@@ -63,6 +64,23 @@ class Player extends GameEntity {
     }
     // console.log('avg spds', this.hspd, this.vspd)
   }
+    draw(){
+      let count = 0;
+      let x;
+      let y;
+      if(this.faceDir === -1){
+        // this.context.scale(-1,1);
+      }
+      else {
+        // this.context.scale(1,1);
+      }
+    
+      // this.context.scale(-1, 1);
+      // this.context.translate(-14, 0)
+      this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
+      
+    }
+
 }
 
 

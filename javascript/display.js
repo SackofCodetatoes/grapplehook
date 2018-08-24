@@ -60,14 +60,17 @@ class Display {
       this.game.entities.hookPoint.calcSpd();
     })
     document.addEventListener('mouseup', (event) => {
-      let player = this.game.entities.newPlayer;
-      this.playerInput['shootHook'] = false;
-      this.game.entities.hookPoint.active = false;
-      this.game.entities.hookPoint.reset(player.x + player.x_len/2, player.y + player.y_len/2);
-      this.game.entities.newPlayer.state = 'move';
-      this.game.entities.hookPoint['fired'] = false;
+      this.hookOff();
     })
-
+  }
+  hookOff(){
+    let player = this.game.entities.newPlayer;
+    this.playerInput['shootHook'] = false;
+    this.game.entities.hookPoint.active = false;
+    this.game.entities.hookPoint.reset(player.x + player.x_len / 2, player.y + player.y_len / 2);
+    this.game.entities.newPlayer.state = 'move';
+    this.game.entities.hookPoint['fired'] = false;
+ 
   }
 
   getInput() {
@@ -126,19 +129,28 @@ class Display {
       let hookPoint = this.game.entities.hookPoint;
       let hook = this.game.entities.hook;
       let newPlayer = this.game.entities.newPlayer;
-
-
+      
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
-      // this.game.entities.hookPoint.vspd = -1;
-
+      
+      let checkLen = Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+      
+      if(checkLen > 500){
+        this.hookOff();
+      }
+      
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
         //on collide
         this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
         if(!this.game.entities.hookPoint.collided){
           this.playerInput['ropeLen'] = 
-            Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
+          Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
+          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
+
+          if (this.playerInput.ropeLen > 100) {
+            console.log('exceed max capacity');
+          }
+
           if(newPlayer.x < newPlayer.targetPoint.x) {
             console.log('spds', newPlayer.hspd, newPlayer.vspd);
             // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
@@ -192,7 +204,12 @@ class Display {
     }
 
   }
-  
+  newGame(){
+    // this.game.constructor();
+    this.game.init();
+    this.render();
+    // console.log(this)
+  }
 
 
   render(){  
@@ -212,30 +229,27 @@ class Display {
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
+    let newGame = this.newGame.bind(this);
     // debugger
     
     let run = setInterval(function () {
       if(newPlayer.y > 700){
-        alert('outa here');
+        // alert('git outa here');
+        newGame();
         clearInterval(run);
       }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      context.fillStyle = 'orange'; //background 
+      context.fillStyle = 'gray'; //background 
+      // context.scale(2,2);
       context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      applyPhysics(newPlayer);
-      
+      // if(!hookPoint.collided){
+
+        applyPhysics(newPlayer);
+      // }
+
       newPlayer.move();
-      
-      //Test Purposes
-      if (entities.staticEntity.y > 200) {
-        move_dir = -2;
-      } else if (entities.staticEntity.y < 100) {
-        move_dir = 2;
-      }
-      entities.staticEntity.y += move_dir;
-      
       
       hook.x = newPlayer.x + newPlayer.x_len/2;
       hook.y = newPlayer.y + newPlayer.y_len/2;
@@ -263,3 +277,11 @@ class Display {
 }
 
 module.exports = Display;
+
+      //Test Purposes
+      // if (entities.staticEntity.y > 200) {
+      //   move_dir = -2;
+      // } else if (entities.staticEntity.y < 100) {
+      //   move_dir = 2;
+      // }
+      // entities.staticEntity.y += move_dir;
