@@ -19,9 +19,7 @@ In GrappleHook, the user can:
 ## Engine
 The game engine and logic was built out from scratch using JavaScript and utilized HTML5 canvas to render the game entitites. The engine functions by defining game entities in the `init()` function and stores the entities into an `entities` object which the `display` iterates over to render all active entities. Additionally, game entities are derived from a base entity and additional object classes can be easily created.
 
-```
-code here
-```
+
 While functional, certain parts can be abstracted to simplify interface.
 
 ## Game Logic
