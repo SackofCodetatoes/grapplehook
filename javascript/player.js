@@ -53,6 +53,10 @@ class Player extends GameEntity {
           
           this.y += this.vspd;
           this.x += this.hspd;
+        } 
+        else {
+          //add bounce
+          this.rotateSpd = this.rotateSpd * -1;
         }
         
         

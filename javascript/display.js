@@ -148,11 +148,11 @@ class Display {
           this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
 
           if (this.playerInput.ropeLen > 100) {
-            console.log('exceed max capacity');
+            // console.log('exceed max capacity');
           }
 
           if(newPlayer.x < newPlayer.targetPoint.x) {
-            console.log('spds', newPlayer.hspd, newPlayer.vspd);
+            // console.log('spds', newPlayer.hspd, newPlayer.vspd);
             // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
             newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
           } 
@@ -193,7 +193,7 @@ class Display {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        console.log('ahh im stuck');
+        // console.log('ahh im stuck');
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }
