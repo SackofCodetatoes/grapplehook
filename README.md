@@ -1,7 +1,7 @@
 # GrappleHook
 [Live Demo](https://sackofcodetatoes.github.io/grapplehook/)
 
-![GrappleHook Preview](https://gph.is/2Mtah97)
+![GrappleHook Preview](https://github.com/SackofCodetatoes/grapplehook/blob/master/images/preview.gif)
 
 GrappleHook is a 2d side-scrolling game that incorporates a bit of physics and a grappling hook. The game engine and mechanics were implemented using JavaScript and HTML5 Canvas. GrappleHook was built in a 5 day deadline with future revisions to come.
 Assets were not made by me.

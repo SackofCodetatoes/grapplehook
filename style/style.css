@@ -1,7 +1,10 @@
 #game-canvas:hover {
   cursor: none;
   /* display: inline; */
-
+}
+.title {
+  /* left: 200px; p */
+  /* padding-left: 100px; */
 }
 .controls-div, .description {
   padding: 10px;
@@ -10,8 +13,8 @@
   position: absolute;
   top: 80px;
   /* right: ; */
-  background: white;
   opacity: 0.5;
+  background: white;
   /* display: inline; */
 }
 .description {
@@ -22,4 +25,11 @@
 * {
   font-family: 'M PLUS Rounded 1c',
   sans-serif;
+  /* text-align: center; */
+}
+.text {
+  position: absolute;
+  top: 20px;
+  /* left: 250px; */
+  left: 15px;
 }
