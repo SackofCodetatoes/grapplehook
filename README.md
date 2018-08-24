@@ -1,68 +1,46 @@
 # GrappleHook
-## Background and Overview
-GrappleHook is a 2d puzzle platforming game that incorporates physics, problem solving, and a grappling hook.
+[Live Demo](https://sackofcodetatoes.github.io/grapplehook/)
 
-The player will traverse and solve their way through levels using a grappling hook. 
+![GrappleHook Preview]()
 
-## Functionality & MVP'
-In GrappleHook, users will be able to: 
-- [ ] Move the player around a level by jumping
-- [ ] Traverse using a grappling hook to hook onto surfaces
-- [ ] Hear visual feedback dependant on specfic actions
-- [ ] Interact with objects on the level 
-- [ ] Puzzles for player to solve
+GrappleHook is a 2d side-scrolling game that incorporates a bit of physics and a grappling hook. The game engine and mechanics were implemented using JavaScript and HTML5 Canvas. GrappleHook was built in a 5 day deadline with future revisions to come.
+Assets were not made by me.
 
-## Wireframes
-This application screen will consist of the game title, game information, social media links, the game canvas, and a mute option. 
+Assets Sources: 
+* [City Background](https://opengameart.org/content/city-background-repetitive-3)
+* [Character](https://0x72.itch.io/16x16-industrial-tileset)
+ 
+## Features
+In GrappleHook, the user can:  
+* Move the player in horizontal directions and jump
+* Traverse the level using a grappling hook
 
-The game canvas will display an entire level with the player sprite and an objective point. Users will use 'A' and 'S' to move the player left and right, 'space' to jump, and the mouse to aim and fire the grappling hook. 
 
-![Wireframe](https://github.com/SackofCodetatoes/grapplehook/blob/master/wireframe.png)
+## Engine
+The game engine and logic was built out from scratch using JavaScript and utilized HTML5 canvas to render the game entitites. The engine functions by defining game entities in the `init()` function and stores the entities into an `entities` object which the `display` iterates over to render all active entities. Additionally, game entities are derived from a base entity and additional object classes can be easily created.
+
+```
+code here
+```
+While functional, certain parts can be abstracted to simplify interface.
+
+## Game Logic
+The game features a movable character that is influenced by gravity. The player can move along the horizontal and vertical axis with functional collision detection in respective directions. Collision detection is determined by checking the object's next coordinates and if it contacts a `platform` entitity, the player's coordinates are incrementally shifted until contacting. 
+The player can also fire an anchor point omni-directionally to traverse quicker. Calculating projectile velocity currently takes the mouse location and the right triangle angle formed between the player and target point. 
+Currently, the swing mechanic takes the player's horiztonal speed and vertical speed to calculate rotation speed around the anchor point. Additionally, the player can bounce off platforms when colliding a during the `swing` state.  
+
+While the logic is not perfect, it does create interesting game behaviors.
 
 ## Architecture and Technologies
-The project will implement the following technologies:
+The project uses the following technologies:
 * Vanilla JavaScript to control game physics and logic
 * `HTML5 Canvas` for DOM manipulation and game rendering
 * Webpack to bundle JavaScript files 
 
-The included scripts will be: 
-* `game.js` : handles the game logic
-* `display.js` : handles the rendering logic and updating canvas
-* `grapplehook.js` : Webpack entry file that combines all files
-* `player.js` : handles player object and player input 
-* `physics.js` : handles fixed and physics object classes.
-* `util.js` : handles physics calculations
-
-
-## Implementation Timeline
-### Over the weekend: Setup and create game skeleton
-- [x] Setup project repo and configure webpack appropriately
-- [x] Render a movable player sprite with keyboard keys
-- [x] Revisit Asteroids project to review how canvas works + review JavaScript
-
-### Day 1: Game Logic
-Write out game logic to allow proper physics interactions between player and fixed platforms and walls (collision)
-- [x] Player collision on x-axis and y-axis
-- [x] Create fixed platforms and walls to allow player traversal
-
-### Day 2: Create a physics level
-- [~] Create a physics system that player sprite abides by
-- [x] Allow player to jump and fall
-
-### Day 3: Create a grappling hook
-- [ ] Learn how to and add mouse to aim and fire grappling hook, drawing a line between point and player
-- [ ] Learn and update physics system to incorporate radial movement around fixed point for swinging
-
-### Day 4: Build sensory aspects
-Spend the day styling and adding audio to appropriate aspects
-- [ ] Style the level on canvas to be visually pleasing
-- [ ] Add sound effects for jumping, and grappling hook
-- [ ] Add mute option
-- [ ] Create html elements for additional information
-
-## Bonuses
-If time avails, additional features
-- [ ] Additional Levels
-- [ ] Background music
-- [ ] Advanced physics
+## Future Features
+* Add an objective to the game
+* Add appropriate sound effects
+* Fix known bugs
+* Rework physics 
+* Add different game states for better game flow
 

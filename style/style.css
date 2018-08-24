@@ -3,7 +3,7 @@
   /* display: inline; */
 
 }
-.controls-div {
+.controls-div, .description {
   width: 200px;
   position: absolute;
   top: 80px;
@@ -11,4 +11,9 @@
   background: white;
   opacity: 0.5;
   /* display: inline; */
+}
+.description {
+  left: 250px;
+  width: 550px;
+  text-align: center;
 }
