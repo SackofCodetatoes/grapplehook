@@ -325,6 +325,8 @@ class Display {
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
     let newGame = this.newGame.bind(this);
+    let game = this.game;
+    let imageX = 0;
     // debugger
     
     let run = setInterval(function () {
@@ -334,9 +336,15 @@ class Display {
         clearInterval(run);
       }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      context.fillStyle = 'gray'; //background 
-      // context.scale(2,2);
-      context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+      // plain background
+      // context.fillStyle = 'gray'; //background 
+      // context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+
+      //city background
+      // debugger
+      imageX += 0.5;
+      context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+
 
       getInput();
       // if(!hookPoint.collided){
@@ -628,11 +636,15 @@ const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
 console.log('all is dandy!');
 let spriteSheet = new Image();
 spriteSheet.src = "./images/industrial.v2.png";
+
+let background = new Image();
+background.src = "./images/city_background_night.png";
 const game = new Game();
 game.spriteSheet = spriteSheet;
+game.background = background;
 game.init();
 const testDisplay = new Display(game);
-spriteSheet.onload = testDisplay.render;
+background.onload = testDisplay.render;
 
 
 
@@ -660,7 +672,7 @@ class GrappleHook extends GameEntity {
   }
 
   draw(){
-    this.context.strokeStyle = 'black';
+    this.context.strokeStyle = 'lightgray';
     this.context.beginPath();
     this.context.moveTo(this.x, this.y);
     this.context.lineTo(this.targetX, this.targetY);

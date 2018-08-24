@@ -7,7 +7,7 @@ class GrappleHook extends GameEntity {
   }
 
   draw(){
-    this.context.strokeStyle = 'black';
+    this.context.strokeStyle = 'lightgray';
     this.context.beginPath();
     this.context.moveTo(this.x, this.y);
     this.context.lineTo(this.targetX, this.targetY);
