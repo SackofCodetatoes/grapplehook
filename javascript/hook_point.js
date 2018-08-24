@@ -12,7 +12,6 @@ class HookPoint extends GameEntity {
   draw() {
     this.context.fillStyle = 'yellow';
     this.context.fillRect(this.x, this.y, 10, 10);
-    // this.context.rotate(0.3);
     // this.context.restore();
   }
   reset(x, y){
