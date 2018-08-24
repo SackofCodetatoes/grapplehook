@@ -16,6 +16,7 @@ class Game {
   init() {
     //testing purposes
     // debugger
+    this.platforms = [];
     const playerOptions = {
       x: 25,
       y: 25,

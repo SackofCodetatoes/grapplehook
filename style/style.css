@@ -1,3 +1,14 @@
 #game-canvas:hover {
   cursor: none;
+  /* display: inline; */
+
+}
+.controls-div {
+  width: 200px;
+  position: absolute;
+  top: 80px;
+  /* right: ; */
+  background: white;
+  opacity: 0.5;
+  /* display: inline; */
 }

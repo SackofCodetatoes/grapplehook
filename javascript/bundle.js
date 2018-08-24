@@ -416,6 +416,7 @@ class Game {
   init() {
     //testing purposes
     // debugger
+    this.platforms = [];
     const playerOptions = {
       x: 25,
       y: 25,
@@ -855,7 +856,7 @@ class Player extends GameEntity {
         } 
         else {
           //add bounce
-          this.rotateSpd = this.rotateSpd * -1;
+          this.rotateSpd = this.rotateSpd * -0.51;
         }
         
         

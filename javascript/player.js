@@ -56,7 +56,7 @@ class Player extends GameEntity {
         } 
         else {
           //add bounce
-          this.rotateSpd = this.rotateSpd * -1;
+          this.rotateSpd = this.rotateSpd * -0.51;
         }
         
         
