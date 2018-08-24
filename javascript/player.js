@@ -10,8 +10,9 @@ class Player extends GameEntity {
     this.ropeAngle;
     this.targetPoint = {}
     this.rotateSpd = .06;
+    this.collsionCheck;
   }
-
+  
   move(){
     // console.log('spds', this.hspd, this.vspd)
     if(this.collided === true){
@@ -37,17 +38,15 @@ class Player extends GameEntity {
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-        // console.log('cur x and y pos', this.x, this.y);
-        // console.log('nexts', nextX, nextY);
         // debugger
+        this.hspd = nextX - this.x;
+        this.vspd = nextY - this.y;
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
-          this.hspd -= 1;
         }
-        //set conditional for left and right
-        // if(nextX )
-        this.x = nextX;
-        this.y = nextY;
+        
+        this.x += this.hspd;
+        this.y += this.vspd;
         
         // console.log('x and y spd', this.hspd, this.vspd );
         break;

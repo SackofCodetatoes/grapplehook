@@ -39,8 +39,8 @@ class Game {
       y_len: 20,
     }
     const platformOptions2 = {
-      x: 200,
-      y: 220,
+      x: 320,
+      y: 250,
       color: 'black',
       context: this.context,
       x_len: 100,
@@ -55,8 +55,8 @@ class Game {
       y_len: 0,
     }
     const hookPointOptions = {
-      x: playerOptions.x,
-      y: playerOptions.y,
+      x: playerOptions.x + playerOptions.x_len/2,
+      y: playerOptions.y + playerOptions.y_len/2,
       color: 'yellow',
       context: this.context,
       x_len: 10,
@@ -73,11 +73,11 @@ class Game {
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
-    // debugger
+    this.entities.newPlayer.collisionCheck = this.collisionCheck;
+
   }
   gravStep(obj){
     obj.vspd += 2;
-    // console.log(obj);
     return obj;
   }
   collisionCheck(obj) {
@@ -85,7 +85,8 @@ class Game {
     let platforms = this.platforms;
     for(let i = 0; i < platforms.length; i++){
       if( 
-        ((obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+        (
+          (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
           (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
         ) {
           return true;

@@ -144,16 +144,23 @@ class Display {
       this.playerInput.mousePos.y = event.clientY;
     })
     document.addEventListener('mousedown', (event) => {
+      let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      this.game.entities.hookPoint.x = player.x + player.x_len / 2;
+      this.game.entities.hookPoint.y = player.y + player.y_len / 2;
       this.game.entities.hookPoint.target = this.playerInput.hookTarget;
       this.game.entities.hookPoint.active = true;
+      this.game.entities.hookPoint['fired'] = true;
+      this.game.entities.hookPoint.calcSpd();
     })
     document.addEventListener('mouseup', (event) => {
+      let player = this.game.entities.newPlayer;
       this.playerInput['shootHook'] = false;
       this.game.entities.hookPoint.active = false;
-      this.game.entities.hookPoint.reset(this.game.entities.newPlayer.x, this.game.entities.newPlayer.y)
+      this.game.entities.hookPoint.reset(player.x + player.x_len/2, player.y + player.y_len/2);
       this.game.entities.newPlayer.state = 'move';
+      this.game.entities.hookPoint['fired'] = false;
     })
 
   }
@@ -173,8 +180,8 @@ class Display {
         this.game.entities.newPlayer.x += 1;
       } 
       else 
-        this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        // this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+        // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['a'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
@@ -192,7 +199,7 @@ class Display {
       }
       else this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['d'] === false){
-      this.game.entities.hspd = 0;
+      this.game.entities.newPlayer.hspd = 0;
     }
 //for debuggerin
     if (this.playerInput['w'] === true) {
@@ -208,10 +215,7 @@ class Display {
       }
       else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
-    
-    if(this.playerInput['f'] === true) {   
-        this.game.entities.newPlayer.vspd = 1;
-    }
+
 
     if(this.playerInput.shootHook === true){
       let hookPoint = this.game.entities.hookPoint;
@@ -221,7 +225,7 @@ class Display {
 
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
-      this.game.entities.hookPoint.vspd = -1;
+      // this.game.entities.hookPoint.vspd = -1;
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
         //on collide
@@ -293,22 +297,23 @@ class Display {
     let entities = this.game.entities;
     let getInput = this.getInput;
     let mousePos = this.playerInput.mousePos;
-
+    let platforms = this.game.platforms;
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
     let hookTarget = this.playerInput.hookTarget;
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
-
     
     setInterval(function () {
-      context.clearRect(0, 0, 640, 480);
+      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       context.fillStyle = 'orange'; //background 
-      context.fillRect(0, 0, 640, 480);
+      context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      applyPhysics(newPlayer);
+      // if(!hookPoint.active){
+        applyPhysics(newPlayer);
+      // }
       newPlayer.move();
       
       //Test Purposes
@@ -323,12 +328,14 @@ class Display {
       hook.x = newPlayer.x + newPlayer.x_len/2;
       hook.y = newPlayer.y + newPlayer.y_len/2;
       if(!hookPoint.active){
-        hookPoint.x = newPlayer.x;
-        hookPoint.y = newPlayer.y;
+        hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
+        hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
       }
       hookPoint.move();
 
-      
+      for(let i = 0; i < platforms.length; i++){
+        platforms[i].move();
+      }
       for(let i = 0; i < Object.values(entities).length; i++){
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
@@ -395,8 +402,8 @@ class Game {
       y_len: 20,
     }
     const platformOptions2 = {
-      x: 200,
-      y: 220,
+      x: 320,
+      y: 250,
       color: 'black',
       context: this.context,
       x_len: 100,
@@ -411,8 +418,8 @@ class Game {
       y_len: 0,
     }
     const hookPointOptions = {
-      x: playerOptions.x,
-      y: playerOptions.y,
+      x: playerOptions.x + playerOptions.x_len/2,
+      y: playerOptions.y + playerOptions.y_len/2,
       color: 'yellow',
       context: this.context,
       x_len: 10,
@@ -429,11 +436,11 @@ class Game {
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
-    // debugger
+    this.entities.newPlayer.collisionCheck = this.collisionCheck;
+
   }
   gravStep(obj){
     obj.vspd += 2;
-    // console.log(obj);
     return obj;
   }
   collisionCheck(obj) {
@@ -441,7 +448,8 @@ class Game {
     let platforms = this.platforms;
     for(let i = 0; i < platforms.length; i++){
       if( 
-        ((obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+        (
+          (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
           (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
         ) {
           return true;
@@ -565,6 +573,7 @@ class HookPoint extends GameEntity {
     this.moveSpd = 50;
     this.target = {x: 0, y: 0};
     this.collided = false;
+    this.snapCalc = false;
   }
   draw() {
     this.context.fillStyle = 'yellow';
@@ -580,23 +589,39 @@ class HookPoint extends GameEntity {
     this.collided = false;
   }
   calcSpd(){
+    // https: //gist.github.com/conorbuck/2606166
     let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
     // console.log('heres an angle', angle);
     this.hspd = this.moveSpd * Math.cos(angle);
     this.vspd = this.moveSpd * Math.sin(angle);
+    // debugger
 
   }
   move(){
-    // https: //gist.github.com/conorbuck/2606166
-    if(!this.collided){
-      this.calcSpd();
-    } else {
-      this.hspd = 0;
-      this.vspd = 0;
+    if(this.active){
+     if(!this.collided){
+       this.x += this.hspd;
+       this.y += this.vspd;
+      }
+      else if(this.collided){
+        this.x -= 1;
+      }
     }
-    this.x += this.hspd;
-    this.y += this.vspd;
-  }
+
+    //  else {
+
+    //   // debugger
+    //   console.log('spds', this.hspd, this.vspd)
+    //   this.x += this.hspd;
+    //   this.y += this.vspd;
+    //  }
+  //      this.hspd = 0;
+  //      this.vspd = 0;
+  //    }
+  //  }
+
+   } 
+  
 }
 module.exports = HookPoint;
 
@@ -616,6 +641,10 @@ class Platform extends GameEntity {
     super(options);
     // this.color = 'black';
     //replace the above with sprite dimensions
+  }
+
+  move(){
+    this.x -= 1;
   }
   
 }
@@ -642,8 +671,9 @@ class Player extends GameEntity {
     this.ropeAngle;
     this.targetPoint = {}
     this.rotateSpd = .06;
+    this.collsionCheck;
   }
-
+  
   move(){
     // console.log('spds', this.hspd, this.vspd)
     if(this.collided === true){
@@ -669,17 +699,15 @@ class Player extends GameEntity {
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-        // console.log('cur x and y pos', this.x, this.y);
-        // console.log('nexts', nextX, nextY);
         // debugger
+        this.hspd = nextX - this.x;
+        this.vspd = nextY - this.y;
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
-          this.hspd -= 1;
         }
-        //set conditional for left and right
-        // if(nextX )
-        this.x = nextX;
-        this.y = nextY;
+        
+        this.x += this.hspd;
+        this.y += this.vspd;
         
         // console.log('x and y spd', this.hspd, this.vspd );
         break;

@@ -6,6 +6,10 @@ class Platform extends GameEntity {
     // this.color = 'black';
     //replace the above with sprite dimensions
   }
+
+  move(){
+    this.x -= 1;
+  }
   
 }
 module.exports = Platform;

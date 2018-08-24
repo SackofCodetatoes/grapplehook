@@ -49,16 +49,23 @@ class Display {
       this.playerInput.mousePos.y = event.clientY;
     })
     document.addEventListener('mousedown', (event) => {
+      let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      this.game.entities.hookPoint.x = player.x + player.x_len / 2;
+      this.game.entities.hookPoint.y = player.y + player.y_len / 2;
       this.game.entities.hookPoint.target = this.playerInput.hookTarget;
       this.game.entities.hookPoint.active = true;
+      this.game.entities.hookPoint['fired'] = true;
+      this.game.entities.hookPoint.calcSpd();
     })
     document.addEventListener('mouseup', (event) => {
+      let player = this.game.entities.newPlayer;
       this.playerInput['shootHook'] = false;
       this.game.entities.hookPoint.active = false;
-      this.game.entities.hookPoint.reset(this.game.entities.newPlayer.x, this.game.entities.newPlayer.y)
+      this.game.entities.hookPoint.reset(player.x + player.x_len/2, player.y + player.y_len/2);
       this.game.entities.newPlayer.state = 'move';
+      this.game.entities.hookPoint['fired'] = false;
     })
 
   }
@@ -78,8 +85,8 @@ class Display {
         this.game.entities.newPlayer.x += 1;
       } 
       else 
-        this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        // this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+        // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['a'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
@@ -97,7 +104,7 @@ class Display {
       }
       else this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['d'] === false){
-      this.game.entities.hspd = 0;
+      this.game.entities.newPlayer.hspd = 0;
     }
 //for debuggerin
     if (this.playerInput['w'] === true) {
@@ -113,10 +120,7 @@ class Display {
       }
       else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
     }
-    
-    if(this.playerInput['f'] === true) {   
-        this.game.entities.newPlayer.vspd = 1;
-    }
+
 
     if(this.playerInput.shootHook === true){
       let hookPoint = this.game.entities.hookPoint;
@@ -126,7 +130,7 @@ class Display {
 
       this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
       this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
-      this.game.entities.hookPoint.vspd = -1;
+      // this.game.entities.hookPoint.vspd = -1;
 
       if(this.game.collisionCheck(this.game.entities.hookPoint)){
         //on collide
@@ -198,22 +202,24 @@ class Display {
     let entities = this.game.entities;
     let getInput = this.getInput;
     let mousePos = this.playerInput.mousePos;
-
+    let platforms = this.game.platforms;
     let applyPhysics = this.applyPhysics;
     let shootHook = this.playerInput.shootHook;
     let hookTarget = this.playerInput.hookTarget;
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
-
+    debugger
     
     setInterval(function () {
-      context.clearRect(0, 0, 640, 480);
+      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       context.fillStyle = 'orange'; //background 
-      context.fillRect(0, 0, 640, 480);
+      context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      applyPhysics(newPlayer);
+      // if(!hookPoint.active){
+        applyPhysics(newPlayer);
+      // }
       newPlayer.move();
       
       //Test Purposes
@@ -228,12 +234,14 @@ class Display {
       hook.x = newPlayer.x + newPlayer.x_len/2;
       hook.y = newPlayer.y + newPlayer.y_len/2;
       if(!hookPoint.active){
-        hookPoint.x = newPlayer.x;
-        hookPoint.y = newPlayer.y;
+        hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
+        hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
       }
       hookPoint.move();
 
-      
+      for(let i = 0; i < platforms.length; i++){
+        platforms[i].move();
+      }
       for(let i = 0; i < Object.values(entities).length; i++){
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
