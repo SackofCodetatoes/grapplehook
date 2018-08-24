@@ -4,7 +4,7 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
-    this.moveSpd = 50;
+    this.moveSpd = 40;
     this.target = {x: 0, y: 0};
     this.collided = false;
     this.snapCalc = false;
@@ -38,7 +38,7 @@ class HookPoint extends GameEntity {
        this.y += this.vspd;
       }
       else if(this.collided){
-        this.x -= 1;
+        // this.x -= 1;
       }
     }
 

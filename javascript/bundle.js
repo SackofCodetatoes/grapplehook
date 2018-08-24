@@ -235,10 +235,13 @@ class Display {
             Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
           this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
           if(newPlayer.x < newPlayer.targetPoint.x) {
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            console.log('spds', newPlayer.hspd, newPlayer.vspd);
+            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
           } 
           else {
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
+            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
+            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
           }
         }
         // console.log('collsion chek', this.playerInput.ropeLen)
@@ -304,16 +307,20 @@ class Display {
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
+    // debugger
     
-    setInterval(function () {
+    let run = setInterval(function () {
+      if(newPlayer.y > 700){
+        alert('outa here');
+        clearInterval(run);
+      }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       context.fillStyle = 'orange'; //background 
       context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      // if(!hookPoint.active){
-        applyPhysics(newPlayer);
-      // }
+      applyPhysics(newPlayer);
+      
       newPlayer.move();
       
       //Test Purposes
@@ -376,6 +383,7 @@ class Game {
   }
   init() {
     //testing purposes
+    debugger
     const playerOptions = {
       x: 25,
       y: 25,
@@ -383,6 +391,7 @@ class Game {
       color: 'blue',
       x_len: 25,
       y_len: 25,
+      game: this,
     };
     const staticOptions = {
       x: 0,
@@ -395,11 +404,11 @@ class Game {
     };
     const platformOptions = {
       x: 0,
-      y: 450,
+      y: 600,
       color: 'black',
       context: this.context,
       x_len: 640,
-      y_len: 20,
+      y_len: 100,
     }
     const platformOptions2 = {
       x: 320,
@@ -408,6 +417,14 @@ class Game {
       context: this.context,
       x_len: 100,
       y_len: 50,
+    }
+    const platformOptions3 = {
+      x: 400,
+      y: 0,
+      color: 'black',
+      context: this.context,
+      x_len: 20,
+      y_len: 400,
     }
     const grappleHookOptions = {
       x: playerOptions.x,
@@ -430,18 +447,33 @@ class Game {
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
+    this.entities['platform3'] = new Platform(platformOptions3);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
+    this.platforms.push(this.entities.platform3); 
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
 
   }
   gravStep(obj){
     obj.vspd += 2;
     return obj;
+  }
+  xCollisionCheck(obj){
+      let platforms = this.platforms;
+      for (let i = 0; i < platforms.length; i++) {
+        if (
+          (
+            (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+            (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
+        ) {
+          return true;
+        }
+      }
+      return false;
   }
   collisionCheck(obj) {
     // debugger
@@ -570,7 +602,7 @@ class HookPoint extends GameEntity {
   constructor(options){
     super(options);
     this.active = false;
-    this.moveSpd = 50;
+    this.moveSpd = 40;
     this.target = {x: 0, y: 0};
     this.collided = false;
     this.snapCalc = false;
@@ -604,7 +636,7 @@ class HookPoint extends GameEntity {
        this.y += this.vspd;
       }
       else if(this.collided){
-        this.x -= 1;
+        // this.x -= 1;
       }
     }
 
@@ -644,7 +676,7 @@ class Platform extends GameEntity {
   }
 
   move(){
-    this.x -= 1;
+    // this.x -= 1;
   }
   
 }
@@ -660,6 +692,7 @@ module.exports = Platform;
 /***/ (function(module, exports, __webpack_require__) {
 
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js")
+
 const MOVE_STATES = ['move', 'fixed']
 // const KEY_LEFT = (event.key === 'a');
 class Player extends GameEntity {
@@ -670,8 +703,10 @@ class Player extends GameEntity {
     this.ropeLen = 0;
     this.ropeAngle;
     this.targetPoint = {}
-    this.rotateSpd = .06;
+    this.rotateSpd = .05;
     this.collsionCheck;
+    this.game = options.game;
+    debugger
   }
   
   move(){
@@ -683,11 +718,11 @@ class Player extends GameEntity {
       case 'move':
         this.x += this.hspd;
         this.y += this.vspd;
+        // this.rotateSpd = 0.6;
         break;
 
 
       case 'swing':
-
         let center = this.targetPoint;
         this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
         if(this.y + this.vspd > this.ropeLen){
@@ -705,9 +740,13 @@ class Player extends GameEntity {
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
         }
-        
+        let test = Object.assign({}, this, {x: this.x, y: this.y+ this.vspd});
+        if(!this.game.collisionCheck(test)){
+          
+          this.y += this.vspd;
+        }
         this.x += this.hspd;
-        this.y += this.vspd;
+        
         
         // console.log('x and y spd', this.hspd, this.vspd );
         break;
@@ -715,6 +754,7 @@ class Player extends GameEntity {
       default:
         break;
     }
+    // console.log('avg spds', this.hspd, this.vspd)
   }
 }
 

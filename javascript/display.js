@@ -140,10 +140,13 @@ class Display {
             Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
           this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;     
           if(newPlayer.x < newPlayer.targetPoint.x) {
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            console.log('spds', newPlayer.hspd, newPlayer.vspd);
+            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
           } 
           else {
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
+            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
+            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
           }
         }
         // console.log('collsion chek', this.playerInput.ropeLen)
@@ -209,17 +212,20 @@ class Display {
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
-    debugger
+    // debugger
     
-    setInterval(function () {
+    let run = setInterval(function () {
+      if(newPlayer.y > 700){
+        alert('outa here');
+        clearInterval(run);
+      }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       context.fillStyle = 'orange'; //background 
       context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
 
       getInput();
-      // if(!hookPoint.active){
-        applyPhysics(newPlayer);
-      // }
+      applyPhysics(newPlayer);
+      
       newPlayer.move();
       
       //Test Purposes

@@ -13,6 +13,7 @@ class Game {
   }
   init() {
     //testing purposes
+    debugger
     const playerOptions = {
       x: 25,
       y: 25,
@@ -20,6 +21,7 @@ class Game {
       color: 'blue',
       x_len: 25,
       y_len: 25,
+      game: this,
     };
     const staticOptions = {
       x: 0,
@@ -32,11 +34,11 @@ class Game {
     };
     const platformOptions = {
       x: 0,
-      y: 450,
+      y: 600,
       color: 'black',
       context: this.context,
       x_len: 640,
-      y_len: 20,
+      y_len: 100,
     }
     const platformOptions2 = {
       x: 320,
@@ -45,6 +47,14 @@ class Game {
       context: this.context,
       x_len: 100,
       y_len: 50,
+    }
+    const platformOptions3 = {
+      x: 400,
+      y: 0,
+      color: 'black',
+      context: this.context,
+      x_len: 20,
+      y_len: 400,
     }
     const grappleHookOptions = {
       x: playerOptions.x,
@@ -67,18 +77,33 @@ class Game {
     // this.move_dir = 1;
     this.entities['platform'] = new Platform(platformOptions);
     this.entities['platform2'] = new Platform(platformOptions2);
+    this.entities['platform3'] = new Platform(platformOptions3);
     this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     this.platforms.push(this.entities.platform); 
     this.platforms.push(this.entities.platform2); 
+    this.platforms.push(this.entities.platform3); 
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
 
   }
   gravStep(obj){
     obj.vspd += 2;
     return obj;
+  }
+  xCollisionCheck(obj){
+      let platforms = this.platforms;
+      for (let i = 0; i < platforms.length; i++) {
+        if (
+          (
+            (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
+            (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
+        ) {
+          return true;
+        }
+      }
+      return false;
   }
   collisionCheck(obj) {
     // debugger

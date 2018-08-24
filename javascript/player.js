@@ -1,4 +1,5 @@
 const GameEntity = require("./game_entity.js")
+
 const MOVE_STATES = ['move', 'fixed']
 // const KEY_LEFT = (event.key === 'a');
 class Player extends GameEntity {
@@ -9,8 +10,10 @@ class Player extends GameEntity {
     this.ropeLen = 0;
     this.ropeAngle;
     this.targetPoint = {}
-    this.rotateSpd = .06;
+    this.rotateSpd = .05;
     this.collsionCheck;
+    this.game = options.game;
+    debugger
   }
   
   move(){
@@ -22,11 +25,11 @@ class Player extends GameEntity {
       case 'move':
         this.x += this.hspd;
         this.y += this.vspd;
+        // this.rotateSpd = 0.6;
         break;
 
 
       case 'swing':
-
         let center = this.targetPoint;
         this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
         if(this.y + this.vspd > this.ropeLen){
@@ -44,9 +47,13 @@ class Player extends GameEntity {
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
         }
-        
+        let test = Object.assign({}, this, {x: this.x, y: this.y+ this.vspd});
+        if(!this.game.collisionCheck(test)){
+          
+          this.y += this.vspd;
+        }
         this.x += this.hspd;
-        this.y += this.vspd;
+        
         
         // console.log('x and y spd', this.hspd, this.vspd );
         break;
@@ -54,6 +61,7 @@ class Player extends GameEntity {
       default:
         break;
     }
+    // console.log('avg spds', this.hspd, this.vspd)
   }
 }
 
