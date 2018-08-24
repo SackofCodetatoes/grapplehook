@@ -4,6 +4,8 @@
 
 }
 .controls-div, .description {
+  padding: 10px;
+  border-radius: 5px;
   width: 200px;
   position: absolute;
   top: 80px;
@@ -16,4 +18,8 @@
   left: 250px;
   width: 550px;
   text-align: center;
+}
+* {
+  font-family: 'M PLUS Rounded 1c',
+  sans-serif;
 }
