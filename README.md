@@ -6,7 +6,7 @@
 GrappleHook is a 2d side-scrolling game that incorporates a bit of physics and a grappling hook. The game engine and mechanics were implemented using JavaScript and HTML5 Canvas. GrappleHook was built in a 5 day deadline with future revisions to come.
 Assets were not made by me.
 
-Assets Sources: 
+Asset Sources: 
 * [City Background](https://opengameart.org/content/city-background-repetitive-3)
 * [Character](https://0x72.itch.io/16x16-industrial-tileset)
  
