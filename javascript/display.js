@@ -44,14 +44,14 @@ class Display {
         this.game.entities.newPlayer.vspd = -4;
       }
     })
-    document.addEventListener('mousemove', (event) => {
-      this.playerInput.mousePos.x = event.clientX;
-      this.playerInput.mousePos.y = event.clientY;
+    this.game.canvas.addEventListener('mousemove', (event) => {
+      this.playerInput.mousePos.x = event.clientX - this.game.canvas.offsetLeft;
+      this.playerInput.mousePos.y = event.clientY - this.game.canvas.offsetTop;
     })
-    document.addEventListener('mousedown', (event) => {
+    this.game.canvas.addEventListener('mousedown', (event) => {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX, y: event.clientY};
+      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft, y: event.clientY - this.game.canvas.offsetTop};
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
       this.game.entities.hookPoint.target = this.playerInput.hookTarget;
@@ -241,15 +241,21 @@ class Display {
         clearInterval(run);
       }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+      context.beginPath();
+      context.strokeStyle = 'red';
+      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
+      context.stroke();
+
+      
       // plain background
       // context.fillStyle = 'gray'; //background 
       // context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-
+      
       //city background
       // debugger
       imageX += 0.5;
       context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
-
+      
 
       getInput();
       // if(!hookPoint.collided){
@@ -276,10 +282,6 @@ class Display {
         }
       }
 
-      context.beginPath();
-      context.strokeStyle = 'red';
-      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
-      context.stroke();
     }, 1000 / 60);
   }
 }

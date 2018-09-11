@@ -3,7 +3,7 @@ const Game = require("./game.js");
 
 
 
-console.log('all is dandy!');
+// console.log('all is dandy!');
 let spriteSheet = new Image();
 spriteSheet.src = "./images/industrial.v2.png";
 
