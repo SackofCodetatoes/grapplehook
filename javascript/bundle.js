@@ -115,6 +115,8 @@ class Display {
     }
     this.keyBind();
     this.render = this.render.bind(this);
+    this.startRender = this.startRender.bind(this);
+    this.startScreenRender = this.startScreenRender.bind(this);
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
@@ -147,6 +149,7 @@ class Display {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
       this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft, y: event.clientY - this.game.canvas.offsetTop};
+
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
       this.game.entities.hookPoint.target = this.playerInput.hookTarget;
@@ -299,6 +302,8 @@ class Display {
     }
 
   }
+
+
   newGame(){
     // this.game.constructor();
     this.game.init();
@@ -307,23 +312,52 @@ class Display {
   }
 
 
+  startScreenRender(canvas, context, game, mousePos, imageX){
+    // debugger
+    if(this.playerInput.shootHook){
+      this.render();
+    }
+    else {
+      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+      imageX += 0.2;
+      
+      context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+      
+      context.fillStyle = "gray";
+      context.fillRect(250, 100, 200, 150);
+  
+      
+      context.beginPath();
+      context.strokeStyle = 'red';
+      context.arc(mousePos.x, mousePos.y, 10, 0, 2 * Math.PI);
+      context.stroke();
+      requestAnimationFrame(() => this.startScreenRender(canvas, context, game, mousePos, imageX));
+    }
+  }
+  
+  startRender(){
+    const canvas = this.game.canvas;
+    const context = this.game.context;
+    const game = this.game;
+    const mousePos = this.playerInput.mousePos;
+
+    let imageX = 0;
+    this.startScreenRender(canvas, context, game, mousePos, imageX);
+    // requestAnimationFrame(() => this.startScreenRender(canvas, context, game, mousePos, imageX));
+  }
+
+
   render(){  
     const canvas = this.game.canvas;
 
     const context = this.game.context;
     let newPlayer = this.game.entities.newPlayer;
-    let staticEntity = this.game.entities.staticEntity;
-    let move_dir = this.game.entities.move_dir;
     let entities = this.game.entities;
     let getInput = this.getInput;
     let mousePos = this.playerInput.mousePos;
-    let platforms = this.game.platforms;
     let applyPhysics = this.applyPhysics;
-    let shootHook = this.playerInput.shootHook;
-    let hookTarget = this.playerInput.hookTarget;
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
-    let ropeLen = this.playerInput.ropeLen;
     let newGame = this.newGame.bind(this);
     let game = this.game;
     let imageX = 0;
@@ -331,16 +365,11 @@ class Display {
     
     let run = setInterval(function () {
       if(newPlayer.y > 700){
-        // alert('git outa here');
         newGame();
         clearInterval(run);
       }
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      context.beginPath();
-      context.strokeStyle = 'red';
-      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
-      context.stroke();
-
+      
       
       // plain background
       // context.fillStyle = 'gray'; //background 
@@ -348,16 +377,16 @@ class Display {
       
       //city background
       // debugger
-      imageX += 0.5;
+      // imageX += 0.5;
       context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
       
-
+      
       getInput();
       // if(!hookPoint.collided){
-
+        
         applyPhysics(newPlayer);
       // }
-
+      
       newPlayer.move();
       
       hook.x = newPlayer.x + newPlayer.x_len/2;
@@ -366,17 +395,23 @@ class Display {
         hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
         hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
       }
-      hookPoint.move();
 
-      for(let i = 0; i < platforms.length; i++){
-        platforms[i].move();
-      }
+      // console.log(newPlayer.x, newPlayer.y);
+      hookPoint.move();
+      // for(let i = 0; i < platforms.length; i++){
+      //   platforms[i].move();
+      // }
+      
       for(let i = 0; i < Object.values(entities).length; i++){
         if(Object.values(entities)[i].active){
           requestAnimationFrame(Object.values(entities)[i].draw);
         }
       }
-
+      context.beginPath();
+      context.strokeStyle = 'red';
+      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
+      context.stroke();
+      
     }, 1000 / 60);
   }
 }
@@ -387,7 +422,7 @@ module.exports = Display;
       // if (entities.staticEntity.y > 200) {
       //   move_dir = -2;
       // } else if (entities.staticEntity.y < 100) {
-      //   move_dir = 2;
+        //   move_dir = 2;
       // }
       // entities.staticEntity.y += move_dir;
 
@@ -415,6 +450,8 @@ class Game {
     this.spriteSheet;
     // this.spriteSheet.onload = draw;
   }
+
+  
   init() {
     //testing purposes
     // debugger
@@ -650,7 +687,8 @@ game.spriteSheet = spriteSheet;
 game.background = background;
 game.init();
 const testDisplay = new Display(game);
-background.onload = testDisplay.render;
+// background.onload = testDisplay.render;
+background.onload = testDisplay.startRender;
 
 
 
@@ -738,7 +776,7 @@ class HookPoint extends GameEntity {
        this.y += this.vspd;
       }
       else if(this.collided){
-        this.x -= 1;
+        // this.x -= 1;
       }
     }
 

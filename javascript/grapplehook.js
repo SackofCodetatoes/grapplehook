@@ -14,7 +14,8 @@ game.spriteSheet = spriteSheet;
 game.background = background;
 game.init();
 const testDisplay = new Display(game);
-background.onload = testDisplay.render;
+// background.onload = testDisplay.render;
+background.onload = testDisplay.startRender;
 
 
 

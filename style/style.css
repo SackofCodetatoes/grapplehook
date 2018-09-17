@@ -13,14 +13,17 @@
   position: absolute;
   top: 80px;
   /* right: ; */
-  opacity: 0.5;
-  background: white;
+  opacity: 0.7;
+  /* background: white; */
+  background: gray;
   /* display: inline; */
 }
+
 .description {
   left: 250px;
   width: 550px;
   text-align: center;
+  display: none;
 }
 * {
   font-family: 'M PLUS Rounded 1c',

@@ -13,6 +13,8 @@ class Game {
     this.spriteSheet;
     // this.spriteSheet.onload = draw;
   }
+
+  
   init() {
     //testing purposes
     // debugger
