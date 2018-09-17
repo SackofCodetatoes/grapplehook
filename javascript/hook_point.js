@@ -37,7 +37,7 @@ class HookPoint extends GameEntity {
        this.y += this.vspd;
       }
       else if(this.collided){
-        // this.x -= 1;
+        this.x -= 1;
       }
     }
 

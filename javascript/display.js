@@ -228,8 +228,8 @@ class Display {
       
       context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
       
-      context.fillStyle = "gray";
-      context.fillRect(250, 100, 200, 150);
+      // context.fillStyle = "gray";
+      // context.fillRect(250, 100, 200, 150);
   
       
       context.beginPath();
@@ -257,12 +257,18 @@ class Display {
 
     const context = this.game.context;
     let newPlayer = this.game.entities.newPlayer;
+    let staticEntity = this.game.entities.staticEntity;
+    let move_dir = this.game.entities.move_dir;
     let entities = this.game.entities;
     let getInput = this.getInput;
     let mousePos = this.playerInput.mousePos;
+    let platforms = this.game.platforms;
     let applyPhysics = this.applyPhysics;
+    let shootHook = this.playerInput.shootHook;
+    let hookTarget = this.playerInput.hookTarget;
     let hook = this.game.entities.hook;
     let hookPoint = this.game.entities.hookPoint;
+    let ropeLen = this.playerInput.ropeLen;
     let newGame = this.newGame.bind(this);
     let game = this.game;
     let imageX = 0;
@@ -282,7 +288,7 @@ class Display {
       
       //city background
       // debugger
-      // imageX += 0.5;
+      imageX += 0.5;
       context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
       
       
@@ -303,9 +309,9 @@ class Display {
 
       // console.log(newPlayer.x, newPlayer.y);
       hookPoint.move();
-      // for(let i = 0; i < platforms.length; i++){
-      //   platforms[i].move();
-      // }
+      for(let i = 0; i < platforms.length; i++){
+        platforms[i].move();
+      }
       
       for(let i = 0; i < Object.values(entities).length; i++){
         if(Object.values(entities)[i].active){
