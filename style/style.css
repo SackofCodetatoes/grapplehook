@@ -2,10 +2,7 @@
   cursor: none;
   /* display: inline; */
 }
-.title {
-  /* left: 200px; p */
-  /* padding-left: 100px; */
-}
+
 .controls-div, .description {
   padding: 10px;
   border-radius: 5px;
@@ -38,4 +35,11 @@
 }
 body {
   text-align: center;
+}
+
+@font-face{
+  font-family: 'M Plus';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c) format('woff2');
 }

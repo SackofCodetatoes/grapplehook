@@ -2,6 +2,7 @@ const Game = require("./game.js");
 const Player = require("./player.js");
 const GameEntity = require("./game_entity.js");
 const PLAYER_KEYS = ['w', 'a', 's', 'd', 'f'];
+const WebFont = require('webfontloader');
 
 class Display {
   constructor(game){
@@ -18,6 +19,11 @@ class Display {
       shootHook: false,
       hookTarget: {},
     }
+    WebFont.load({
+      google: {
+        families: ['M PLUS Rounded 1c']
+      }
+    });
     this.keyBind();
     this.render = this.render.bind(this);
     this.startRender = this.startRender.bind(this);
@@ -224,12 +230,18 @@ class Display {
     }
     else {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+      if(imageX + 0.2 >= 4192 - canvas.attributes.width.value){
+        imageX = 0;
+      }
       imageX += 0.2;
       
       context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
       
-      // context.fillStyle = "gray";
-      // context.fillRect(250, 100, 200, 150);
+      context.fillStyle= 'white'
+      context.font = "64px Helvetica";
+      context.fillText("GrappleHook", canvas.attributes.width.value / 2 - (30 * 6), canvas.attributes.height.value / 2 - 30);
+      context.font = "32px Arial";
+      context.fillText("Click on screen to Start", canvas.attributes.width.value / 2 - (30 * 5), canvas.attributes.height.value / 2 + 30);
   
       
       context.beginPath();
@@ -239,6 +251,7 @@ class Display {
       requestAnimationFrame(() => this.startScreenRender(canvas, context, game, mousePos, imageX));
     }
   }
+  
   
   startRender(){
     const canvas = this.game.canvas;
@@ -270,58 +283,60 @@ class Display {
     let hookPoint = this.game.entities.hookPoint;
     let ropeLen = this.playerInput.ropeLen;
     let newGame = this.newGame.bind(this);
+    let startScreen = this.startRender.bind(this);
     let game = this.game;
     let imageX = 0;
     // debugger
     
     let run = setInterval(function () {
+      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
+      
       if(newPlayer.y > 700){
         newGame();
         clearInterval(run);
       }
-      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      
-      
-      // plain background
-      // context.fillStyle = 'gray'; //background 
-      // context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      
-      //city background
-      // debugger
-      imageX += 0.5;
-      context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
-      
-      
-      getInput();
-      // if(!hookPoint.collided){
+      else {
+        // plain background
+        // context.fillStyle = 'gray'; //background 
+        // context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
         
-        applyPhysics(newPlayer);
-      // }
-      
-      newPlayer.move();
-      
-      hook.x = newPlayer.x + newPlayer.x_len/2;
-      hook.y = newPlayer.y + newPlayer.y_len/2;
-      if(!hookPoint.active){
-        hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
-        hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
-      }
-
-      // console.log(newPlayer.x, newPlayer.y);
-      hookPoint.move();
-      for(let i = 0; i < platforms.length; i++){
-        platforms[i].move();
-      }
-      
-      for(let i = 0; i < Object.values(entities).length; i++){
-        if(Object.values(entities)[i].active){
-          requestAnimationFrame(Object.values(entities)[i].draw);
+        //city background
+        // debugger
+        imageX += 0.5;
+        context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+        
+        
+        getInput();
+        // if(!hookPoint.collided){
+          
+          applyPhysics(newPlayer);
+        // }
+        
+        newPlayer.move();
+        
+        hook.x = newPlayer.x + newPlayer.x_len/2;
+        hook.y = newPlayer.y + newPlayer.y_len/2;
+        if(!hookPoint.active){
+          hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
+          hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
         }
-      }
-      context.beginPath();
-      context.strokeStyle = 'red';
-      context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
-      context.stroke();
+  
+        // console.log(newPlayer.x, newPlayer.y);
+        hookPoint.move();
+        for(let i = 0; i < platforms.length; i++){
+          platforms[i].move();
+        }
+        
+        for(let i = 0; i < Object.values(entities).length; i++){
+          if(Object.values(entities)[i].active){
+            requestAnimationFrame(Object.values(entities)[i].draw);
+          }
+        }
+        context.beginPath();
+        context.strokeStyle = 'red';
+        context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
+        context.stroke();
+      }    
       
     }, 1000 / 60);
   }

@@ -1,6 +1,6 @@
 const Display = require("./display.js");
 const Game = require("./game.js");
-
+// const WebFont = require('webfontloader');
 
 
 // console.log('all is dandy!');
@@ -15,6 +15,13 @@ game.background = background;
 game.init();
 const testDisplay = new Display(game);
 // background.onload = testDisplay.render;
+// WebFont.load({
+//   google: {
+//     families: ['M PLUS Rounded 1c']
+//   }
+// });
+
+
 background.onload = testDisplay.startRender;
 
 
