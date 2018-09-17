@@ -90,6 +90,7 @@ class Display {
       next = {
         x: player.x - player.moveSpd,
       }
+
       if(this.game.collisionCheck(Object.assign({}, player, next))){
         while (!this.game.collisionCheck(player)){
           this.game.entities.newPlayer.x -= 1;
@@ -108,6 +109,8 @@ class Display {
       next = {
         x: player.x + player.moveSpd,
       }
+
+
       if (this.game.collisionCheck(Object.assign({}, player, next))) {
         while (!this.game.collisionCheck(player)) {
           this.game.entities.newPlayer.x += 1;
@@ -119,19 +122,19 @@ class Display {
       this.game.entities.newPlayer.hspd = 0;
     }
 //for debuggerin
-    if (this.playerInput['w'] === true) {
-      this.game.entities.newPlayer.y -= 10;
-      next = {
-        y: player.y - player.moveSpd
-      }
-      if (this.game.collisionCheck(Object.assign({}, player, next))) {
-        while (!this.game.collisionCheck(player)) {
-          this.game.entities.newPlayer.y -= 1;
-        }
-        this.game.entities.newPlayer.y+=1;
-      }
-      else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
-    }
+    // if (this.playerInput['w'] === true) {
+    //   this.game.entities.newPlayer.y -= 10;
+    //   next = {
+    //     y: player.y - player.moveSpd
+    //   }
+    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
+    //     while (!this.game.collisionCheck(player)) {
+    //       this.game.entities.newPlayer.y -= 1;
+    //     }
+    //     this.game.entities.newPlayer.y+=1;
+    //   }
+    //   else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
+    // }
 
 
     if(this.playerInput.shootHook === true){
@@ -155,10 +158,6 @@ class Display {
           this.playerInput['ropeLen'] = 
           Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
           this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
-
-          if (this.playerInput.ropeLen > 100) {
-            // console.log('exceed max capacity');
-          }
 
           if(newPlayer.x < newPlayer.targetPoint.x) {
             // console.log('spds', newPlayer.hspd, newPlayer.vspd);
@@ -216,15 +215,13 @@ class Display {
 
 
   newGame(){
-    // this.game.constructor();
     this.game.init();
     this.render();
-    // console.log(this)
+
   }
 
 
   startScreenRender(canvas, context, game, mousePos, imageX){
-    // debugger
     if(this.playerInput.shootHook){
       this.render();
     }
@@ -239,7 +236,7 @@ class Display {
       
       context.fillStyle= 'white'
       context.font = "64px Helvetica";
-      context.fillText("GrappleHook", canvas.attributes.width.value / 2 - (30 * 6), canvas.attributes.height.value / 2 - 30);
+      context.fillText("GrappleHook", canvas.attributes.width.value / 2 - (30 * 6), canvas.attributes.height.value / 2 - 10);
       context.font = "32px Arial";
       context.fillText("Click on screen to Start", canvas.attributes.width.value / 2 - (30 * 5), canvas.attributes.height.value / 2 + 30);
   
@@ -261,7 +258,7 @@ class Display {
 
     let imageX = 0;
     this.startScreenRender(canvas, context, game, mousePos, imageX);
-    // requestAnimationFrame(() => this.startScreenRender(canvas, context, game, mousePos, imageX));
+  
   }
 
 
@@ -296,15 +293,21 @@ class Display {
         clearInterval(run);
       }
       else {
-        // plain background
-        // context.fillStyle = 'gray'; //background 
-        // context.fillRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-        
-        //city background
-        // debugger
         imageX += 0.5;
         context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
-        
+        if(newPlayer.y < 0){
+          //draw triangle at x position
+          context.beginPath();
+          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
+          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
+          context.lineTo(newPlayer.x, 50);
+          context.closePath();
+
+          
+          context.fillStyle = "red";
+          context.fill();
+
+        }
         
         getInput();
         // if(!hookPoint.collided){
@@ -321,7 +324,6 @@ class Display {
           hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
         }
   
-        // console.log(newPlayer.x, newPlayer.y);
         hookPoint.move();
         for(let i = 0; i < platforms.length; i++){
           platforms[i].move();
@@ -343,11 +345,3 @@ class Display {
 }
 
 module.exports = Display;
-
-      //Test Purposes
-      // if (entities.staticEntity.y > 200) {
-      //   move_dir = -2;
-      // } else if (entities.staticEntity.y < 100) {
-        //   move_dir = 2;
-      // }
-      // entities.staticEntity.y += move_dir;

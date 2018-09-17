@@ -22,6 +22,7 @@ body {
   /* display: inline; */
 }
 
+
 .description {
   left: 250px;
   width: 550px;
@@ -36,16 +37,11 @@ body {
 .text {
   position: absolute;
   top: 20px;
-  /* left: 250px; */
   left: 15px;
 }
 body {
   text-align: center;
 }
-
-@font-face{
-  font-family: 'M Plus';
-  font-style: normal;
-  font-weight: 400;
-  src: url(https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c) format('woff2');
+* {
+  -webkit-user-select: none;
 }

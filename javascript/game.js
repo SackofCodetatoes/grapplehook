@@ -14,7 +14,7 @@ class Game {
     // this.spriteSheet.onload = draw;
   }
 
-  
+
   init() {
     //testing purposes
     // debugger
@@ -157,23 +157,12 @@ class Game {
     obj.vspd += 2;
     return obj;
   }
-  xCollisionCheck(obj){
-      let platforms = this.platforms;
-      for (let i = 0; i < platforms.length; i++) {
-        if (
-          (
-            (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
-            (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
-        ) {
-          return true;
-        }
-      }
-      return false;
-  }
+
   collisionCheck(obj) {
     // debugger
     let platforms = this.platforms;
     for(let i = 0; i < platforms.length; i++){
+      // obj.positionMeeting(obj.x, obj.y, platforms[i]);
       if( 
         (
           (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
