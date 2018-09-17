@@ -1,18 +1,24 @@
+body {
+  background: #eee;
+}
+
 #game-canvas:hover {
   cursor: none;
-  /* display: inline; */
+  border-radius: 5px;
+
 }
 
 .controls-div, .description {
-  padding: 10px;
+  padding: 15px;
   border-radius: 5px;
-  width: 200px;
+  width: 230px;
   position: absolute;
-  top: 80px;
+  left: 20px;
+  top: 90px;
   /* right: ; */
-  opacity: 0.7;
+  opacity: 0.9;
   /* background: white; */
-  background: gray;
+  background:#497C7C;
   /* display: inline; */
 }
 
