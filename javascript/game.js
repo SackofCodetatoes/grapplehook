@@ -23,8 +23,8 @@ class Game {
     this.platforms = [];
 
     const coinOptions = {
-        x: 200,
-        y: 500,
+        x: 400,
+        y: 650,
         context: this.context,
         color: 'yellow',
         x_len: 25,
@@ -99,17 +99,28 @@ class Game {
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
 
+
+    coinOptions.x = 1000;
+    this.entities['coin1'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin1);
+
+    coinOptions.x = 1500;
+    coinOptions.y = 550;
+    this.entities['coin2'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin2);
     // this.entities['platform2'] = new Platform(platformOptions3);
     platformOptions.x = 600;
     this.entities['platform3'] = new Platform(platformOptions);
+    
+
     
     platformOptions2.x = 600;
     platformOptions2.y = 650;
     platformOptions2.x_len = 300;
     platformOptions2.y_len = 200;
     this.entities['platform4'] = new Platform(platformOptions2);
-
-
+    
+    
     platformOptions2.x = 1200;
     platformOptions2.y = 650;
     this.entities['platform5'] = new Platform(platformOptions2);
@@ -117,6 +128,11 @@ class Game {
     platformOptions2.x = 1400;
     platformOptions2.y = 600;
     this.entities['platform20'] = new Platform(platformOptions2);
+    
+    coinOptions.x = 1840;
+    coinOptions.y = 500;
+    this.entities['coin3'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin3);
 
     platformOptions2.x_len = 100
     platformOptions2.y_len = 50

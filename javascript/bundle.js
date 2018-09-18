@@ -105,7 +105,7 @@ class Coin extends GameEntitiy {
     this.context.lineWidth = 2;
     this.context.strokeStyle = 'orange';
     this.context.fillStyle = 'yellow';
-    this.context.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+    this.context.arc(this.x + this.x_len / 2, this.y + this.y_len / 2, 10, 0, 2 * Math.PI);
     this.context.fill();
     this.context.stroke();
   }
@@ -415,7 +415,7 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -4;
+    const moveSpd = -2;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -528,8 +528,8 @@ class Game {
     this.platforms = [];
 
     const coinOptions = {
-        x: 200,
-        y: 500,
+        x: 400,
+        y: 650,
         context: this.context,
         color: 'yellow',
         x_len: 25,
@@ -604,17 +604,28 @@ class Game {
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
 
+
+    coinOptions.x = 1000;
+    this.entities['coin1'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin1);
+
+    coinOptions.x = 1500;
+    coinOptions.y = 550;
+    this.entities['coin2'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin2);
     // this.entities['platform2'] = new Platform(platformOptions3);
     platformOptions.x = 600;
     this.entities['platform3'] = new Platform(platformOptions);
+    
+
     
     platformOptions2.x = 600;
     platformOptions2.y = 650;
     platformOptions2.x_len = 300;
     platformOptions2.y_len = 200;
     this.entities['platform4'] = new Platform(platformOptions2);
-
-
+    
+    
     platformOptions2.x = 1200;
     platformOptions2.y = 650;
     this.entities['platform5'] = new Platform(platformOptions2);
@@ -622,6 +633,11 @@ class Game {
     platformOptions2.x = 1400;
     platformOptions2.y = 600;
     this.entities['platform20'] = new Platform(platformOptions2);
+    
+    coinOptions.x = 1840;
+    coinOptions.y = 500;
+    this.entities['coin3'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin3);
 
     platformOptions2.x_len = 100
     platformOptions2.y_len = 50
