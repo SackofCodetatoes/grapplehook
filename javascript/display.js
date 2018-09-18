@@ -285,7 +285,7 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = -4;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);

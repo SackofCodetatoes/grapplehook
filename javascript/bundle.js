@@ -415,7 +415,7 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = -4;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -636,32 +636,39 @@ class Game {
     
     platformOptions2.x = 2400;
     this.entities['platform8'] = new Platform(platformOptions2)
+
+    //add some coins
     
     platformOptions2.y = 250;
     platformOptions.x = 2500;
+    platformOptions.x_len = 1500;
     this.entities['platform9'] = new Platform(platformOptions);
 
     platformOptions3.x = 2700;
     platformOptions3.x_len = 50;
 
     this.entities['platform10'] = new Platform(platformOptions3);
-    platformOptions2.x = 2900;
+    platformOptions2.x = 2700;
+    platformOptions2.x_len = 950;
+    platformOptions2.y_len = 350;
+    platformOptions2.y = 0;
     this.entities['platform11'] = new Platform(platformOptions2);
     
-    platformOptions3.x = 3200;
+    platformOptions2.y = 650;
+    platformOptions2.x_len = 100
+    platformOptions2.y_len = 50
+    platformOptions2.x = 3900;
     this.entities['platform12'] = new Platform(platformOptions2);
 
-    // platformOptions2.x = 3600;
+    platformOptions2.x = 4000;
+    platformOptions2.y = 600;
+    platformOptions2.y_len = 600;
 
     this.entities['platform13'] = new Platform(platformOptions2);
-
+    // platformOptions2.x_len = 100
+    // platformOptions2.y_len = 50
     
     
-    
-    
-    
-    
-    // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
@@ -679,17 +686,33 @@ class Game {
     this.platforms.push(this.entities.platform11); 
     this.platforms.push(this.entities.platform12); 
     this.platforms.push(this.entities.platform13); 
-
+    
     for(let i = 14; i < 20; i ++){
       let name = 'platform';
-      platformOptions2.x += 400;
+      platformOptions2.x += 100;
+      platformOptions2.y -= 50;
+
       this.entities[name+i] = new Platform(platformOptions2);
       this.platforms.push(this.entities[name+i]);
     }
     this.platforms.push(this.entities.platform20);
     
+    platformOptions2.x = 4650;
+    platformOptions2.y = 0;
+    platformOptions2.y_len = 50;
+    platformOptions2.x_len = 750;
+    this.entities['platform21'] = new Platform(platformOptions2);
+    this.platforms.push(this.entities.platform21);
+
+    platformOptions2.x = 5400;
+    platformOptions2.y = 650;
+    platformOptions2.y_len = 50;
+    platformOptions2.x_len = 2500;
+    this.entities['platform22'] = new Platform(platformOptions2);
+    this.platforms.push(this.entities.platform22);
+
     
-    
+
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
     // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
   }
