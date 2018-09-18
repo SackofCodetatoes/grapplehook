@@ -1,11 +1,13 @@
 body {
   background: #eee;
 }
-
+#back-canvas{
+  position: absolute;
+  z-index: -1;
+}
 #game-canvas:hover {
   cursor: none;
   border-radius: 5px;
-
 }
 
 .controls-div, .description {

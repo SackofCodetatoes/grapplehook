@@ -217,19 +217,20 @@ class Display {
     let next;
     if (this.playerInput['a'] === true) {
       this.game.entities.newPlayer.faceDir = -1;
-      next = {
-        x: player.x - player.moveSpd,
-      }
-
-      if(this.game.collisionCheck(Object.assign({}, player, next))){
-        while (!this.game.collisionCheck(player)){
-          this.game.entities.newPlayer.x -= 1;
-        }
-        this.game.entities.newPlayer.x += 1;
-      } 
-      else 
-        // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+      // next = {
+      //   x: player.x - player.moveSpd,
+      // }
+      this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+      this.game.entities.newPlayer.move();
+      // if(this.game.collisionCheck(Object.assign({}, player, next))){
+      //   while (!this.game.collisionCheck(player)){
+      //     this.game.entities.newPlayer.x -= 1;
+      //   }
+      //   this.game.entities.newPlayer.x += 1;
+      // } 
+      // else 
+      //   // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+      //   this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['a'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
@@ -239,15 +240,19 @@ class Display {
       next = {
         x: player.x + player.moveSpd,
       }
-
-
-      if (this.game.collisionCheck(Object.assign({}, player, next))) {
-        while (!this.game.collisionCheck(player)) {
-          this.game.entities.newPlayer.x += 1;
-        }
-        this.game.entities.newPlayer.x -= 1;
-      }
-      else this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+      this.game.entities.newPlayer.hspd = 2;
+      this.game.entities.newPlayer.move();
+      
+      // if (this.game.collisionCheck(Object.assign({}, player, next))) {
+      //   while (!this.game.collisionCheck(player)) {
+      //     this.game.entities.newPlayer.x += 1;
+      //   }
+      //   this.game.entities.newPlayer.x -= 1;
+      // }
+      // else {
+      //   this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+      //   console.log(this.game.entities.newPlayer.hspd)
+      // }
     } else if(this.playerInput['d'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
@@ -514,7 +519,9 @@ class Game {
   constructor() {
     this.entities = {};
     this.canvas = document.getElementById('game-canvas');
+    this.backCanvas = document.getElementById('back-canvas');
     this.context = this.canvas.getContext('2d');
+    this.backContext = this.backCanvas.getContext('2d');
     this.platforms = [];
     this.coins = [];
     this.spriteSheet;
@@ -646,14 +653,36 @@ class Game {
     this.entities['platform6'] = new Platform(platformOptions2);
     
     
-    
+    coinOptions.x = 2140;
+    coinOptions.y = 500;
+    this.entities['coin4'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin4);
     platformOptions2.x = 2100;
     this.entities['platform7'] = new Platform(platformOptions2);
-    
+
+
+    coinOptions.x = 2440;
+    coinOptions.y = 500;
+    this.entities['coin5'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin5);
     platformOptions2.x = 2400;
     this.entities['platform8'] = new Platform(platformOptions2)
 
     //add some coins
+    
+
+    coinOptions.x = 3040;
+    coinOptions.y = 550;
+    this.entities['coin6'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin6);
+    coinOptions.x = 3240;
+    coinOptions.y = 500;
+    this.entities['coin7'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin7);
+    coinOptions.x = 3440;
+    coinOptions.y = 450;
+    this.entities['coin8'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin8);
     
     platformOptions2.y = 250;
     platformOptions.x = 2500;
@@ -1009,8 +1038,14 @@ class Player extends GameEntity {
     // }
     switch (this.state) {
       case 'move':
-        this.x += this.hspd;
-        this.y += this.vspd;
+        let testObj = Object.assign({}, this);
+        testObj.x += testObj.hspd;
+        testObj.y += testObj.vspd;
+        if(!this.game.collisionCheck(testObj)){
+          this.x += this.hspd;
+          this.y += this.vspd;
+        }
+
         // this.rotateSpd = 0.6;
         break;
 

@@ -87,19 +87,20 @@ class Display {
     let next;
     if (this.playerInput['a'] === true) {
       this.game.entities.newPlayer.faceDir = -1;
-      next = {
-        x: player.x - player.moveSpd,
-      }
-
-      if(this.game.collisionCheck(Object.assign({}, player, next))){
-        while (!this.game.collisionCheck(player)){
-          this.game.entities.newPlayer.x -= 1;
-        }
-        this.game.entities.newPlayer.x += 1;
-      } 
-      else 
-        // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
+      // next = {
+      //   x: player.x - player.moveSpd,
+      // }
+      this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+      this.game.entities.newPlayer.move();
+      // if(this.game.collisionCheck(Object.assign({}, player, next))){
+      //   while (!this.game.collisionCheck(player)){
+      //     this.game.entities.newPlayer.x -= 1;
+      //   }
+      //   this.game.entities.newPlayer.x += 1;
+      // } 
+      // else 
+      //   // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+      //   this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
     } else if(this.playerInput['a'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
@@ -109,15 +110,19 @@ class Display {
       next = {
         x: player.x + player.moveSpd,
       }
-
-
-      if (this.game.collisionCheck(Object.assign({}, player, next))) {
-        while (!this.game.collisionCheck(player)) {
-          this.game.entities.newPlayer.x += 1;
-        }
-        this.game.entities.newPlayer.x -= 1;
-      }
-      else this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+      this.game.entities.newPlayer.hspd = 2;
+      this.game.entities.newPlayer.move();
+      
+      // if (this.game.collisionCheck(Object.assign({}, player, next))) {
+      //   while (!this.game.collisionCheck(player)) {
+      //     this.game.entities.newPlayer.x += 1;
+      //   }
+      //   this.game.entities.newPlayer.x -= 1;
+      // }
+      // else {
+      //   this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+      //   console.log(this.game.entities.newPlayer.hspd)
+      // }
     } else if(this.playerInput['d'] === false){
       this.game.entities.newPlayer.hspd = 0;
     }
