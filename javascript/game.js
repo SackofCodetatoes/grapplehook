@@ -9,9 +9,7 @@ class Game {
   constructor() {
     this.entities = {};
     this.canvas = document.getElementById('game-canvas');
-    this.backCanvas = document.getElementById('back-canvas');
     this.context = this.canvas.getContext('2d');
-    this.backContext = this.backCanvas.getContext('2d');
     this.platforms = [];
     this.coins = [];
     this.spriteSheet;

@@ -267,8 +267,11 @@ class Display {
 
   render(){  
     const canvas = this.game.canvas;
-
     const context = this.game.context;
+    const backCanvas = this.game.backCanvas;
+    const backContext = this.game.backContext;
+
+
     let newPlayer = this.game.entities.newPlayer;
     let staticEntity = this.game.entities.staticEntity;
     let move_dir = this.game.entities.move_dir;
@@ -302,23 +305,7 @@ class Display {
       else {
         imageX += 0.5;
         context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
-        if(newPlayer.y < 0){
-          //draw triangle at x position
-          context.beginPath();
-          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
-          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
-          context.lineTo(newPlayer.x, 50);
-          context.closePath();
-
-          context.fillStyle = "red";
-          context.fill();
-
-        }
-
-        context.fillStyle = 'white'
-        context.font = "bold 24px Helvetica";
-        context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
-
+        
         getInput();
         // if(!hookPoint.collided){
           
@@ -326,7 +313,7 @@ class Display {
         // }
         
         newPlayer.move();
-
+        
         for(let i = 0; i < coins.length; i++){
           coins[i].move(moveSpd);
           if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
@@ -337,14 +324,14 @@ class Display {
           }
         }
 
-
+        
         hook.x = newPlayer.x + newPlayer.x_len/2;
         hook.y = newPlayer.y + newPlayer.y_len/2;
         if(!hookPoint.active){
           hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
           hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
         }
-  
+        
         hookPoint.move(moveSpd);
         for(let i = 0; i < platforms.length; i++){
           platforms[i].move(moveSpd);
@@ -352,9 +339,27 @@ class Display {
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            requestAnimationFrame(Object.values(entities)[i].draw);
+            // requestAnimationFrame(Object.values(entities)[i].draw);
+            Object.values(entities)[i].draw();
           }
         }
+        
+        if(newPlayer.y < 0){
+          //draw triangle at x position
+          context.beginPath();
+          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
+          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
+          context.lineTo(newPlayer.x, 50);
+          context.closePath();
+        
+          context.fillStyle = "red";
+          context.fill();
+        
+        }
+        
+        context.fillStyle = 'white'
+        context.font = "bold 24px Helvetica";
+        context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
         context.beginPath();
         context.strokeStyle = 'red';
         context.lineWidth= 2.5;
