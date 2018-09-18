@@ -19,9 +19,9 @@ class Player extends GameEntity {
   
   move(){
     // console.log('spds', this.hspd, this.vspd)
-    if(this.collided === true){
-      // console.log('set!');
-    }
+    // if(this.collided === true){
+    //   // console.log('set!');
+    // }
     switch (this.state) {
       case 'move':
         this.x += this.hspd;

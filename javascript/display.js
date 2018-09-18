@@ -169,15 +169,13 @@ class Display {
             newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
           }
         }
-        // console.log('collsion chek', this.playerInput.ropeLen)
         this.game.entities.hookPoint.collided = true;
         this.game.entities.newPlayer.state = 'swing';
         this.game.context.beginPath();
-        this.game.context.strokeStyle = 'white';
+        this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         this.game.context.arc(hookPoint.x, hookPoint.y,
         this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
-        // console.log(this.game.entities.newPlayer.hspd, this.game.entities.newPlayer.vspd)
       }
       //set hsnapshopt
       this.game.entities.hook.draw();
@@ -283,7 +281,10 @@ class Display {
     let startScreen = this.startRender.bind(this);
     let game = this.game;
     let imageX = 0;
-    // debugger
+    let coinCounter = 0;
+
+    let coins = this.game.coins;
+    
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -303,12 +304,15 @@ class Display {
           context.lineTo(newPlayer.x, 50);
           context.closePath();
 
-          
           context.fillStyle = "red";
           context.fill();
 
         }
-        
+
+        context.fillStyle = 'white'
+        context.font = "24px Helvetica";
+        context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
+
         getInput();
         // if(!hookPoint.collided){
           
@@ -316,7 +320,18 @@ class Display {
         // }
         
         newPlayer.move();
-        
+
+        for(let i = 0; i < coins.length; i++){
+          coins[i].move();
+          if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
+            if(!coins[i].active) { continue; }
+            coinCounter += 1;
+            coins[i].active = false;
+            // console.log('oo a penny');
+          }
+        }
+
+
         hook.x = newPlayer.x + newPlayer.x_len/2;
         hook.y = newPlayer.y + newPlayer.y_len/2;
         if(!hookPoint.active){
@@ -336,6 +351,7 @@ class Display {
         }
         context.beginPath();
         context.strokeStyle = 'red';
+        context.lineWidth= 2.5;
         context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
         context.stroke();
       }    

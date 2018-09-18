@@ -86,6 +86,30 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/coin.js":
+/*!****************************!*\
+  !*** ./javascript/coin.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const GameEntitiy = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+class Coin extends GameEntitiy {
+  constructor(options){
+    super(options);
+  }
+
+  move(){
+    this.x -= 1;
+  }
+
+}
+
+module.exports = Coin;
+
+/***/ }),
+
 /***/ "./javascript/display.js":
 /*!*******************************!*\
   !*** ./javascript/display.js ***!
@@ -264,15 +288,13 @@ class Display {
             newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
           }
         }
-        // console.log('collsion chek', this.playerInput.ropeLen)
         this.game.entities.hookPoint.collided = true;
         this.game.entities.newPlayer.state = 'swing';
         this.game.context.beginPath();
-        this.game.context.strokeStyle = 'white';
+        this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         this.game.context.arc(hookPoint.x, hookPoint.y,
         this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
-        // console.log(this.game.entities.newPlayer.hspd, this.game.entities.newPlayer.vspd)
       }
       //set hsnapshopt
       this.game.entities.hook.draw();
@@ -378,7 +400,10 @@ class Display {
     let startScreen = this.startRender.bind(this);
     let game = this.game;
     let imageX = 0;
-    // debugger
+    let coinCounter = 0;
+
+    let coins = this.game.coins;
+    
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -398,12 +423,15 @@ class Display {
           context.lineTo(newPlayer.x, 50);
           context.closePath();
 
-          
           context.fillStyle = "red";
           context.fill();
 
         }
-        
+
+        context.fillStyle = 'white'
+        context.font = "24px Helvetica";
+        context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
+
         getInput();
         // if(!hookPoint.collided){
           
@@ -411,7 +439,18 @@ class Display {
         // }
         
         newPlayer.move();
-        
+
+        for(let i = 0; i < coins.length; i++){
+          coins[i].move();
+          if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
+            if(!coins[i].active) { continue; }
+            coinCounter += 1;
+            coins[i].active = false;
+            // console.log('oo a penny');
+          }
+        }
+
+
         hook.x = newPlayer.x + newPlayer.x_len/2;
         hook.y = newPlayer.y + newPlayer.y_len/2;
         if(!hookPoint.active){
@@ -431,6 +470,7 @@ class Display {
         }
         context.beginPath();
         context.strokeStyle = 'red';
+        context.lineWidth= 2.5;
         context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
         context.stroke();
       }    
@@ -454,6 +494,7 @@ module.exports = Display;
 const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
 const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 const Platform = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+const Coin = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
 const Hook = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
 const HookPoint = __webpack_require__(/*! ./hook_point.js */ "./javascript/hook_point.js");
 
@@ -463,6 +504,7 @@ class Game {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.platforms = [];
+    this.coins = [];
     this.spriteSheet;
     // this.spriteSheet.onload = draw;
   }
@@ -472,6 +514,18 @@ class Game {
     //testing purposes
     // debugger
     this.platforms = [];
+
+    const coinOptions = {
+        x: 200,
+        y: 500,
+        context: this.context,
+        color: 'yellow',
+        x_len: 25,
+        y_len: 25,
+        game: this,
+        // image: this.spriteSheet
+    };
+
     const playerOptions = {
       x: 25,
       y: 25,
@@ -537,6 +591,9 @@ class Game {
 
 
     // this.move_dir = 1;
+    this.entities['coin'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin);
+
     this.entities['platform'] = new Platform(platformOptions);
     platformOptions2.y = 550; 
     this.entities['platform2'] = new Platform(platformOptions2);
@@ -669,12 +726,13 @@ class GameEntity {
     //return true or false if new position intersects other objects position
 
     //check right side
-    if((x + this.x_len > otherObj.x && x + this.x_len < otherObj.x + otherObj.x_len) && 
-      (y + this.y_len > otherObj.y && y + this.y_len < otherObj.y + otherObj.y_len)
+    if((x + this.x_len > otherObj.x && x < otherObj.x + otherObj.x_len) && 
+      (y + this.y_len > otherObj.y && y < otherObj.y + otherObj.y_len)
     ) {
       // console.log('aw shoot');
+      return true;
     }// end of if
-
+    return false;
   }
 }
 module.exports = GameEntity;
@@ -704,14 +762,6 @@ game.spriteSheet = spriteSheet;
 game.background = background;
 game.init();
 const testDisplay = new Display(game);
-// background.onload = testDisplay.render;
-// WebFont.load({
-//   google: {
-//     families: ['M PLUS Rounded 1c']
-//   }
-// });
-
-
 background.onload = testDisplay.startRender;
 
 
@@ -885,9 +935,9 @@ class Player extends GameEntity {
   
   move(){
     // console.log('spds', this.hspd, this.vspd)
-    if(this.collided === true){
-      // console.log('set!');
-    }
+    // if(this.collided === true){
+    //   // console.log('set!');
+    // }
     switch (this.state) {
       case 'move':
         this.x += this.hspd;

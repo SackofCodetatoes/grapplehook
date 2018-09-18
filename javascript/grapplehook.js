@@ -14,14 +14,6 @@ game.spriteSheet = spriteSheet;
 game.background = background;
 game.init();
 const testDisplay = new Display(game);
-// background.onload = testDisplay.render;
-// WebFont.load({
-//   google: {
-//     families: ['M PLUS Rounded 1c']
-//   }
-// });
-
-
 background.onload = testDisplay.startRender;
 
 

@@ -1,6 +1,7 @@
 const Player = require("./player.js");
 const GameEntity = require("./game_entity.js");
 const Platform = require("./platform.js");
+const Coin = require("./coin.js");
 const Hook = require("./hook.js");
 const HookPoint = require("./hook_point.js");
 
@@ -10,6 +11,7 @@ class Game {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.platforms = [];
+    this.coins = [];
     this.spriteSheet;
     // this.spriteSheet.onload = draw;
   }
@@ -19,6 +21,18 @@ class Game {
     //testing purposes
     // debugger
     this.platforms = [];
+
+    const coinOptions = {
+        x: 200,
+        y: 500,
+        context: this.context,
+        color: 'yellow',
+        x_len: 25,
+        y_len: 25,
+        game: this,
+        // image: this.spriteSheet
+    };
+
     const playerOptions = {
       x: 25,
       y: 25,
@@ -84,6 +98,9 @@ class Game {
 
 
     // this.move_dir = 1;
+    this.entities['coin'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin);
+
     this.entities['platform'] = new Platform(platformOptions);
     platformOptions2.y = 550; 
     this.entities['platform2'] = new Platform(platformOptions2);
