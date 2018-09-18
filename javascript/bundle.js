@@ -442,7 +442,6 @@ class Display {
           applyPhysics(newPlayer);
         // }
         
-        newPlayer.move();
         
         for(let i = 0; i < coins.length; i++){
           coins[i].move(moveSpd);
@@ -453,7 +452,7 @@ class Display {
             // console.log('oo a penny');
           }
         }
-
+        
         
         hook.x = newPlayer.x + newPlayer.x_len/2;
         hook.y = newPlayer.y + newPlayer.y_len/2;
@@ -464,8 +463,10 @@ class Display {
         
         hookPoint.move(moveSpd);
         for(let i = 0; i < platforms.length; i++){
-          platforms[i].move(moveSpd);
+          platforms[i].move(moveSpd, newPlayer);
         }
+        
+        newPlayer.move();
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
@@ -536,9 +537,9 @@ class Game {
     //testing purposes
     // debugger
     this.platforms = [];
-
+    
     const coinOptions = {
-        x: 400,
+      x: 400,
         y: 650,
         context: this.context,
         color: 'yellow',
@@ -546,27 +547,27 @@ class Game {
         y_len: 25,
         game: this,
         // image: this.spriteSheet
-    };
-
-    const playerOptions = {
-      x: 25,
-      y: 25,
-      context: this.context,
-      color: 'blue',
-      x_len: 25,
-      y_len: 25,
-      game: this,
-      image: this.spriteSheet,
-    };
-
-    const platformOptions = {
-      x: 0,
-      y: 700,
-      color: 'black',
-      context: this.context,
-      x_len: 640,
-      y_len: 100,
-      image: this.spriteSheet,
+      };
+      
+      const playerOptions = {
+        x: 25,
+        y: 25,
+        context: this.context,
+        color: 'blue',
+        x_len: 25,
+        y_len: 25,
+        game: this,
+        image: this.spriteSheet,
+      };
+      
+      const platformOptions = {
+        x: 0,
+        y: 700,
+        color: 'black',
+        context: this.context,
+        x_len: 640,
+        y_len: 100,
+        image: this.spriteSheet,
     }
     const platformOptions2 = {
       x: 320,
@@ -602,23 +603,22 @@ class Game {
       x_len: 10,
       y_len: 10,
     }
-
-
+    
     // this.move_dir = 1;
     this.entities['coin'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin);
-
+    
     this.entities['platform'] = new Platform(platformOptions);
     platformOptions2.y = 650; 
     platformOptions2.x = 620;
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
-
-
+    
+    
     coinOptions.x = 1000;
     this.entities['coin1'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin1);
-
+    
     coinOptions.x = 1500;
     coinOptions.y = 550;
     this.entities['coin2'] = new Coin(coinOptions);
@@ -627,7 +627,7 @@ class Game {
     platformOptions.x = 600;
     this.entities['platform3'] = new Platform(platformOptions);
     
-
+    
     
     platformOptions2.x = 600;
     platformOptions2.y = 650;
@@ -648,7 +648,7 @@ class Game {
     coinOptions.y = 500;
     this.entities['coin3'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin3);
-
+    
     platformOptions2.x_len = 100
     platformOptions2.y_len = 50
     platformOptions2.y = 550;
@@ -662,18 +662,18 @@ class Game {
     this.coins.push(this.entities.coin4);
     platformOptions2.x = 2100;
     this.entities['platform7'] = new Platform(platformOptions2);
-
-
+    
+    
     coinOptions.x = 2440;
     coinOptions.y = 500;
     this.entities['coin5'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin5);
     platformOptions2.x = 2400;
     this.entities['platform8'] = new Platform(platformOptions2)
-
+    
     //add some coins
     
-
+    
     coinOptions.x = 3040;
     coinOptions.y = 550;
     this.entities['coin6'] = new Coin(coinOptions);
@@ -691,10 +691,10 @@ class Game {
     platformOptions.x = 2500;
     platformOptions.x_len = 1500;
     this.entities['platform9'] = new Platform(platformOptions);
-
+    
     platformOptions3.x = 2700;
     platformOptions3.x_len = 50;
-
+    
     this.entities['platform10'] = new Platform(platformOptions3);
     platformOptions2.x = 2700;
     platformOptions2.x_len = 950;
@@ -707,17 +707,16 @@ class Game {
     platformOptions2.y_len = 50
     platformOptions2.x = 3900;
     this.entities['platform12'] = new Platform(platformOptions2);
-
+    
     platformOptions2.x = 4000;
     platformOptions2.y = 600;
     platformOptions2.y_len = 600;
-
+    
     this.entities['platform13'] = new Platform(platformOptions2);
     // platformOptions2.x_len = 100
     // platformOptions2.y_len = 50
     
     
-    this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
     this.entities['hookPoint'] = new HookPoint(hookPointOptions);
     
@@ -739,7 +738,7 @@ class Game {
       let name = 'platform';
       platformOptions2.x += 100;
       platformOptions2.y -= 50;
-
+      
       this.entities[name+i] = new Platform(platformOptions2);
       this.platforms.push(this.entities[name+i]);
     }
@@ -751,16 +750,17 @@ class Game {
     platformOptions2.x_len = 750;
     this.entities['platform21'] = new Platform(platformOptions2);
     this.platforms.push(this.entities.platform21);
-
+    
     platformOptions2.x = 5400;
     platformOptions2.y = 650;
     platformOptions2.y_len = 50;
     platformOptions2.x_len = 2500;
     this.entities['platform22'] = new Platform(platformOptions2);
     this.platforms.push(this.entities.platform22);
-
     
-
+    
+    
+    this.entities['newPlayer'] = new Player(playerOptions);
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
     // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
   }
@@ -768,7 +768,7 @@ class Game {
     obj.vspd += 2;
     return obj;
   }
-
+  
   collisionCheck(obj) {
     // debugger
     let platforms = this.platforms;
@@ -999,7 +999,11 @@ class Platform extends GameEntity {
     // }
   }
 
-  move(moveSpd){
+  move(moveSpd, otherObj){
+    if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
+      otherObj.x += moveSpd;
+      otherObj.vspd = 0;
+    }
     this.x += moveSpd;
   }
   
@@ -1048,6 +1052,11 @@ class Player extends GameEntity {
           this.x += this.hspd;
           this.y += this.vspd;
         }
+        // else {
+        //   while(!this.game.collisionCheck(testObj)){
+        //     this.x += 1
+        //   }
+        // }
 
         // this.rotateSpd = 0.6;
         break;

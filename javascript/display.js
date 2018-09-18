@@ -312,7 +312,6 @@ class Display {
           applyPhysics(newPlayer);
         // }
         
-        newPlayer.move();
         
         for(let i = 0; i < coins.length; i++){
           coins[i].move(moveSpd);
@@ -323,7 +322,7 @@ class Display {
             // console.log('oo a penny');
           }
         }
-
+        
         
         hook.x = newPlayer.x + newPlayer.x_len/2;
         hook.y = newPlayer.y + newPlayer.y_len/2;
@@ -334,8 +333,10 @@ class Display {
         
         hookPoint.move(moveSpd);
         for(let i = 0; i < platforms.length; i++){
-          platforms[i].move(moveSpd);
+          platforms[i].move(moveSpd, newPlayer);
         }
+        
+        newPlayer.move();
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){

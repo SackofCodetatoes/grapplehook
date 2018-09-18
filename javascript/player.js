@@ -31,6 +31,11 @@ class Player extends GameEntity {
           this.x += this.hspd;
           this.y += this.vspd;
         }
+        // else {
+        //   while(!this.game.collisionCheck(testObj)){
+        //     this.x += 1
+        //   }
+        // }
 
         // this.rotateSpd = 0.6;
         break;
