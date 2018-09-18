@@ -43,18 +43,10 @@ class Game {
       game: this,
       image: this.spriteSheet,
     };
-    const staticOptions = {
-      x: 0,
-      y: 0,
-      context: this.context,
-      color: 'red',
-      x_len: 40,
-      y_len: 40,
-      context: this.context,
-    };
+
     const platformOptions = {
       x: 0,
-      y: 600,
+      y: 700,
       color: 'black',
       context: this.context,
       x_len: 640,
@@ -63,7 +55,7 @@ class Game {
     }
     const platformOptions2 = {
       x: 320,
-      y: 250,
+      y: 350,
       color: 'black',
       context: this.context,
       x_len: 100,
@@ -102,31 +94,55 @@ class Game {
     this.coins.push(this.entities.coin);
 
     this.entities['platform'] = new Platform(platformOptions);
-    platformOptions2.y = 550; 
+    platformOptions2.y = 650; 
+    platformOptions2.x = 620;
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
 
     // this.entities['platform2'] = new Platform(platformOptions3);
-    platformOptions.x = 800;
+    platformOptions.x = 600;
     this.entities['platform3'] = new Platform(platformOptions);
     
-    platformOptions2.x = 800;
+    platformOptions2.x = 600;
+    platformOptions2.y = 650;
+    platformOptions2.x_len = 300;
+    platformOptions2.y_len = 200;
     this.entities['platform4'] = new Platform(platformOptions2);
+
+
     platformOptions2.x = 1200;
+    platformOptions2.y = 650;
     this.entities['platform5'] = new Platform(platformOptions2);
-    platformOptions2.x = 1600;
+    
+    platformOptions2.x = 1400;
+    platformOptions2.y = 600;
+    this.entities['platform20'] = new Platform(platformOptions2);
+
+    platformOptions2.x_len = 100
+    platformOptions2.y_len = 50
+    platformOptions2.y = 550;
+    platformOptions2.x = 1800;
     this.entities['platform6'] = new Platform(platformOptions2);
-    platformOptions2.x = 2000;
+    
+    
+    
+    platformOptions2.x = 2100;
     this.entities['platform7'] = new Platform(platformOptions2);
+    
     platformOptions2.x = 2400;
     this.entities['platform8'] = new Platform(platformOptions2)
+    
+    platformOptions2.y = 250;
     platformOptions.x = 2500;
     this.entities['platform9'] = new Platform(platformOptions);
+
     platformOptions3.x = 2700;
     platformOptions3.x_len = 50;
+
     this.entities['platform10'] = new Platform(platformOptions3);
     platformOptions2.x = 2900;
     this.entities['platform11'] = new Platform(platformOptions2);
+    
     platformOptions3.x = 3200;
     this.entities['platform12'] = new Platform(platformOptions2);
 
@@ -165,18 +181,7 @@ class Game {
       this.entities[name+i] = new Platform(platformOptions2);
       this.platforms.push(this.entities[name+i]);
     }
-    // this.entities['platform14'] = new Platform(platformOptions2);
-    // this.entities['platform15'] = new Platform(platformOptions2);
-    // this.entities['platform16'] = new Platform(platformOptions2);
-    // this.entities['platform17'] = new Platform(platformOptions2);
-
-    // this.platforms.push(this.entities.platform14); 
-    // this.platforms.push(this.entities.platform15); 
-    // this.platforms.push(this.entities.platform16); 
-    // this.platforms.push(this.entities.platform17); 
-
-    // this.platforms.push(this.entities.platform18); 
-    
+    this.platforms.push(this.entities.platform20);
     
     
     

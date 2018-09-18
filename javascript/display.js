@@ -285,7 +285,7 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -1;
+    const moveSpd = -2;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -340,7 +340,7 @@ class Display {
           hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
         }
   
-        hookPoint.move();
+        hookPoint.move(moveSpd);
         for(let i = 0; i < platforms.length; i++){
           platforms[i].move(moveSpd);
         }

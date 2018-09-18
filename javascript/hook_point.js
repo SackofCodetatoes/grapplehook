@@ -30,14 +30,14 @@ class HookPoint extends GameEntity {
     // debugger
 
   }
-  move(){
+  move(moveSpd){
     if(this.active){
      if(!this.collided){
        this.x += this.hspd;
        this.y += this.vspd;
       }
       else if(this.collided){
-        this.x -= 1;
+        this.x += moveSpd;
       }
     }
 
