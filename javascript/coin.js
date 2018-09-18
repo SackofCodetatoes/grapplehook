@@ -5,8 +5,19 @@ class Coin extends GameEntitiy {
     super(options);
   }
 
-  move(){
-    this.x -= 1;
+  draw() {
+    this.context.beginPath();
+    this.context.lineWidth = 2;
+    this.context.strokeStyle = 'orange';
+    this.context.fillStyle = 'yellow';
+    this.context.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+    this.context.fill();
+    this.context.stroke();
+  }
+
+
+  move(moveSpd){
+    this.x += moveSpd;
   }
 
 }

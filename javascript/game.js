@@ -106,40 +106,40 @@ class Game {
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
 
-    this.entities['platform3'] = new Platform(platformOptions3);
+    // this.entities['platform2'] = new Platform(platformOptions3);
     platformOptions.x = 800;
-    this.entities['platform4'] = new Platform(platformOptions);
+    this.entities['platform3'] = new Platform(platformOptions);
     
     platformOptions2.x = 800;
-    this.entities['platform5'] = new Platform(platformOptions2);
+    this.entities['platform4'] = new Platform(platformOptions2);
     platformOptions2.x = 1200;
-    this.entities['platform6'] = new Platform(platformOptions2);
+    this.entities['platform5'] = new Platform(platformOptions2);
     platformOptions2.x = 1600;
-    this.entities['platform7'] = new Platform(platformOptions2);
+    this.entities['platform6'] = new Platform(platformOptions2);
     platformOptions2.x = 2000;
-    this.entities['platform8'] = new Platform(platformOptions2);
+    this.entities['platform7'] = new Platform(platformOptions2);
     platformOptions2.x = 2400;
-    this.entities['platform9'] = new Platform(platformOptions2)
+    this.entities['platform8'] = new Platform(platformOptions2)
     platformOptions.x = 2500;
-    this.entities['platform10'] = new Platform(platformOptions);
+    this.entities['platform9'] = new Platform(platformOptions);
     platformOptions3.x = 2700;
-    this.entities['platform11'] = new Platform(platformOptions3);
+    platformOptions3.x_len = 50;
+    this.entities['platform10'] = new Platform(platformOptions3);
     platformOptions2.x = 2900;
-    this.entities['platform12'] = new Platform(platformOptions2);
+    this.entities['platform11'] = new Platform(platformOptions2);
     platformOptions3.x = 3200;
+    this.entities['platform12'] = new Platform(platformOptions2);
+
+    // platformOptions2.x = 3600;
+
     this.entities['platform13'] = new Platform(platformOptions2);
 
-    this.entities['platform14'] = new Platform(platformOptions2);
-    this.entities['platform15'] = new Platform(platformOptions2);
-    this.entities['platform16'] = new Platform(platformOptions2);
-    this.entities['platform17'] = new Platform(platformOptions2);
-    this.entities['platform18'] = new Platform(platformOptions2);
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
     // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
@@ -158,15 +158,28 @@ class Game {
     this.platforms.push(this.entities.platform11); 
     this.platforms.push(this.entities.platform12); 
     this.platforms.push(this.entities.platform13); 
-    this.platforms.push(this.entities.platform14); 
-    this.platforms.push(this.entities.platform15); 
-    this.platforms.push(this.entities.platform16); 
-    this.platforms.push(this.entities.platform17); 
-    this.platforms.push(this.entities.platform18); 
 
+    for(let i = 14; i < 20; i ++){
+      let name = 'platform';
+      platformOptions2.x += 400;
+      this.entities[name+i] = new Platform(platformOptions2);
+      this.platforms.push(this.entities[name+i]);
+    }
+    // this.entities['platform14'] = new Platform(platformOptions2);
+    // this.entities['platform15'] = new Platform(platformOptions2);
+    // this.entities['platform16'] = new Platform(platformOptions2);
+    // this.entities['platform17'] = new Platform(platformOptions2);
 
+    // this.platforms.push(this.entities.platform14); 
+    // this.platforms.push(this.entities.platform15); 
+    // this.platforms.push(this.entities.platform16); 
+    // this.platforms.push(this.entities.platform17); 
 
-
+    // this.platforms.push(this.entities.platform18); 
+    
+    
+    
+    
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
     // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
   }

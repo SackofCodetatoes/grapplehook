@@ -285,6 +285,7 @@ class Display {
 
     let coins = this.game.coins;
     
+    const moveSpd = -1;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -310,7 +311,7 @@ class Display {
         }
 
         context.fillStyle = 'white'
-        context.font = "24px Helvetica";
+        context.font = "bold 24px Helvetica";
         context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
 
         getInput();
@@ -322,7 +323,7 @@ class Display {
         newPlayer.move();
 
         for(let i = 0; i < coins.length; i++){
-          coins[i].move();
+          coins[i].move(moveSpd);
           if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
             if(!coins[i].active) { continue; }
             coinCounter += 1;
@@ -341,7 +342,7 @@ class Display {
   
         hookPoint.move();
         for(let i = 0; i < platforms.length; i++){
-          platforms[i].move();
+          platforms[i].move(moveSpd);
         }
         
         for(let i = 0; i < Object.values(entities).length; i++){

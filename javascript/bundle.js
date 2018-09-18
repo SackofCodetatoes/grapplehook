@@ -100,8 +100,19 @@ class Coin extends GameEntitiy {
     super(options);
   }
 
-  move(){
-    this.x -= 1;
+  draw() {
+    this.context.beginPath();
+    this.context.lineWidth = 2;
+    this.context.strokeStyle = 'orange';
+    this.context.fillStyle = 'yellow';
+    this.context.arc(this.x, this.y, 10, 0, 2 * Math.PI);
+    this.context.fill();
+    this.context.stroke();
+  }
+
+
+  move(moveSpd){
+    this.x += moveSpd;
   }
 
 }
@@ -404,6 +415,7 @@ class Display {
 
     let coins = this.game.coins;
     
+    const moveSpd = -1;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -429,7 +441,7 @@ class Display {
         }
 
         context.fillStyle = 'white'
-        context.font = "24px Helvetica";
+        context.font = "bold 24px Helvetica";
         context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
 
         getInput();
@@ -441,7 +453,7 @@ class Display {
         newPlayer.move();
 
         for(let i = 0; i < coins.length; i++){
-          coins[i].move();
+          coins[i].move(moveSpd);
           if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
             if(!coins[i].active) { continue; }
             coinCounter += 1;
@@ -460,7 +472,7 @@ class Display {
   
         hookPoint.move();
         for(let i = 0; i < platforms.length; i++){
-          platforms[i].move();
+          platforms[i].move(moveSpd);
         }
         
         for(let i = 0; i < Object.values(entities).length; i++){
@@ -599,40 +611,40 @@ class Game {
     this.entities['platform2'] = new Platform(platformOptions2);
     platformOptions2.y = 250;
 
-    this.entities['platform3'] = new Platform(platformOptions3);
+    // this.entities['platform2'] = new Platform(platformOptions3);
     platformOptions.x = 800;
-    this.entities['platform4'] = new Platform(platformOptions);
+    this.entities['platform3'] = new Platform(platformOptions);
     
     platformOptions2.x = 800;
-    this.entities['platform5'] = new Platform(platformOptions2);
+    this.entities['platform4'] = new Platform(platformOptions2);
     platformOptions2.x = 1200;
-    this.entities['platform6'] = new Platform(platformOptions2);
+    this.entities['platform5'] = new Platform(platformOptions2);
     platformOptions2.x = 1600;
-    this.entities['platform7'] = new Platform(platformOptions2);
+    this.entities['platform6'] = new Platform(platformOptions2);
     platformOptions2.x = 2000;
-    this.entities['platform8'] = new Platform(platformOptions2);
+    this.entities['platform7'] = new Platform(platformOptions2);
     platformOptions2.x = 2400;
-    this.entities['platform9'] = new Platform(platformOptions2)
+    this.entities['platform8'] = new Platform(platformOptions2)
     platformOptions.x = 2500;
-    this.entities['platform10'] = new Platform(platformOptions);
+    this.entities['platform9'] = new Platform(platformOptions);
     platformOptions3.x = 2700;
-    this.entities['platform11'] = new Platform(platformOptions3);
+    platformOptions3.x_len = 50;
+    this.entities['platform10'] = new Platform(platformOptions3);
     platformOptions2.x = 2900;
-    this.entities['platform12'] = new Platform(platformOptions2);
+    this.entities['platform11'] = new Platform(platformOptions2);
     platformOptions3.x = 3200;
+    this.entities['platform12'] = new Platform(platformOptions2);
+
+    // platformOptions2.x = 3600;
+
     this.entities['platform13'] = new Platform(platformOptions2);
 
-    this.entities['platform14'] = new Platform(platformOptions2);
-    this.entities['platform15'] = new Platform(platformOptions2);
-    this.entities['platform16'] = new Platform(platformOptions2);
-    this.entities['platform17'] = new Platform(platformOptions2);
-    this.entities['platform18'] = new Platform(platformOptions2);
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
     // this.entities['staticEntity'] = new GameEntity(staticOptions);
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities['hook'] = new Hook(grappleHookOptions);
@@ -651,15 +663,28 @@ class Game {
     this.platforms.push(this.entities.platform11); 
     this.platforms.push(this.entities.platform12); 
     this.platforms.push(this.entities.platform13); 
-    this.platforms.push(this.entities.platform14); 
-    this.platforms.push(this.entities.platform15); 
-    this.platforms.push(this.entities.platform16); 
-    this.platforms.push(this.entities.platform17); 
-    this.platforms.push(this.entities.platform18); 
 
+    for(let i = 14; i < 20; i ++){
+      let name = 'platform';
+      platformOptions2.x += 400;
+      this.entities[name+i] = new Platform(platformOptions2);
+      this.platforms.push(this.entities[name+i]);
+    }
+    // this.entities['platform14'] = new Platform(platformOptions2);
+    // this.entities['platform15'] = new Platform(platformOptions2);
+    // this.entities['platform16'] = new Platform(platformOptions2);
+    // this.entities['platform17'] = new Platform(platformOptions2);
 
+    // this.platforms.push(this.entities.platform14); 
+    // this.platforms.push(this.entities.platform15); 
+    // this.platforms.push(this.entities.platform16); 
+    // this.platforms.push(this.entities.platform17); 
 
-
+    // this.platforms.push(this.entities.platform18); 
+    
+    
+    
+    
     this.entities.newPlayer.collisionCheck = this.collisionCheck;
     // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
   }
@@ -898,8 +923,8 @@ class Platform extends GameEntity {
     // }
   }
 
-  move(){
-    this.x -= 1;
+  move(moveSpd){
+    this.x += moveSpd;
   }
   
 }

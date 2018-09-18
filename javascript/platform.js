@@ -16,8 +16,8 @@ class Platform extends GameEntity {
     // }
   }
 
-  move(){
-    this.x -= 1;
+  move(moveSpd){
+    this.x += moveSpd;
   }
   
 }
