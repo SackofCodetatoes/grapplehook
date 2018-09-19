@@ -14,6 +14,8 @@ class Player extends GameEntity {
     this.collsionCheck;
     this.game = options.game;
     this.image = options.image;
+    this.snapX;
+    this.snapY;
     // debugger
   }
   
@@ -31,12 +33,10 @@ class Player extends GameEntity {
           this.x += this.hspd;
           this.y += this.vspd;
         }
-        // else {
-        //   while(!this.game.collisionCheck(testObj)){
-        //     this.x += 1
-        //   }
-        // }
-
+        if(this.snapX != undefined && this.snapY != undefined){
+          this.snapX = undefined;
+          this.snapY = undefined;
+        }
         // this.rotateSpd = 0.6;
         break;
 
@@ -49,11 +49,20 @@ class Player extends GameEntity {
             this.y+=1;
           }
         }
+        // if(this.snapX == undefined && this.snapY == undefined){
+        //   this.snapX = this.x;
+        //   this.snapY = this.y;
+        //   let radius = Math.sqrt(Math.pow(this.snapX - center.x, 2) + Math.pow(this.snapY - center.y, 2));
+        // }
         //to the mathman i never could be:
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-        // debugger
+
+        //old working-ish
+        // let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
+        // let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
+
         this.hspd = nextX - this.x;
         this.vspd = nextY - this.y;
         if(nextY < this.y && this.vspd > -4){
@@ -61,7 +70,6 @@ class Player extends GameEntity {
         }
         let test = Object.assign({}, this, {x: this.x, y: this.y+ this.vspd});
         if(!this.game.collisionCheck(test)){
-          
           this.y += this.vspd;
           this.x += this.hspd;
         } 
@@ -71,13 +79,11 @@ class Player extends GameEntity {
         }
         
         
-        // console.log('x and y spd', this.hspd, this.vspd );
         break;
 
       default:
         break;
     }
-    // console.log('avg spds', this.hspd, this.vspd)
   }
     draw(){
       let count = 0;

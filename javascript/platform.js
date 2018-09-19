@@ -19,7 +19,8 @@ class Platform extends GameEntity {
   move(moveSpd, otherObj){
     if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
       otherObj.x += moveSpd;
-      otherObj.vspd = 0;
+      // otherObj.vspd = 0;
+      otherObj.y += 1;
     }
     this.x += moveSpd;
   }

@@ -307,10 +307,10 @@ class Display {
         context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
         
         getInput();
-        // if(!hookPoint.collided){
+        if(!hookPoint.collided){
           
           applyPhysics(newPlayer);
-        // }
+        }
         
         
         for(let i = 0; i < coins.length; i++){
