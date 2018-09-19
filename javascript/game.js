@@ -271,7 +271,12 @@ class Game {
       this.entities[name + i] = new Platform(platformOptions2);
       this.platforms.push(this.entities[name + i]);
     }
-    
+
+    platformOptions2.y = 350;
+    platformOptions2.x = 250;
+    this.entities['platform50'] = new Platform(platformOptions2);
+    this.platforms.push(this.entities.platform50);
+
     
     this.entities['newPlayer'] = new Player(playerOptions);
     this.entities.newPlayer.collisionCheck = this.collisionCheck;

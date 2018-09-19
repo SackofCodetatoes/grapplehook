@@ -16,10 +16,12 @@ class Player extends GameEntity {
     this.image = options.image;
     this.snapX;
     this.snapY;
+    this.rotateSpd = 0.05;
+
     // debugger
   }
   
-  move(){
+  move(swingMove){
     // console.log('spds', this.hspd, this.vspd)
     // if(this.collided === true){
     //   // console.log('set!');
@@ -37,7 +39,7 @@ class Player extends GameEntity {
           this.snapX = undefined;
           this.snapY = undefined;
         }
-        // this.rotateSpd = 0.6;
+        this.rotateSpd = 0.05;
         break;
 
 
@@ -56,14 +58,14 @@ class Player extends GameEntity {
         // }
         //to the mathman i never could be:
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
-        let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
-        let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
+        let nextX = (center.x + swingMove + (this.x - center.x + swingMove) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
+        let nextY = (center.y + swingMove + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
 
         //old working-ish
         // let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         // let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
 
-        this.hspd = nextX - this.x;
+        this.hspd = nextX - this.x + swingMove;
         this.vspd = nextY - this.y;
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
@@ -75,7 +77,7 @@ class Player extends GameEntity {
         } 
         else {
           //add bounce
-          this.rotateSpd = this.rotateSpd * -0.51;
+          this.rotateSpd = this.rotateSpd * -0.5;
         }
         
         

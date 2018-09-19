@@ -90,8 +90,10 @@ class Display {
       // next = {
       //   x: player.x - player.moveSpd,
       // }
-      this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-      this.game.entities.newPlayer.move();
+      if(this.game.entities.newPlayer.state != 'swing'){
+        this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
+        this.game.entities.newPlayer.move();
+      }
       // if(this.game.collisionCheck(Object.assign({}, player, next))){
       //   while (!this.game.collisionCheck(player)){
       //     this.game.entities.newPlayer.x -= 1;
@@ -106,12 +108,14 @@ class Display {
     }
 
     if (this.playerInput['d'] === true) {
-      this.game.entities.newPlayer.faceDir = 1;
-      next = {
-        x: player.x + player.moveSpd,
+      if(this.game.entities.newPlayer.state != 'swing'){
+        this.game.entities.newPlayer.faceDir = 1;
+        next = {
+          x: player.x + player.moveSpd,
+        }
+        this.game.entities.newPlayer.hspd = 2;
+        this.game.entities.newPlayer.move();
       }
-      this.game.entities.newPlayer.hspd = 2;
-      this.game.entities.newPlayer.move();
       
       // if (this.game.collisionCheck(Object.assign({}, player, next))) {
       //   while (!this.game.collisionCheck(player)) {
@@ -166,12 +170,12 @@ class Display {
 
           if(newPlayer.x < newPlayer.targetPoint.x) {
             // console.log('spds', newPlayer.hspd, newPlayer.vspd);
-            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
-            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
+            // newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
           } 
           else {
-            // newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
-            newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
+            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
+            // newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
           }
         }
         this.game.entities.hookPoint.collided = true;
@@ -298,7 +302,7 @@ class Display {
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y > 700){
+      if(newPlayer.y >  900){
         newGame();
         clearInterval(run);
       }
@@ -336,7 +340,7 @@ class Display {
           platforms[i].move(moveSpd, newPlayer);
         }
         
-        newPlayer.move();
+        newPlayer.move(moveSpd);
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
