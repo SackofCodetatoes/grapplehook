@@ -751,6 +751,21 @@ class Game {
     this.entities['platform21'] = new Platform(platformOptions2);
     this.platforms.push(this.entities.platform21);
     
+    coinOptions.x = 4840;
+    coinOptions.y = 300;
+    this.entities['coin9'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin9);
+    
+    coinOptions.x = 5040;
+    coinOptions.y = 350;
+    this.entities['coin10'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin10);
+    
+    coinOptions.x = 5240;
+    coinOptions.y = 400;
+    this.entities['coin11'] = new Coin(coinOptions);
+    this.coins.push(this.entities.coin11);
+
     platformOptions2.x = 5400;
     platformOptions2.y = 650;
     platformOptions2.y_len = 50;
@@ -758,6 +773,20 @@ class Game {
     this.entities['platform22'] = new Platform(platformOptions2);
     this.platforms.push(this.entities.platform22);
     
+    platformOptions2.y = 300;
+    platformOptions2.y_len = 50;
+    platformOptions2.x_len = 100;
+
+
+    // let moveFactor = 
+    for (let i = 23; i < 50; i++) {
+      let name = 'platform';
+      platformOptions2.x += 400;
+      // platformOptions2.y += moveFactor
+
+      this.entities[name + i] = new Platform(platformOptions2);
+      this.platforms.push(this.entities[name + i]);
+    }
     
     
     this.entities['newPlayer'] = new Player(playerOptions);
