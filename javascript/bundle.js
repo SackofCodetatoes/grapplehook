@@ -388,7 +388,7 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = 0;
+    const moveSpd = -2;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -994,7 +994,6 @@ class Platform extends GameEntity {
 
   move(moveSpd, otherObj){
     if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
-      console.log('trigger')
       otherObj.x += moveSpd;
       // otherObj.vspd = 0;
       // otherObj.y += 1;
