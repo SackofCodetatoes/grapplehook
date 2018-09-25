@@ -8,22 +8,20 @@ class Platform extends GameEntity {
 
   }
   draw(){
-    // if(this.y_len > this.x_len){
-      // this.context.drawImage(this.image, 214, 128, 14, 81, this.x, this.y, 14, 81);
-    // } else {
       this.context.fillStyle = this.color;
       this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
-    // }
   }
 
   move(moveSpd, otherObj){
     if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
+      console.log('trigger')
       otherObj.x += moveSpd;
       // otherObj.vspd = 0;
-      otherObj.y += 1;
+      // otherObj.y += 1;
     }
     this.x += moveSpd;
   }
   
 }
+module.exports = Platform;
 module.exports = Platform;

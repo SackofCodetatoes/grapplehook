@@ -87,63 +87,26 @@ class Display {
     let next;
     if (this.playerInput['a'] === true) {
       this.game.entities.newPlayer.faceDir = -1;
-      // next = {
-      //   x: player.x - player.moveSpd,
-      // }
+
       if(this.game.entities.newPlayer.state != 'swing'){
         this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        this.game.entities.newPlayer.move();
+        // this.game.entities.newPlayer.move();
       }
-      // if(this.game.collisionCheck(Object.assign({}, player, next))){
-      //   while (!this.game.collisionCheck(player)){
-      //     this.game.entities.newPlayer.x -= 1;
-      //   }
-      //   this.game.entities.newPlayer.x += 1;
-      // } 
-      // else 
-      //   // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-      //   this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
-    } else if(this.playerInput['a'] === false){
-      this.game.entities.newPlayer.hspd = 0;
-    }
-
-    if (this.playerInput['d'] === true) {
-      if(this.game.entities.newPlayer.state != 'swing'){
-        this.game.entities.newPlayer.faceDir = 1;
-        next = {
-          x: player.x + player.moveSpd,
+   
+    } 
+  
+    else if(this.playerInput['d'] === true) {
+        if(this.game.entities.newPlayer.state != 'swing'){
+          this.game.entities.newPlayer.faceDir = 1;
+          // this.game.entities.newPlayer.hspd = 2;
+          this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+          // this.game.entities.newPlayer.move();
         }
-        this.game.entities.newPlayer.hspd = 2;
-        this.game.entities.newPlayer.move();
       }
-      
-      // if (this.game.collisionCheck(Object.assign({}, player, next))) {
-      //   while (!this.game.collisionCheck(player)) {
-      //     this.game.entities.newPlayer.x += 1;
-      //   }
-      //   this.game.entities.newPlayer.x -= 1;
-      // }
-      // else {
-      //   this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
-      //   console.log(this.game.entities.newPlayer.hspd)
-      // }
-    } else if(this.playerInput['d'] === false){
+       
+    else {
       this.game.entities.newPlayer.hspd = 0;
     }
-//for debuggerin
-    // if (this.playerInput['w'] === true) {
-    //   this.game.entities.newPlayer.y -= 10;
-    //   next = {
-    //     y: player.y - player.moveSpd
-    //   }
-    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
-    //     while (!this.game.collisionCheck(player)) {
-    //       this.game.entities.newPlayer.y -= 1;
-    //     }
-    //     this.game.entities.newPlayer.y+=1;
-    //   }
-    //   else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
-    // }
 
 
     if(this.playerInput.shootHook === true){
@@ -208,11 +171,9 @@ class Display {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        // console.log('ahh im stuck');
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }
-        // console.log(this.game.collisionCheck(obj))
         this.game.entities.newPlayer.y -= 2;
 
       }
@@ -297,12 +258,12 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = 0;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  900){
+      if(newPlayer.y >  900 || newPlayer.x < 0){
         newGame();
         clearInterval(run);
       }
@@ -323,7 +284,6 @@ class Display {
             if(!coins[i].active) { continue; }
             coinCounter += 1;
             coins[i].active = false;
-            // console.log('oo a penny');
           }
         }
         
@@ -344,7 +304,6 @@ class Display {
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            // requestAnimationFrame(Object.values(entities)[i].draw);
             Object.values(entities)[i].draw();
           }
         }

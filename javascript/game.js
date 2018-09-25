@@ -34,7 +34,7 @@ class Game {
       };
       
       const playerOptions = {
-        x: 25,
+        x: 125,
         y: 25,
         context: this.context,
         color: 'blue',

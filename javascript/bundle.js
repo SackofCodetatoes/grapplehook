@@ -217,63 +217,26 @@ class Display {
     let next;
     if (this.playerInput['a'] === true) {
       this.game.entities.newPlayer.faceDir = -1;
-      // next = {
-      //   x: player.x - player.moveSpd,
-      // }
+
       if(this.game.entities.newPlayer.state != 'swing'){
         this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        this.game.entities.newPlayer.move();
+        // this.game.entities.newPlayer.move();
       }
-      // if(this.game.collisionCheck(Object.assign({}, player, next))){
-      //   while (!this.game.collisionCheck(player)){
-      //     this.game.entities.newPlayer.x -= 1;
-      //   }
-      //   this.game.entities.newPlayer.x += 1;
-      // } 
-      // else 
-      //   // this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-      //   this.game.entities.newPlayer.x -= this.game.entities.newPlayer.moveSpd;
-    } else if(this.playerInput['a'] === false){
-      this.game.entities.newPlayer.hspd = 0;
-    }
-
-    if (this.playerInput['d'] === true) {
-      if(this.game.entities.newPlayer.state != 'swing'){
-        this.game.entities.newPlayer.faceDir = 1;
-        next = {
-          x: player.x + player.moveSpd,
+   
+    } 
+  
+    else if(this.playerInput['d'] === true) {
+        if(this.game.entities.newPlayer.state != 'swing'){
+          this.game.entities.newPlayer.faceDir = 1;
+          // this.game.entities.newPlayer.hspd = 2;
+          this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
+          // this.game.entities.newPlayer.move();
         }
-        this.game.entities.newPlayer.hspd = 2;
-        this.game.entities.newPlayer.move();
       }
-      
-      // if (this.game.collisionCheck(Object.assign({}, player, next))) {
-      //   while (!this.game.collisionCheck(player)) {
-      //     this.game.entities.newPlayer.x += 1;
-      //   }
-      //   this.game.entities.newPlayer.x -= 1;
-      // }
-      // else {
-      //   this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
-      //   console.log(this.game.entities.newPlayer.hspd)
-      // }
-    } else if(this.playerInput['d'] === false){
+       
+    else {
       this.game.entities.newPlayer.hspd = 0;
     }
-//for debuggerin
-    // if (this.playerInput['w'] === true) {
-    //   this.game.entities.newPlayer.y -= 10;
-    //   next = {
-    //     y: player.y - player.moveSpd
-    //   }
-    //   if (this.game.collisionCheck(Object.assign({}, player, next))) {
-    //     while (!this.game.collisionCheck(player)) {
-    //       this.game.entities.newPlayer.y -= 1;
-    //     }
-    //     this.game.entities.newPlayer.y+=1;
-    //   }
-    //   else this.game.entities.newPlayer.y -= this.game.entities.newPlayer.moveSpd;
-    // }
 
 
     if(this.playerInput.shootHook === true){
@@ -338,11 +301,9 @@ class Display {
       obj.vspd = 0;
       this.playerInput.canJump = true;
       if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        // console.log('ahh im stuck');
         while (!this.game.collisionCheck(obj)) {
           this.game.entities.newPlayer.y += 2;
         }
-        // console.log(this.game.collisionCheck(obj))
         this.game.entities.newPlayer.y -= 2;
 
       }
@@ -427,12 +388,12 @@ class Display {
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = 0;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  900){
+      if(newPlayer.y >  900 || newPlayer.x < 0){
         newGame();
         clearInterval(run);
       }
@@ -453,7 +414,6 @@ class Display {
             if(!coins[i].active) { continue; }
             coinCounter += 1;
             coins[i].active = false;
-            // console.log('oo a penny');
           }
         }
         
@@ -474,7 +434,6 @@ class Display {
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            // requestAnimationFrame(Object.values(entities)[i].draw);
             Object.values(entities)[i].draw();
           }
         }
@@ -554,7 +513,7 @@ class Game {
       };
       
       const playerOptions = {
-        x: 25,
+        x: 125,
         y: 25,
         context: this.context,
         color: 'blue',
@@ -1029,24 +988,22 @@ class Platform extends GameEntity {
 
   }
   draw(){
-    // if(this.y_len > this.x_len){
-      // this.context.drawImage(this.image, 214, 128, 14, 81, this.x, this.y, 14, 81);
-    // } else {
       this.context.fillStyle = this.color;
       this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
-    // }
   }
 
   move(moveSpd, otherObj){
     if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
+      console.log('trigger')
       otherObj.x += moveSpd;
       // otherObj.vspd = 0;
-      otherObj.y += 1;
+      // otherObj.y += 1;
     }
     this.x += moveSpd;
   }
   
 }
+module.exports = Platform;
 module.exports = Platform;
 
 /***/ }),
@@ -1070,35 +1027,28 @@ class Player extends GameEntity {
     this.ropeLen = 0;
     this.ropeAngle;
     this.targetPoint = {}
-    this.rotateSpd = .05;
     this.collsionCheck;
     this.game = options.game;
     this.image = options.image;
     this.snapX;
     this.snapY;
-    this.rotateSpd = 0.05;
-
-    // debugger
+    this.rotateSpd = 0.03;
   }
   
   move(swingMove){
-    // console.log('spds', this.hspd, this.vspd)
-    // if(this.collided === true){
-    //   // console.log('set!');
-    // }
     switch (this.state) {
       case 'move':
         let testObj = Object.assign({}, this);
         testObj.x += testObj.hspd;
         testObj.y += testObj.vspd;
+
         if(!this.game.collisionCheck(testObj)){
           this.x += this.hspd;
           this.y += this.vspd;
         }
-        if(this.snapX != undefined && this.snapY != undefined){
-          this.snapX = undefined;
-          this.snapY = undefined;
+        else {
         }
+
         this.rotateSpd = 0.05;
         break;
 
@@ -1111,11 +1061,7 @@ class Player extends GameEntity {
             this.y+=1;
           }
         }
-        // if(this.snapX == undefined && this.snapY == undefined){
-        //   this.snapX = this.x;
-        //   this.snapY = this.y;
-        //   let radius = Math.sqrt(Math.pow(this.snapX - center.x, 2) + Math.pow(this.snapY - center.y, 2));
-        // }
+        
         //to the mathman i never could be:
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         let nextX = (center.x + swingMove + (this.x - center.x + swingMove) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
@@ -1130,16 +1076,19 @@ class Player extends GameEntity {
         if(nextY < this.y && this.vspd > -4){
           this.vspd -= 1;
         }
-        let test = Object.assign({}, this, {x: this.x, y: this.y+ this.vspd});
+        let test = Object.assign({}, this, {x: this.x, y: this.y + this.vspd});
         if(!this.game.collisionCheck(test)){
           this.y += this.vspd;
           this.x += this.hspd;
         } 
+
         else {
+          //slide
+          this.vspd = 0;
+          this.x += this.hspd;
           //add bounce
-          this.rotateSpd = this.rotateSpd * -0.5;
+          // this.rotateSpd = this.rotateSpd * -0.5;
         }
-        
         
         break;
 
@@ -1148,18 +1097,6 @@ class Player extends GameEntity {
     }
   }
     draw(){
-      let count = 0;
-      let x;
-      let y;
-      // if(this.faceDir === -1){
-      //   this.context.scale(-1,1);
-      // }
-      // else {
-      //   this.context.scale(1,1);
-      // }
-    
-      // this.context.scale(-1, 1);
-
       this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
       
     }
