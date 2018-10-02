@@ -79,8 +79,8 @@ class Player extends GameEntity {
         break;
     }
   }
-    draw(){
-      this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
+    draw(viewPort){
+      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
       
     }
 

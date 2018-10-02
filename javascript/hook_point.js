@@ -9,9 +9,9 @@ class HookPoint extends GameEntity {
     this.collided = false;
     this.snapCalc = false;
   }
-  draw() {
+  draw(viewPort) {
     this.context.fillStyle = 'yellow';
-    this.context.fillRect(this.x, this.y, 10, 10);
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 10, 10);
     // this.context.restore();
   }
   reset(x, y){

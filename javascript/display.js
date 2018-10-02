@@ -24,6 +24,12 @@ class Display {
         families: ['M PLUS Rounded 1c']
       }
     });
+
+    this.viewPort = {
+      x: 0,
+      y: 0
+    }
+
     this.keyBind();
     this.render = this.render.bind(this);
     this.startRender = this.startRender.bind(this);
@@ -59,7 +65,7 @@ class Display {
     this.game.canvas.addEventListener('mousedown', (event) => {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft, y: event.clientY - this.game.canvas.offsetTop};
+      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft - this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop - this.viewPort.y};
 
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
@@ -255,10 +261,12 @@ class Display {
     let game = this.game;
     let imageX = 0;
     let coinCounter = 0;
+    let viewPort = this.viewPort;
+
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = 0;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
@@ -268,10 +276,13 @@ class Display {
         clearInterval(run);
       }
       else {
-        imageX += 0.5;
+        // imageX += 0.5;
+        
         context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
         
         getInput();
+        viewPort.x = newPlayer.x - (1280 / 2);
+        viewPort.y = newPlayer.y - (720 / 2);
         if(!hookPoint.collided){
           
           applyPhysics(newPlayer);
@@ -304,7 +315,7 @@ class Display {
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            Object.values(entities)[i].draw();
+            Object.values(entities)[i].draw(viewPort);
           }
         }
         
