@@ -273,7 +273,7 @@ class Display {
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  900 || newPlayer.x < 0){
+      if(newPlayer.y >  1400 || newPlayer.x < 0){
         newGame();
         clearInterval(run);
       }
