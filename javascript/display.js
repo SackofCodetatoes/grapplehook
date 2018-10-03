@@ -183,7 +183,7 @@ class Display {
       }
   
       if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-        // nextStep.y += nextStep.vspd;
+        nextStep.y += nextStep.vspd;
         //fall
       } else {
         obj.vspd = 0;
