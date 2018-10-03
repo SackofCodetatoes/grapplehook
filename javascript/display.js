@@ -14,11 +14,13 @@ class Display {
       w: false,
       s: false,
       ' ': false,
+      c: false,
       canJump: 'true',
       mousePos: {x: 0, y: 0},
       shootHook: false,
       hookTarget: {},
     }
+    this.grav = 1;
     WebFont.load({
       google: {
         families: ['M PLUS Rounded 1c']
@@ -58,6 +60,12 @@ class Display {
       if(event.key === ' ' && this.playerInput.canJump === true){
         this.playerInput.canJump = false;
         this.game.entities.newPlayer.vspd = -4;
+      }
+    })
+    //gravity flip
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'c') {
+        this.grav = -this.grav;
       }
     })
     this.game.canvas.addEventListener('mousemove', (event) => {
@@ -166,24 +174,54 @@ class Display {
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
-    checkStep.y = checkStep.y + checkStep.vspd + 1;
 
-    if(obj.vspd < 8){
-      obj.vspd += 0.2;
-    }
-
-    if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-      nextStep.y += nextStep.vspd;
-      //fall
-    } else {
-      obj.vspd = 0;
-      this.playerInput.canJump = true;
-      if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        while (!this.game.collisionCheck(obj)) {
-          this.game.entities.newPlayer.y += 2;
+    if(this.grav > 0){
+      checkStep.y = checkStep.y + checkStep.vspd + 1;
+  
+      if(obj.vspd < 6){
+        obj.vspd += 0.2;
+      }
+  
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        // nextStep.y += nextStep.vspd;
+        //fall
+      } else {
+        obj.vspd = 0;
+        this.playerInput.canJump = true;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y += 2;
+          }
+          this.game.entities.newPlayer.y -= 2;
+  
         }
-        this.game.entities.newPlayer.y -= 2;
+      }
+    }
+    //reverse grav attempt
+    else {
+      // debugger
+      checkStep.y = checkStep.y - checkStep.vspd - 1;
 
+      if (obj.vspd > -6) {
+        obj.vspd -= 0.2;
+      }
+
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        nextStep.y -= nextStep.vspd;
+        console.log(nextStep.y);
+        // debugger
+        // ???
+        //fall
+      } else {
+        console.log('wadu')
+        obj.vspd = 0;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y -= 2;
+          }
+          this.game.entities.newPlayer.y += 2;
+
+        }
       }
     }
 
@@ -273,14 +311,14 @@ class Display {
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  1400 || newPlayer.x < 0){
+      if(newPlayer.y >  1400){
         newGame();
         clearInterval(run);
       }
       else {
         // imageX += 0.5;
         
-        context.drawImage(game.background, imageX, 300, 4192, 1024, 0 - (viewPort.x * 0.2), 0 - (viewPort.y * 0.3), 4192, 1024);
+        context.drawImage(game.background, 0, 300, 4192, 1024, 0 - (viewPort.x * 0.2) - 200, 0 - (viewPort.y * 0.3), 4192, 1024);
         
         viewPort.x = newPlayer.x - (1280 / 2);
         viewPort.y = newPlayer.y - (720 / 2);
@@ -322,18 +360,17 @@ class Display {
           }
         }
         
-        if(newPlayer.y < 0){
-          //draw triangle at x position
-          context.beginPath();
-          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
-          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
-          context.lineTo(newPlayer.x, 50);
-          context.closePath();
+        // if(newPlayer.y < 0){
+        //   //draw triangle at x position
+        //   context.beginPath();
+        //   context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
+        //   context.lineTo(newPlayer.x + newPlayer.x_len, 50);
+        //   context.lineTo(newPlayer.x, 50);
+        //   context.closePath();
         
-          context.fillStyle = "red";
-          context.fill();
-        
-        }
+        //   context.fillStyle = "red";
+        //   context.fill();
+        // }
         
         context.fillStyle = 'white'
         context.font = "bold 24px Helvetica";

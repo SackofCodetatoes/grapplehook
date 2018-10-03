@@ -23,13 +23,21 @@ class Player extends GameEntity {
       case 'move':
         let testObj = Object.assign({}, this);
         testObj.x += testObj.hspd;
-        testObj.y += testObj.vspd;
-
+        
         if(!this.game.collisionCheck(testObj)){
           this.x += this.hspd;
+          console.log('waduhek')
+        }
+
+        testObj.y += testObj.vspd;
+        
+        if(!this.game.collisionCheck(testObj)){
           this.y += this.vspd;
         }
+        
+        
         else {
+          
         }
 
         this.rotateSpd = 0.05;
