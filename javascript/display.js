@@ -37,6 +37,8 @@ class Display {
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
+
+
   //source of inspiration for omni-directional movement/fluidity
   //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
@@ -65,7 +67,7 @@ class Display {
     this.game.canvas.addEventListener('mousedown', (event) => {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft - this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop - this.viewPort.y};
+      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft + this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop + this.viewPort.y};
 
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
@@ -151,12 +153,12 @@ class Display {
         this.game.entities.newPlayer.state = 'swing';
         this.game.context.beginPath();
         this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        this.game.context.arc(hookPoint.x, hookPoint.y,
-        this.playerInput.ropeLen, 0, 2 * Math.PI);
+        this.game.context.arc(hookPoint.x - this.viewPort.x, hookPoint.y - this.viewPort.y,
+          this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
       }
-      //set hsnapshopt
-      this.game.entities.hook.draw();
+      //set hsnapshot, also draws line
+      this.game.entities.hook.draw(this.viewPort);
     }
 
   }
@@ -278,9 +280,8 @@ class Display {
       else {
         // imageX += 0.5;
         
-        context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+        context.drawImage(game.background, imageX, 300, 4192, 1024, 0 - (viewPort.x * 0.2), 0 - (viewPort.y * 0.3), 4192, 1024);
         
-        getInput();
         viewPort.x = newPlayer.x - (1280 / 2);
         viewPort.y = newPlayer.y - (720 / 2);
         if(!hookPoint.collided){
@@ -312,6 +313,8 @@ class Display {
         }
         
         newPlayer.move(moveSpd);
+        getInput();
+
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
