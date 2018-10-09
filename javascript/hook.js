@@ -6,11 +6,11 @@ class GrappleHook extends GameEntity {
     this.active = false;
   }
 
-  draw(){
+  draw(viewPort){
     this.context.strokeStyle = 'lightgray';
     this.context.beginPath();
-    this.context.moveTo(this.x, this.y);
-    this.context.lineTo(this.targetX, this.targetY);
+    this.context.moveTo(this.x - viewPort.x, this.y - viewPort.y);
+    this.context.lineTo(this.targetX - viewPort.x, this.targetY - viewPort.y);
     this.context.stroke();
   }
   snapshot(){

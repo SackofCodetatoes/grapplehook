@@ -144,7 +144,7 @@ class Game {
     coinOptions.y = 500;
     this.entities['coin4'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin4);
-    platformOptions2.x = 2100;
+    platformOptions2.x = 2000;
     this.entities['platform7'] = new Platform(platformOptions2);
     
     
@@ -152,7 +152,7 @@ class Game {
     coinOptions.y = 500;
     this.entities['coin5'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin5);
-    platformOptions2.x = 2400;
+    platformOptions2.x = 2200;
     this.entities['platform8'] = new Platform(platformOptions2)
     
     //add some coins

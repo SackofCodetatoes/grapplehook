@@ -14,16 +14,24 @@ class Display {
       w: false,
       s: false,
       ' ': false,
+      c: false,
       canJump: 'true',
       mousePos: {x: 0, y: 0},
       shootHook: false,
       hookTarget: {},
     }
+    this.grav = 1;
     WebFont.load({
       google: {
         families: ['M PLUS Rounded 1c']
       }
     });
+
+    this.viewPort = {
+      x: 0,
+      y: 0
+    }
+
     this.keyBind();
     this.render = this.render.bind(this);
     this.startRender = this.startRender.bind(this);
@@ -31,6 +39,8 @@ class Display {
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
+
+
   //source of inspiration for omni-directional movement/fluidity
   //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
@@ -52,6 +62,12 @@ class Display {
         this.game.entities.newPlayer.vspd = -4;
       }
     })
+    //gravity flip
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'c') {
+        this.grav = -this.grav;
+      }
+    })
     this.game.canvas.addEventListener('mousemove', (event) => {
       this.playerInput.mousePos.x = event.clientX - this.game.canvas.offsetLeft;
       this.playerInput.mousePos.y = event.clientY - this.game.canvas.offsetTop;
@@ -59,7 +75,7 @@ class Display {
     this.game.canvas.addEventListener('mousedown', (event) => {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft, y: event.clientY - this.game.canvas.offsetTop};
+      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft + this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop + this.viewPort.y};
 
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
@@ -145,12 +161,12 @@ class Display {
         this.game.entities.newPlayer.state = 'swing';
         this.game.context.beginPath();
         this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        this.game.context.arc(hookPoint.x, hookPoint.y,
-        this.playerInput.ropeLen, 0, 2 * Math.PI);
+        this.game.context.arc(hookPoint.x - this.viewPort.x, hookPoint.y - this.viewPort.y,
+          this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
       }
-      //set hsnapshopt
-      this.game.entities.hook.draw();
+      //set hsnapshot, also draws line
+      this.game.entities.hook.draw(this.viewPort);
     }
 
   }
@@ -158,24 +174,54 @@ class Display {
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
-    checkStep.y = checkStep.y + checkStep.vspd + 1;
 
-    if(obj.vspd < 8){
-      obj.vspd += 0.2;
-    }
-
-    if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-      nextStep.y += nextStep.vspd;
-      //fall
-    } else {
-      obj.vspd = 0;
-      this.playerInput.canJump = true;
-      if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        while (!this.game.collisionCheck(obj)) {
-          this.game.entities.newPlayer.y += 2;
+    if(this.grav > 0){
+      checkStep.y = checkStep.y + checkStep.vspd + 1;
+  
+      if(obj.vspd < 6){
+        obj.vspd += 0.2;
+      }
+  
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        nextStep.y += nextStep.vspd;
+        //fall
+      } else {
+        obj.vspd = 0;
+        this.playerInput.canJump = true;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y += 2;
+          }
+          this.game.entities.newPlayer.y -= 2;
+  
         }
-        this.game.entities.newPlayer.y -= 2;
+      }
+    }
+    //reverse grav attempt
+    else {
+      // debugger
+      checkStep.y = checkStep.y - checkStep.vspd - 1;
 
+      if (obj.vspd > -6) {
+        obj.vspd -= 0.2;
+      }
+
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        nextStep.y -= nextStep.vspd;
+        console.log(nextStep.y);
+        // debugger
+        // ???
+        //fall
+      } else {
+        console.log('wadu')
+        obj.vspd = 0;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y -= 2;
+          }
+          this.game.entities.newPlayer.y += 2;
+
+        }
       }
     }
 
@@ -255,23 +301,27 @@ class Display {
     let game = this.game;
     let imageX = 0;
     let coinCounter = 0;
+    let viewPort = this.viewPort;
+
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = 0;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  900 || newPlayer.x < 0){
+      if(newPlayer.y >  1400){
         newGame();
         clearInterval(run);
       }
       else {
-        imageX += 0.5;
-        context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+        // imageX += 0.5;
         
-        getInput();
+        context.drawImage(game.background, 0, 300, 4192, 1024, 0 - (viewPort.x * 0.2) - 200, 0 - (viewPort.y * 0.3), 4192, 1024);
+        
+        viewPort.x = newPlayer.x - (1280 / 2);
+        viewPort.y = newPlayer.y - (720 / 2);
         if(!hookPoint.collided){
           
           applyPhysics(newPlayer);
@@ -301,25 +351,26 @@ class Display {
         }
         
         newPlayer.move(moveSpd);
+        getInput();
+
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            Object.values(entities)[i].draw();
+            Object.values(entities)[i].draw(viewPort);
           }
         }
         
-        if(newPlayer.y < 0){
-          //draw triangle at x position
-          context.beginPath();
-          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
-          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
-          context.lineTo(newPlayer.x, 50);
-          context.closePath();
+        // if(newPlayer.y < 0){
+        //   //draw triangle at x position
+        //   context.beginPath();
+        //   context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
+        //   context.lineTo(newPlayer.x + newPlayer.x_len, 50);
+        //   context.lineTo(newPlayer.x, 50);
+        //   context.closePath();
         
-          context.fillStyle = "red";
-          context.fill();
-        
-        }
+        //   context.fillStyle = "red";
+        //   context.fill();
+        // }
         
         context.fillStyle = 'white'
         context.font = "bold 24px Helvetica";

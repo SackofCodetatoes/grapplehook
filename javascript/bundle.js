@@ -100,12 +100,12 @@ class Coin extends GameEntitiy {
     super(options);
   }
 
-  draw() {
+  draw(viewPort) {
     this.context.beginPath();
     this.context.lineWidth = 2;
     this.context.strokeStyle = 'orange';
     this.context.fillStyle = 'yellow';
-    this.context.arc(this.x + this.x_len / 2, this.y + this.y_len / 2, 10, 0, 2 * Math.PI);
+    this.context.arc(this.x + this.x_len / 2 - viewPort.x, this.y + this.y_len / 2 - viewPort.y, 10, 0, 2 * Math.PI);
     this.context.fill();
     this.context.stroke();
   }
@@ -144,16 +144,24 @@ class Display {
       w: false,
       s: false,
       ' ': false,
+      c: false,
       canJump: 'true',
       mousePos: {x: 0, y: 0},
       shootHook: false,
       hookTarget: {},
     }
+    this.grav = 1;
     WebFont.load({
       google: {
         families: ['M PLUS Rounded 1c']
       }
     });
+
+    this.viewPort = {
+      x: 0,
+      y: 0
+    }
+
     this.keyBind();
     this.render = this.render.bind(this);
     this.startRender = this.startRender.bind(this);
@@ -161,6 +169,8 @@ class Display {
     this.getInput = this.getInput.bind(this);
     this.applyPhysics = this.applyPhysics.bind(this);
   }
+
+
   //source of inspiration for omni-directional movement/fluidity
   //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
   keyBind() {
@@ -182,6 +192,12 @@ class Display {
         this.game.entities.newPlayer.vspd = -4;
       }
     })
+    //gravity flip
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'c') {
+        this.grav = -this.grav;
+      }
+    })
     this.game.canvas.addEventListener('mousemove', (event) => {
       this.playerInput.mousePos.x = event.clientX - this.game.canvas.offsetLeft;
       this.playerInput.mousePos.y = event.clientY - this.game.canvas.offsetTop;
@@ -189,7 +205,7 @@ class Display {
     this.game.canvas.addEventListener('mousedown', (event) => {
       let player = this.game.entities.newPlayer;
       this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft, y: event.clientY - this.game.canvas.offsetTop};
+      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft + this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop + this.viewPort.y};
 
       this.game.entities.hookPoint.x = player.x + player.x_len / 2;
       this.game.entities.hookPoint.y = player.y + player.y_len / 2;
@@ -275,12 +291,12 @@ class Display {
         this.game.entities.newPlayer.state = 'swing';
         this.game.context.beginPath();
         this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        this.game.context.arc(hookPoint.x, hookPoint.y,
-        this.playerInput.ropeLen, 0, 2 * Math.PI);
+        this.game.context.arc(hookPoint.x - this.viewPort.x, hookPoint.y - this.viewPort.y,
+          this.playerInput.ropeLen, 0, 2 * Math.PI);
         this.game.context.stroke();
       }
-      //set hsnapshopt
-      this.game.entities.hook.draw();
+      //set hsnapshot, also draws line
+      this.game.entities.hook.draw(this.viewPort);
     }
 
   }
@@ -288,24 +304,54 @@ class Display {
   applyPhysics(obj){
     let nextStep = obj;
     let checkStep = Object.assign({}, obj);
-    checkStep.y = checkStep.y + checkStep.vspd + 1;
 
-    if(obj.vspd < 8){
-      obj.vspd += 0.2;
-    }
-
-    if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-      nextStep.y += nextStep.vspd;
-      //fall
-    } else {
-      obj.vspd = 0;
-      this.playerInput.canJump = true;
-      if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-        while (!this.game.collisionCheck(obj)) {
-          this.game.entities.newPlayer.y += 2;
+    if(this.grav > 0){
+      checkStep.y = checkStep.y + checkStep.vspd + 1;
+  
+      if(obj.vspd < 6){
+        obj.vspd += 0.2;
+      }
+  
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        nextStep.y += nextStep.vspd;
+        //fall
+      } else {
+        obj.vspd = 0;
+        this.playerInput.canJump = true;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y += 2;
+          }
+          this.game.entities.newPlayer.y -= 2;
+  
         }
-        this.game.entities.newPlayer.y -= 2;
+      }
+    }
+    //reverse grav attempt
+    else {
+      // debugger
+      checkStep.y = checkStep.y - checkStep.vspd - 1;
 
+      if (obj.vspd > -6) {
+        obj.vspd -= 0.2;
+      }
+
+      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
+        nextStep.y -= nextStep.vspd;
+        console.log(nextStep.y);
+        // debugger
+        // ???
+        //fall
+      } else {
+        console.log('wadu')
+        obj.vspd = 0;
+        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
+          while (!this.game.collisionCheck(obj)) {
+            this.game.entities.newPlayer.y -= 2;
+          }
+          this.game.entities.newPlayer.y += 2;
+
+        }
       }
     }
 
@@ -385,23 +431,27 @@ class Display {
     let game = this.game;
     let imageX = 0;
     let coinCounter = 0;
+    let viewPort = this.viewPort;
+
 
     let coins = this.game.coins;
     
-    const moveSpd = -2;
+    const moveSpd = 0;
     
     let run = setInterval(function () {
       context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
       
-      if(newPlayer.y >  900 || newPlayer.x < 0){
+      if(newPlayer.y >  1400){
         newGame();
         clearInterval(run);
       }
       else {
-        imageX += 0.5;
-        context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
+        // imageX += 0.5;
         
-        getInput();
+        context.drawImage(game.background, 0, 300, 4192, 1024, 0 - (viewPort.x * 0.2) - 200, 0 - (viewPort.y * 0.3), 4192, 1024);
+        
+        viewPort.x = newPlayer.x - (1280 / 2);
+        viewPort.y = newPlayer.y - (720 / 2);
         if(!hookPoint.collided){
           
           applyPhysics(newPlayer);
@@ -431,25 +481,26 @@ class Display {
         }
         
         newPlayer.move(moveSpd);
+        getInput();
+
         
         for(let i = 0; i < Object.values(entities).length; i++){
           if(Object.values(entities)[i].active){
-            Object.values(entities)[i].draw();
+            Object.values(entities)[i].draw(viewPort);
           }
         }
         
-        if(newPlayer.y < 0){
-          //draw triangle at x position
-          context.beginPath();
-          context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
-          context.lineTo(newPlayer.x + newPlayer.x_len, 50);
-          context.lineTo(newPlayer.x, 50);
-          context.closePath();
+        // if(newPlayer.y < 0){
+        //   //draw triangle at x position
+        //   context.beginPath();
+        //   context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
+        //   context.lineTo(newPlayer.x + newPlayer.x_len, 50);
+        //   context.lineTo(newPlayer.x, 50);
+        //   context.closePath();
         
-          context.fillStyle = "red";
-          context.fill();
-        
-        }
+        //   context.fillStyle = "red";
+        //   context.fill();
+        // }
         
         context.fillStyle = 'white'
         context.font = "bold 24px Helvetica";
@@ -623,7 +674,7 @@ class Game {
     coinOptions.y = 500;
     this.entities['coin4'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin4);
-    platformOptions2.x = 2100;
+    platformOptions2.x = 2000;
     this.entities['platform7'] = new Platform(platformOptions2);
     
     
@@ -631,7 +682,7 @@ class Game {
     coinOptions.y = 500;
     this.entities['coin5'] = new Coin(coinOptions);
     this.coins.push(this.entities.coin5);
-    platformOptions2.x = 2400;
+    platformOptions2.x = 2200;
     this.entities['platform8'] = new Platform(platformOptions2)
     
     //add some coins
@@ -810,9 +861,9 @@ class GameEntity {
     this.active = true;
     this.faceDir = 1;
   }
-  draw() {
+  draw(viewPort) {
     this.context.fillStyle = this.color;
-    this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.x_len, this.y_len);
   }
 
   move() {
@@ -887,11 +938,11 @@ class GrappleHook extends GameEntity {
     this.active = false;
   }
 
-  draw(){
+  draw(viewPort){
     this.context.strokeStyle = 'lightgray';
     this.context.beginPath();
-    this.context.moveTo(this.x, this.y);
-    this.context.lineTo(this.targetX, this.targetY);
+    this.context.moveTo(this.x - viewPort.x, this.y - viewPort.y);
+    this.context.lineTo(this.targetX - viewPort.x, this.targetY - viewPort.y);
     this.context.stroke();
   }
   snapshot(){
@@ -920,9 +971,9 @@ class HookPoint extends GameEntity {
     this.collided = false;
     this.snapCalc = false;
   }
-  draw() {
+  draw(viewPort) {
     this.context.fillStyle = 'yellow';
-    this.context.fillRect(this.x, this.y, 10, 10);
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 10, 10);
     // this.context.restore();
   }
   reset(x, y){
@@ -987,9 +1038,9 @@ class Platform extends GameEntity {
     this.image = options.image;
 
   }
-  draw(){
+  draw(viewPort){
       this.context.fillStyle = this.color;
-      this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+      this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.x_len, this.y_len);
   }
 
   move(moveSpd, otherObj){
@@ -1021,7 +1072,7 @@ const MOVE_STATES = ['move', 'fixed']
 class Player extends GameEntity {
   constructor(options) {
     super(options);
-    this.moveSpd = 4;
+    this.moveSpd = 5;
     this.state = 'move';
     this.ropeLen = 0;
     this.ropeAngle;
@@ -1037,57 +1088,101 @@ class Player extends GameEntity {
   move(swingMove){
     switch (this.state) {
       case 'move':
-        let testObj = Object.assign({}, this);
-        testObj.x += testObj.hspd;
-        testObj.y += testObj.vspd;
+      // console.log(this.hspd, this.vspd)
 
+        let testObj = Object.assign({}, this);
+        testObj.x += testObj.hspd + 1;
+        
         if(!this.game.collisionCheck(testObj)){
-          this.x += this.hspd;
+          this.x = Math.floor(this.x + this.hspd);
+        } else {
+          testObj.x -= testObj.hspd;
+        }
+
+        testObj.y += testObj.vspd * 1.5;
+
+        if (!this.game.collisionCheck(testObj)) {
           this.y += this.vspd;
         }
-        else {
-        }
 
+        else { 
+          console.log('collision');
+          this.x += -this.hspd;
+        }
+        
         this.rotateSpd = 0.05;
         break;
 
 
       case 'swing':
         let center = this.targetPoint;
+        
         this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
+        if(this.ropeAngle < 0){
+          this.ropeAngle = 360 + this.ropeAngle
+        }
         if(this.y + this.vspd > this.ropeLen){
           while(!this.y > this.ropeLen ){
             this.y+=1;
           }
         }
-        
+        // let radius;
+        // radius = Math.sqrt(Math.pow(center.x - this.x, 2) + Math.pow(center.y - this.y, 2));
         //to the mathman i never could be:
         //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         let nextX = (center.x + swingMove + (this.x - center.x + swingMove) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         let nextY = (center.y + swingMove + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
+        
+        // let nextX = (center.x + radius) * Math.cos(this.ropeAngle) ;
+        // let nextY = (center.y + radius) * Math.sin(this.ropeAngle) ;
+        // debugger
+        // let nextY = (center.y + swingMove + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
 
         //old working-ish
         // let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
         // let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
 
-        this.hspd = nextX - this.x + swingMove;
+        this.hspd = nextX - this.x;
         this.vspd = nextY - this.y;
-        if(nextY < this.y && this.vspd > -4){
-          this.vspd -= 1;
-        }
+        // console.log(this.hspd, this.vspd)
+
+        // if(nextY < this.y && this.vspd > -4){
+        //   this.vspd -= 1;
+        // }
         let test = Object.assign({}, this, {x: this.x, y: this.y + this.vspd});
+
+
         if(!this.game.collisionCheck(test)){
           this.y += this.vspd;
-          this.x += this.hspd;
         } 
+
+        test = Object.assign({}, this, {x: this.x + this.hspd, y: this.y});
+        if(!this.game.collisionCheck(test)){
+          this.x = Math.floor(this.x + this.hspd);
+        }
 
         else {
           //slide
           this.vspd = 0;
-          this.x += this.hspd;
+          let testStep = Object.assign({}, this);
+          let sign;
+          if(testStep.hspd > 0){
+            sign = 3;
+          } else {
+            sign = -3;
+          }
+
+          testStep.x += testStep.hspd + sign;
+
+
+          if(!this.game.collisionCheck(testStep)){
+            this.x = Math.floor(this.x + this.hspd);
+          }
           //add bounce
-          // this.rotateSpd = this.rotateSpd * -0.5;
         }
+        // this.vspd = 0;
+        this.vspd = this.vspd * 3/10;
+        // console.log(this.vspd)
         
         break;
 
@@ -1095,8 +1190,8 @@ class Player extends GameEntity {
         break;
     }
   }
-    draw(){
-      this.context.drawImage(this.image, 0, 257, 14, 16, this.x, this.y, 30, 28);
+    draw(viewPort){
+      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
       
     }
 

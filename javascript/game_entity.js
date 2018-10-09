@@ -12,9 +12,9 @@ class GameEntity {
     this.active = true;
     this.faceDir = 1;
   }
-  draw() {
+  draw(viewPort) {
     this.context.fillStyle = this.color;
-    this.context.fillRect(this.x, this.y, this.x_len, this.y_len);
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.x_len, this.y_len);
   }
 
   move() {
