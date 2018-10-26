@@ -1,24 +1,9 @@
-const Display = require("./display.js");
-const Game = require("./game.js");
-// const WebFont = require('webfontloader');
+import Display from "./display.js"
 
 
-// console.log('all is dandy!');
-let spriteSheet = new Image();
-spriteSheet.src = "./images/industrial.v2.png";
-
-let background = new Image();
+const display = new Display();
+const background = new Image();
 background.src = "./images/city_background_night.png";
-const game = new Game();
-game.spriteSheet = spriteSheet;
-game.background = background;
-game.init();
-const testDisplay = new Display(game);
-background.onload = testDisplay.startRender;
-
-
-
-
-
-
-
+display.background = background;
+background.onload = display.render;
+display.render;
