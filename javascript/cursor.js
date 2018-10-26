@@ -15,6 +15,10 @@ class Cursor extends UIEntity {
     })
   }
 
+  // draw(){
+  //   unique draw
+  // }
+
   update(viewPort){
     this.draw(viewPort)
   }

@@ -142,6 +142,10 @@ class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     })
   }
 
+  // draw(){
+  //   unique draw
+  // }
+
   update(viewPort){
     this.draw(viewPort)
   }
