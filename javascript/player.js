@@ -10,7 +10,7 @@ class Player extends GameEntity {
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
-
+    this.viewPort = options.viewPort;
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -47,8 +47,8 @@ class Player extends GameEntity {
 
     canvas.addEventListener('mousedown', (event) => {
       let targetPoint = {};
-      targetPoint.x = event.clientX - canvas.offsetLeft;
-      targetPoint.y = event.clientY - canvas.offsetTop;
+      targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       console.log(targetPoint, {x: this.x, y: this.y});
     })
 

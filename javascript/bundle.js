@@ -262,6 +262,7 @@ class Game {
       platformCollision: this.platformCollision,
       physicsObj: true,
       physicsCollision: this.physicsCollision,
+      viewPort: this.viewPort,
     }
 
     let cursorConfig = {
@@ -537,7 +538,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
-
+    this.viewPort = options.viewPort;
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -574,8 +575,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     canvas.addEventListener('mousedown', (event) => {
       let targetPoint = {};
-      targetPoint.x = event.clientX - canvas.offsetLeft;
-      targetPoint.y = event.clientY - canvas.offsetTop;
+      targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       console.log(targetPoint, {x: this.x, y: this.y});
     })
 

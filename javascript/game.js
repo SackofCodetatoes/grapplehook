@@ -39,6 +39,7 @@ class Game {
       platformCollision: this.platformCollision,
       physicsObj: true,
       physicsCollision: this.physicsCollision,
+      viewPort: this.viewPort,
     }
 
     let cursorConfig = {
