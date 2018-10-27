@@ -172,18 +172,20 @@ class Display {
   constructor(){
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
+    this.viewPort = {
+      x: 0,
+      y: 0,
+    }
+
     let gameConfig = {
       canvas: this.canvas,
       context: this.context,
+      viewPort: this.viewPort,
     }
 
     this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameConfig);
     this.game.initialize();
 
-    this.viewPort = {
-      x: 0,
-      y: 0,
-    }
 
     this.render = this.render.bind(this);
   }
@@ -194,7 +196,7 @@ class Display {
 
     this.context.drawImage(this.background, 0, 300, 1584, 1020, -this.viewPort.x, -this.viewPort.y, 1584, 1020);
 
-    this.game.update(this.viewPort);
+    this.game.update();
 
     requestAnimationFrame(() => this.render());
   }
@@ -231,17 +233,20 @@ const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
 class Game {
   constructor(options){
    //preload 
-   this.canvas = options.canvas;
-   this.context = options.context;
-   this.platforms = [];
-   this.entities = [];
-   this.physicsObjs = [];
-   this.staticObjs = [];
+    this.canvas = options.canvas;
+    this.context = options.context;
+    this.viewPort = options.viewPort;
 
-   this.gravDir = 1;
 
-   this.platformCollision = this.platformCollision.bind(this);
-   this.physicsCollision = this.physicsCollision.bind(this);
+    this.platforms = [];
+    this.entities = [];
+    this.physicsObjs = [];
+    this.staticObjs = [];
+
+    this.gravDir = 1;
+
+    this.platformCollision = this.platformCollision.bind(this);
+    this.physicsCollision = this.physicsCollision.bind(this);
   }
 
 
@@ -307,10 +312,10 @@ class Game {
   }
 
 
-  update(viewPort){
+  update(){
     //each game step
-    viewPort.x = this.player.x - (1280 / 2);
-    viewPort.y = this.player.y - (720 / 2);
+    this.viewPort.x = this.player.x - (1280 / 2);
+    this.viewPort.y = this.player.y - (720 / 2);
     
     this.applyGravity();
     
@@ -318,7 +323,7 @@ class Game {
     this.camera.y = this.player.y - (720 / 2);
 
     for(let i = 0; i < this.entities.length; i++){
-      this.entities[i].update(viewPort);
+      this.entities[i].update(this.viewPort);
     }
 
   }
@@ -566,6 +571,13 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.playerInput[event.key] = false;
       }
     });
+
+    canvas.addEventListener('mousedown', (event) => {
+      let targetPoint = {};
+      targetPoint.x = event.clientX - canvas.offsetLeft;
+      targetPoint.y = event.clientY - canvas.offsetTop;
+      console.log(targetPoint, {x: this.x, y: this.y});
+    })
 
   }// end of keybind
 

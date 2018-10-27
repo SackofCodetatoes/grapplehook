@@ -45,6 +45,13 @@ class Player extends GameEntity {
       }
     });
 
+    canvas.addEventListener('mousedown', (event) => {
+      let targetPoint = {};
+      targetPoint.x = event.clientX - canvas.offsetLeft;
+      targetPoint.y = event.clientY - canvas.offsetTop;
+      console.log(targetPoint, {x: this.x, y: this.y});
+    })
+
   }// end of keybind
 
   draw(viewPort){

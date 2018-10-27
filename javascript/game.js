@@ -10,17 +10,20 @@ const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
 class Game {
   constructor(options){
    //preload 
-   this.canvas = options.canvas;
-   this.context = options.context;
-   this.platforms = [];
-   this.entities = [];
-   this.physicsObjs = [];
-   this.staticObjs = [];
+    this.canvas = options.canvas;
+    this.context = options.context;
+    this.viewPort = options.viewPort;
 
-   this.gravDir = 1;
 
-   this.platformCollision = this.platformCollision.bind(this);
-   this.physicsCollision = this.physicsCollision.bind(this);
+    this.platforms = [];
+    this.entities = [];
+    this.physicsObjs = [];
+    this.staticObjs = [];
+
+    this.gravDir = 1;
+
+    this.platformCollision = this.platformCollision.bind(this);
+    this.physicsCollision = this.physicsCollision.bind(this);
   }
 
 
@@ -86,10 +89,10 @@ class Game {
   }
 
 
-  update(viewPort){
+  update(){
     //each game step
-    viewPort.x = this.player.x - (1280 / 2);
-    viewPort.y = this.player.y - (720 / 2);
+    this.viewPort.x = this.player.x - (1280 / 2);
+    this.viewPort.y = this.player.y - (720 / 2);
     
     this.applyGravity();
     
@@ -97,7 +100,7 @@ class Game {
     this.camera.y = this.player.y - (720 / 2);
 
     for(let i = 0; i < this.entities.length; i++){
-      this.entities[i].update(viewPort);
+      this.entities[i].update(this.viewPort);
     }
 
   }
