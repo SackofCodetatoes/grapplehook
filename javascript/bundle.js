@@ -243,6 +243,9 @@ class Game {
     this.physicsObjs = [];
     this.staticObjs = [];
 
+
+    this.activeEntities = {};
+
     this.gravDir = 1;
 
     this.platformCollision = this.platformCollision.bind(this);
@@ -251,6 +254,7 @@ class Game {
 
 
   initialize(){
+    //give each object an id
     //game init
     let playerConfig = {
       x: 205,
@@ -278,20 +282,23 @@ class Game {
     //put all these in a seed file and use call/apply 
     this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 130, y: 300, xLen: 600, yLen: 25, context: this.context})
     this.platforms.push(this.platform);
-    this.entities.push(this.platform);
+    // this.entities.push(this.platform);
+    this.activeEntities['platform1'] = this.platform;
 
     this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 400, y: 0, xLen: 25, yLen: 200, context: this.context})
     this.platforms.push(this.platform2);
-    this.entities.push(this.platform2);
+    // this.entities.push(this.platform2);
+    this.activeEntities['platform2'] = this.platform2;
 
     this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 205, y: 0, xLen: 725, yLen: 25, context: this.context})
     this.platforms.push(this.platform3);
-    this.entities.push(this.platform3);
+    // this.entities.push(this.platform3);
+    this.activeEntities['platform3'] = this.platform3;
 
     this.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_2__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
-    this.entities.push(this.box);
+    // this.entities.push(this.box);
+    this.activeEntities['box'] = this.box;
     this.physicsObjs.push(this.box);
-    // this.platforms.push(this.box);
 
 
     this.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
@@ -303,15 +310,27 @@ class Game {
 
     // this.player.platformCollision = this.platformCollision;
 
-    this.entities.push(this.player);
+    // this.entities.push(this.player);
+    this.activeEntities['player'] = this.player;
 
-    this.entities.push(this.cursor);
+    // this.entities.push(this.cursor);
+    this.activeEntities['cursor'] = this.cursor;
     
     this.physicsObjs.push(this.player);
 
 
+    this.entities = Object.values(this.activeEntities);
   }
 
+  addEntity(entity, id) {
+    this.activeEntities[id] = entity;
+    this.entities = Object.values(this.activeEntities);
+  }
+  
+  deleteEntity(id) {
+    delete this.activeEntities[id];
+    this.entities = Object.values(this.activeEntities)
+  }
 
   update(){
     //each game step
@@ -326,8 +345,8 @@ class Game {
     for(let i = 0; i < this.entities.length; i++){
       this.entities[i].update(this.viewPort);
     }
-
   }
+
   physicsCollision(x, y, obj){
     //check collision with physics objs
     for (let i = 0; i < this.physicsObjs.length; i++) {
