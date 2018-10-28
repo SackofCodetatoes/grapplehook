@@ -8,13 +8,28 @@ class Player extends GameEntity {
   constructor(options){
     super(options);
     this.addEntity = options.addEntity;
-    this.deleteEntity = options.deleteEntity;
-
+    // this.deleteEntity = options.deleteEntity;
+    this.hook = options.hook;
     this.moveSpd = 4;
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
     this.viewPort = options.viewPort;
+
+    let hookConfig = {
+      x: this.x,
+      y: this.y,
+      xLen: 10,
+      yLen: 10,
+      context: this.context,
+      game: this,
+      platformCollision: this.platformCollision,
+      viewPort: this.viewPort,
+    }
+
+    this.hook = new Hook(hookConfig);
+    this.addEntity(this.hook, 'hook');
+
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -57,6 +72,8 @@ class Player extends GameEntity {
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
+      this.hook.x = this.playerInput.targetPoint.x;
+      this.hook.y = this.playerInput.targetPoint.y;
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;

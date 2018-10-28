@@ -519,7 +519,7 @@ display.render;
 /*!****************************!*\
   !*** ./javascript/hook.js ***!
   \****************************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -530,14 +530,11 @@ __webpack_require__.r(__webpack_exports__);
 class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options)
-
+    this.defaultColor = 'red';
   }
 
-
-
-
-
 }
+/* harmony default export */ __webpack_exports__["default"] = (Hook);
 
 /***/ }),
 
@@ -586,13 +583,28 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
     this.addEntity = options.addEntity;
-    this.deleteEntity = options.deleteEntity;
-
+    // this.deleteEntity = options.deleteEntity;
+    this.hook = options.hook;
     this.moveSpd = 4;
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
     this.viewPort = options.viewPort;
+
+    let hookConfig = {
+      x: this.x,
+      y: this.y,
+      xLen: 10,
+      yLen: 10,
+      context: this.context,
+      game: this,
+      platformCollision: this.platformCollision,
+      viewPort: this.viewPort,
+    }
+
+    this.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_1__["default"](hookConfig);
+    this.addEntity(this.hook, 'hook');
+
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -635,6 +647,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
+      this.hook.x = this.playerInput.targetPoint.x;
+      this.hook.y = this.playerInput.targetPoint.y;
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
