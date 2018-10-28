@@ -27,6 +27,8 @@ class Game {
 
     this.platformCollision = this.platformCollision.bind(this);
     this.physicsCollision = this.physicsCollision.bind(this);
+    this.addEntity = this.addEntity.bind(this);
+    this.deleteEntity = this.deleteEntity.bind(this);
   }
 
 
@@ -44,6 +46,8 @@ class Game {
       physicsObj: true,
       physicsCollision: this.physicsCollision,
       viewPort: this.viewPort,
+      addEntity: this.addEntity,
+      deleteEntity: this.deleteEntity,
     }
 
     let cursorConfig = {

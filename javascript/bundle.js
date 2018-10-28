@@ -250,6 +250,8 @@ class Game {
 
     this.platformCollision = this.platformCollision.bind(this);
     this.physicsCollision = this.physicsCollision.bind(this);
+    this.addEntity = this.addEntity.bind(this);
+    this.deleteEntity = this.deleteEntity.bind(this);
   }
 
 
@@ -267,6 +269,8 @@ class Game {
       physicsObj: true,
       physicsCollision: this.physicsCollision,
       viewPort: this.viewPort,
+      addEntity: this.addEntity,
+      deleteEntity: this.deleteEntity,
     }
 
     let cursorConfig = {
@@ -511,6 +515,32 @@ display.render;
 
 /***/ }),
 
+/***/ "./javascript/hook.js":
+/*!****************************!*\
+  !*** ./javascript/hook.js ***!
+  \****************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity */ "./javascript/game_entity.js");
+
+
+class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(options){
+    super(options)
+
+  }
+
+
+
+
+
+}
+
+/***/ }),
+
 /***/ "./javascript/platform.js":
 /*!********************************!*\
   !*** ./javascript/platform.js ***!
@@ -545,6 +575,8 @@ class Platform extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+
 
 
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
@@ -553,6 +585,9 @@ const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
 class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
+    this.addEntity = options.addEntity;
+    this.deleteEntity = options.deleteEntity;
+
     this.moveSpd = 4;
     this.jumpSpd = 6;
     this.game = options.game;
@@ -574,6 +609,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       ' ': false,
       canJump: true,
       canInvert: true,
+      mouseDown: false,
+      targetPoint: {x: this.x, y: this.y},
     };
 
     const canvas = document.getElementById('game-canvas');
@@ -593,10 +630,14 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     });
 
     canvas.addEventListener('mousedown', (event) => {
-      let targetPoint = {};
-      targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
-      targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
-      console.log(targetPoint, {x: this.x, y: this.y});
+      // let targetPoint = {};
+      this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
+      // console.log(targetPoint, {x: this.x, y: this.y});
+      this.playerInput.mouseDown = true;
+    })
+    canvas.addEventListener('mouseup', (event) => {
+      this.playerInput.mouseDown = false;
     })
 
   }// end of keybind

@@ -1,4 +1,5 @@
-import GameEntity from "./game_entity.js"
+import GameEntity from "./game_entity.js";
+import Hook from "./hook.js";
 
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 // const PLAYER_KEYS = ['a', 'd', ' '];
@@ -6,6 +7,9 @@ const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
 class Player extends GameEntity {
   constructor(options){
     super(options);
+    this.addEntity = options.addEntity;
+    this.deleteEntity = options.deleteEntity;
+
     this.moveSpd = 4;
     this.jumpSpd = 6;
     this.game = options.game;
@@ -27,6 +31,8 @@ class Player extends GameEntity {
       ' ': false,
       canJump: true,
       canInvert: true,
+      mouseDown: false,
+      targetPoint: {x: this.x, y: this.y},
     };
 
     const canvas = document.getElementById('game-canvas');
@@ -46,10 +52,14 @@ class Player extends GameEntity {
     });
 
     canvas.addEventListener('mousedown', (event) => {
-      let targetPoint = {};
-      targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
-      targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
-      console.log(targetPoint, {x: this.x, y: this.y});
+      // let targetPoint = {};
+      this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
+      // console.log(targetPoint, {x: this.x, y: this.y});
+      this.playerInput.mouseDown = true;
+    })
+    canvas.addEventListener('mouseup', (event) => {
+      this.playerInput.mouseDown = false;
     })
 
   }// end of keybind
