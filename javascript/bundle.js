@@ -142,9 +142,14 @@ class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     })
   }
 
-  // draw(){
-  //   unique draw
-  // }
+  draw(){
+    // unique draw
+    this.context.beginPath();
+    this.context.strokeStyle = 'yellow';
+    this.context.lineWidth = 2.5;
+    this.context.arc(this.x, this.y, 10, 0, 2* Math.PI);
+    this.context.stroke();
+  }
 
   update(viewPort){
     this.draw(viewPort)
@@ -531,7 +536,12 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options)
     this.defaultColor = 'red';
+    this.spd = 10;
   }
+
+  update(viewPort){
+    
+  }  
 
 }
 /* harmony default export */ __webpack_exports__["default"] = (Hook);
@@ -647,8 +657,12 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
-      this.hook.x = this.playerInput.targetPoint.x;
-      this.hook.y = this.playerInput.targetPoint.y;
+      // this.hook.x = this.playerInput.targetPoint.x;
+      // this.hook.y = this.playerInput.targetPoint.y;
+      this.hook.target = this.playerInput.targetPoint;
+      this.hook.x = this.x;
+      this.hook.y = this.y;
+      
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;

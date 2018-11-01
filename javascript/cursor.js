@@ -15,9 +15,14 @@ class Cursor extends UIEntity {
     })
   }
 
-  // draw(){
-  //   unique draw
-  // }
+  draw(){
+    // unique draw
+    this.context.beginPath();
+    this.context.strokeStyle = 'yellow';
+    this.context.lineWidth = 2.5;
+    this.context.arc(this.x, this.y, 10, 0, 2* Math.PI);
+    this.context.stroke();
+  }
 
   update(viewPort){
     this.draw(viewPort)
