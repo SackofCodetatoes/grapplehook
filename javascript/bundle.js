@@ -540,16 +540,20 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.moving = false;
   }
 
+  //collides with walls and hook points
+
   update(viewPort){
     if(this.moving){
       this.x += this.hspd;
       this.y += this.vspd;
+      this.draw(viewPort)
     }
-    this.draw(viewPort)
   }  
 
   updateTarget(target, from){
     let angle = Math.atan2(target.y - from.y, target.x - from.x);
+    this.x = from.x;
+    this.y = from.y;
     this.hspd = this.spd * Math.cos(angle);
     this.vspd = this.spd * Math.sin(angle);
     this.moving = true;
@@ -663,19 +667,12 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     });
 
     canvas.addEventListener('mousedown', (event) => {
-      // let targetPoint = {};
       this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
-      // this.hook.x = this.playerInput.targetPoint.x;
-      // this.hook.y = this.playerInput.targetPoint.y;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-      // this.hook.target = this.playerInput.targetPoint;
-      
-      this.hook.x = this.x;
-      this.hook.y = this.y;
 
     })
     canvas.addEventListener('mouseup', (event) => {

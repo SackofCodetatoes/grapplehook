@@ -67,19 +67,12 @@ class Player extends GameEntity {
     });
 
     canvas.addEventListener('mousedown', (event) => {
-      // let targetPoint = {};
       this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
-      // this.hook.x = this.playerInput.targetPoint.x;
-      // this.hook.y = this.playerInput.targetPoint.y;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-      // this.hook.target = this.playerInput.targetPoint;
-      
-      this.hook.x = this.x;
-      this.hook.y = this.y;
 
     })
     canvas.addEventListener('mouseup', (event) => {
