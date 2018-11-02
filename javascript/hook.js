@@ -5,11 +5,22 @@ class Hook extends GameEntity {
     super(options)
     this.defaultColor = 'red';
     this.spd = 10;
+    this.moving = false;
   }
 
   update(viewPort){
-    
+    if(this.moving){
+      this.x += this.hspd;
+      this.y += this.vspd;
+    }
+    this.draw(viewPort)
   }  
 
+  updateTarget(target, from){
+    let angle = Math.atan2(target.y - from.y, target.x - from.x);
+    this.hspd = this.spd * Math.cos(angle);
+    this.vspd = this.spd * Math.sin(angle);
+    this.moving = true;
+  }
 }
 export default Hook;
