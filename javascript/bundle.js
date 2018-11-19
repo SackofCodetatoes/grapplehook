@@ -289,20 +289,49 @@ class Game {
 
 
     //put all these in a seed file and use call/apply 
-    this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 130, y: 300, xLen: 600, yLen: 25, context: this.context})
+    this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+      x: 0,
+      y: this.canvas.attributes.height.value - 50,
+      xLen: this.canvas.attributes.width.value,
+      yLen: 25,
+      context: this.context
+    })
     this.platforms.push(this.platform);
     // this.entities.push(this.platform);
     this.activeEntities['platform1'] = this.platform;
 
-    this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 400, y: 0, xLen: 25, yLen: 200, context: this.context})
+    this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+      x: 50,
+      y: 0,
+      xLen: 25,
+      yLen: this.canvas.attributes.height.value,
+      context: this.context
+    })
     this.platforms.push(this.platform2);
     // this.entities.push(this.platform2);
     this.activeEntities['platform2'] = this.platform2;
 
-    this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({x: 205, y: 0, xLen: 725, yLen: 25, context: this.context})
+    this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+      x: 0,
+      y: 25,
+      xLen: this.canvas.attributes.width.value,
+      yLen: 25,
+      context: this.context
+    })
     this.platforms.push(this.platform3);
     // this.entities.push(this.platform3);
     this.activeEntities['platform3'] = this.platform3;
+
+    this.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+      x: this.canvas.attributes.width.value - 50,
+      y: 0,
+      xLen: 25,
+      yLen: this.canvas.attributes.height.value,
+      context: this.context
+    })
+    this.platforms.push(this.platform4);
+    // this.entities.push(this.platform2);
+    this.activeEntities['platform4'] = this.platform4;
 
     this.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_2__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
     // this.entities.push(this.box);
@@ -343,8 +372,8 @@ class Game {
 
   update(){
     //each game step
-    this.viewPort.x = this.player.x - (1280 / 2);
-    this.viewPort.y = this.player.y - (720 / 2);
+    // this.viewPort.x = this.player.x - (1280 / 2);
+    // this.viewPort.y = this.player.y - (720 / 2);
     
     this.applyGravity();
     

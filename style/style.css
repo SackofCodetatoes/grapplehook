@@ -21,7 +21,9 @@ body {
   color: white;
   /* display: inline; */
 }
-
+.controls-div{
+  display: none;
+}
 
 .description {
   left: 250px;
