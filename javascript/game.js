@@ -29,6 +29,11 @@ class Game {
     this.physicsCollision = this.physicsCollision.bind(this);
     this.addEntity = this.addEntity.bind(this);
     this.deleteEntity = this.deleteEntity.bind(this);
+
+
+    window.onkeydown = function (event) {
+      return (!event.keycode == 32);
+    }
   }
 
 
