@@ -1,5 +1,6 @@
 import Player from "./player.js";
 import Camera from "./camera.js";
+import Hook from "./hook.js";
 import GameEntity from "./game_entity.js";
 import Platform from "./platform.js"
 import Cursor from "./cursor.js"
@@ -61,6 +62,7 @@ class Game {
       y: playerConfig.y,
       xLen: 10,
       yLen: 10,
+      active: false,
       context: this.context,
       game: this,
       platformCollision: this.platformCollision,
@@ -179,7 +181,9 @@ class Game {
     this.camera.y = this.player.y - (720 / 2);
 
     for(let i = 0; i < this.entities.length; i++){
-      this.entities[i].update(this.viewPort);
+      if(this.entities[i].active) {
+        this.entities[i].update(this.viewPort);
+      }
     }
   }
 

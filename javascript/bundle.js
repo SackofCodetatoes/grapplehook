@@ -131,7 +131,7 @@ class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
     this.defaultColor = 'yellow';
-
+    this.active = true;
     this.keybind();
   }
 
@@ -223,9 +223,11 @@ class Display {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
 /* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
-/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
-/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
-/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+
 
 
 
@@ -289,12 +291,13 @@ class Game {
       y: playerConfig.y,
       xLen: 10,
       yLen: 10,
+      active: false,
       context: this.context,
       game: this,
       platformCollision: this.platformCollision,
       viewPort: this.viewPort,
     }
-    this.hook = new Hook(hookConfig);
+    this.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
 
     playerConfig.hook = this.hook;
 
@@ -306,11 +309,11 @@ class Game {
       yLen: 25,
       context: this.context,
     }
-    this.cursor = new _cursor_js__WEBPACK_IMPORTED_MODULE_4__["default"](cursorConfig);
+    this.cursor = new _cursor_js__WEBPACK_IMPORTED_MODULE_5__["default"](cursorConfig);
 
 
     //put all these in a seed file and use call/apply 
-    this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
       x: 0,
       y: this.canvas.attributes.height.value - 50,
       xLen: this.canvas.attributes.width.value,
@@ -321,7 +324,7 @@ class Game {
     // this.entities.push(this.platform);
     this.activeEntities['platform1'] = this.platform;
 
-    this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
       x: 50,
       y: 0,
       xLen: 25,
@@ -332,7 +335,7 @@ class Game {
     // this.entities.push(this.platform2);
     this.activeEntities['platform2'] = this.platform2;
 
-    this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
       x: 0,
       y: 25,
       xLen: this.canvas.attributes.width.value,
@@ -343,7 +346,7 @@ class Game {
     // this.entities.push(this.platform3);
     this.activeEntities['platform3'] = this.platform3;
 
-    this.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    this.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
       x: this.canvas.attributes.width.value - 50,
       y: 0,
       xLen: 25,
@@ -354,7 +357,7 @@ class Game {
     // this.entities.push(this.platform2);
     this.activeEntities['platform4'] = this.platform4;
 
-    this.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_2__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
+    this.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_3__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
     // this.entities.push(this.box);
     this.activeEntities['box'] = this.box;
     this.physicsObjs.push(this.box);
@@ -407,7 +410,9 @@ class Game {
     this.camera.y = this.player.y - (720 / 2);
 
     for(let i = 0; i < this.entities.length; i++){
-      this.entities[i].update(this.viewPort);
+      if(this.entities[i].active) {
+        this.entities[i].update(this.viewPort);
+      }
     }
   }
 
@@ -494,7 +499,7 @@ class GameEntity {
     this.platformCollision = options.platformCollision;
     this.physicsCollision = options.physicsCollision;
 
-    this.active = false || options.active;
+    this.active = options.active || true;
     this.draw = this.draw.bind(this);
     this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }
@@ -734,6 +739,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
 
+      console.log('try active?')
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
     })
@@ -810,6 +816,7 @@ class UIEntitiy {
     this.yLen = options.yLen;
     this.canvas = document.getElementById('game-canvas');
     this.defaultColor = options.color || 'yellow'
+    // this.active = options.active
 
     this.context = options.context;
 

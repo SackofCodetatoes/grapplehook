@@ -4,7 +4,7 @@ class Cursor extends UIEntity {
   constructor(options){
     super(options);
     this.defaultColor = 'yellow';
-
+    this.active = true;
     this.keybind();
   }
 

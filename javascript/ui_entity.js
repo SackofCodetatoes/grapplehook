@@ -6,6 +6,7 @@ class UIEntitiy {
     this.yLen = options.yLen;
     this.canvas = document.getElementById('game-canvas');
     this.defaultColor = options.color || 'yellow'
+    // this.active = options.active
 
     this.context = options.context;
 

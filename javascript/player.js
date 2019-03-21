@@ -76,6 +76,7 @@ class Player extends GameEntity {
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
 
+      console.log('try active?')
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
     })
