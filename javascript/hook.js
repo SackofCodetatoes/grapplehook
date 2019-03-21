@@ -1,5 +1,7 @@
 import GameEntity from "./game_entity";
 
+
+//hook object is the moving grapplehook
 class Hook extends GameEntity {
   constructor(options){
     super(options)
@@ -16,6 +18,7 @@ class Hook extends GameEntity {
       this.y += this.vspd;
       this.draw(viewPort)
     }
+    // this.stepCollisionCheck();
   }  
 
   updateTarget(target, from){

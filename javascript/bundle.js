@@ -260,7 +260,8 @@ class Game {
 
 
     window.onkeydown = function (event) {
-      return (!event.keycode == 32);
+      console.log('prevent input');
+      // return (!event.keycode == 32);
     }
   }
 
@@ -279,9 +280,24 @@ class Game {
       physicsObj: true,
       physicsCollision: this.physicsCollision,
       viewPort: this.viewPort,
-      addEntity: this.addEntity,
+      // addEntity: this.addEntity,  //inteded to add hok atfirst
       deleteEntity: this.deleteEntity,
     }
+
+    let hookConfig = {
+      x: playerConfig.x,
+      y: playerConfig.y,
+      xLen: 10,
+      yLen: 10,
+      context: this.context,
+      game: this,
+      platformCollision: this.platformCollision,
+      viewPort: this.viewPort,
+    }
+    this.hook = new Hook(hookConfig);
+
+    playerConfig.hook = this.hook;
+
 
     let cursorConfig = {
       x: 300,
@@ -344,6 +360,9 @@ class Game {
     this.physicsObjs.push(this.box);
 
 
+
+    //add player to game
+    //hook object created below hookConfig
     this.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
     this.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
     this.camera.x = 0;
@@ -351,7 +370,6 @@ class Game {
     this.camera.center = {x: this.x + (1280 / 2), y: this.y + (720 / 2)}
 
 
-    // this.player.platformCollision = this.platformCollision;
 
     // this.entities.push(this.player);
     this.activeEntities['player'] = this.player;
@@ -365,15 +383,18 @@ class Game {
     this.entities = Object.values(this.activeEntities);
   }
 
+  
   addEntity(entity, id) {
     this.activeEntities[id] = entity;
     this.entities = Object.values(this.activeEntities);
   }
   
+
   deleteEntity(id) {
     delete this.activeEntities[id];
     this.entities = Object.values(this.activeEntities)
   }
+
 
   update(){
     //each game step
@@ -473,7 +494,7 @@ class GameEntity {
     this.platformCollision = options.platformCollision;
     this.physicsCollision = options.physicsCollision;
 
-
+    this.active = false || options.active;
     this.draw = this.draw.bind(this);
     this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }
@@ -566,6 +587,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity */ "./javascript/game_entity.js");
 
 
+
+//hook object is the moving grapplehook
 class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options)
@@ -582,6 +605,7 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.y += this.vspd;
       this.draw(viewPort)
     }
+    // this.stepCollisionCheck();
   }  
 
   updateTarget(target, from){
@@ -649,20 +673,24 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.game = options.game;
     this.platformCollision = options.platformCollision;
     this.viewPort = options.viewPort;
+    this.hook = options.hook;
+    //state 0 = not-swinging, state 1 = swinging
 
-    let hookConfig = {
-      x: this.x,
-      y: this.y,
-      xLen: 10,
-      yLen: 10,
-      context: this.context,
-      game: this,
-      platformCollision: this.platformCollision,
-      viewPort: this.viewPort,
-    }
+    this.state = 0;
 
-    this.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_1__["default"](hookConfig);
-    this.addEntity(this.hook, 'hook');
+    // let hookConfig = {
+    //   x: this.x,
+    //   y: this.y,
+    //   xLen: 10,
+    //   yLen: 10,
+    //   context: this.context,
+    //   game: this,
+    //   platformCollision: this.platformCollision,
+    //   viewPort: this.viewPort,
+    // }
+
+    // this.hook = new Hook(hookConfig);
+    // this.addEntity(this.hook, 'hook');
 
 
     this.takeInput = this.takeInput.bind(this);
@@ -720,15 +748,19 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
   }
 
+  //takeinput more of applying input action
   takeInput(viewPort){
-    if (this.playerInput.a) {     
-        this.hspd = -this.moveSpd;
-    }
-    if (this.playerInput.d) {
-        this.hspd = this.moveSpd;
+    if(this.state === 0){
+      if (this.playerInput.a) {     
+          this.hspd = -this.moveSpd;
+      }
+      if (this.playerInput.d) {
+          this.hspd = this.moveSpd;
+      }
     }
 
     if(this.playerInput[' '] && this.playerInput.canJump){
+      this.state = 0;
       this.vspd = this.jumpSpd * -this.game.gravDir;
       this.playerInput.canJump = false;
     }

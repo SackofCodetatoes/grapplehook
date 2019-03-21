@@ -15,20 +15,24 @@ class Player extends GameEntity {
     this.game = options.game;
     this.platformCollision = options.platformCollision;
     this.viewPort = options.viewPort;
+    this.hook = options.hook;
+    //state 0 = not-swinging, state 1 = swinging
 
-    let hookConfig = {
-      x: this.x,
-      y: this.y,
-      xLen: 10,
-      yLen: 10,
-      context: this.context,
-      game: this,
-      platformCollision: this.platformCollision,
-      viewPort: this.viewPort,
-    }
+    this.state = 0;
 
-    this.hook = new Hook(hookConfig);
-    this.addEntity(this.hook, 'hook');
+    // let hookConfig = {
+    //   x: this.x,
+    //   y: this.y,
+    //   xLen: 10,
+    //   yLen: 10,
+    //   context: this.context,
+    //   game: this,
+    //   platformCollision: this.platformCollision,
+    //   viewPort: this.viewPort,
+    // }
+
+    // this.hook = new Hook(hookConfig);
+    // this.addEntity(this.hook, 'hook');
 
 
     this.takeInput = this.takeInput.bind(this);
@@ -86,15 +90,19 @@ class Player extends GameEntity {
     this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
   }
 
+  //takeinput more of applying input action
   takeInput(viewPort){
-    if (this.playerInput.a) {     
-        this.hspd = -this.moveSpd;
-    }
-    if (this.playerInput.d) {
-        this.hspd = this.moveSpd;
+    if(this.state === 0){
+      if (this.playerInput.a) {     
+          this.hspd = -this.moveSpd;
+      }
+      if (this.playerInput.d) {
+          this.hspd = this.moveSpd;
+      }
     }
 
     if(this.playerInput[' '] && this.playerInput.canJump){
+      this.state = 0;
       this.vspd = this.jumpSpd * -this.game.gravDir;
       this.playerInput.canJump = false;
     }

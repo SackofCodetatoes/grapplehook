@@ -32,7 +32,8 @@ class Game {
 
 
     window.onkeydown = function (event) {
-      return (!event.keycode == 32);
+      console.log('prevent input');
+      // return (!event.keycode == 32);
     }
   }
 
@@ -51,9 +52,24 @@ class Game {
       physicsObj: true,
       physicsCollision: this.physicsCollision,
       viewPort: this.viewPort,
-      addEntity: this.addEntity,
+      // addEntity: this.addEntity,  //inteded to add hok atfirst
       deleteEntity: this.deleteEntity,
     }
+
+    let hookConfig = {
+      x: playerConfig.x,
+      y: playerConfig.y,
+      xLen: 10,
+      yLen: 10,
+      context: this.context,
+      game: this,
+      platformCollision: this.platformCollision,
+      viewPort: this.viewPort,
+    }
+    this.hook = new Hook(hookConfig);
+
+    playerConfig.hook = this.hook;
+
 
     let cursorConfig = {
       x: 300,
@@ -116,6 +132,9 @@ class Game {
     this.physicsObjs.push(this.box);
 
 
+
+    //add player to game
+    //hook object created below hookConfig
     this.player = new Player(playerConfig);
     this.camera = new Camera(playerConfig);
     this.camera.x = 0;
@@ -123,7 +142,6 @@ class Game {
     this.camera.center = {x: this.x + (1280 / 2), y: this.y + (720 / 2)}
 
 
-    // this.player.platformCollision = this.platformCollision;
 
     // this.entities.push(this.player);
     this.activeEntities['player'] = this.player;
@@ -137,15 +155,18 @@ class Game {
     this.entities = Object.values(this.activeEntities);
   }
 
+  
   addEntity(entity, id) {
     this.activeEntities[id] = entity;
     this.entities = Object.values(this.activeEntities);
   }
   
+
   deleteEntity(id) {
     delete this.activeEntities[id];
     this.entities = Object.values(this.activeEntities)
   }
+
 
   update(){
     //each game step

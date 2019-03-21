@@ -13,7 +13,7 @@ class GameEntity {
     this.platformCollision = options.platformCollision;
     this.physicsCollision = options.physicsCollision;
 
-
+    this.active = false || options.active;
     this.draw = this.draw.bind(this);
     this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }
