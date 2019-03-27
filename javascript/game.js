@@ -147,6 +147,7 @@ class Game {
 
     // this.entities.push(this.player);
     this.activeEntities['player'] = this.player;
+    this.activeEntities['hook'] = this.hook;
 
     // this.entities.push(this.cursor);
     this.activeEntities['cursor'] = this.cursor;

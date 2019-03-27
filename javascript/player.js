@@ -1,7 +1,7 @@
 import GameEntity from "./game_entity.js";
 import Hook from "./hook.js";
 
-const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 // const PLAYER_KEYS = ['a', 'd', ' '];
 
 class Player extends GameEntity {
@@ -76,7 +76,6 @@ class Player extends GameEntity {
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
 
-      console.log('try active?')
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
     })
@@ -94,6 +93,7 @@ class Player extends GameEntity {
   //takeinput more of applying input action
   takeInput(viewPort){
     if(this.state === 0){
+      //free move state
       if (this.playerInput.a) {     
           this.hspd = -this.moveSpd;
       }
@@ -101,9 +101,20 @@ class Player extends GameEntity {
           this.hspd = this.moveSpd;
       }
     }
+    else {
+      //swing state
+        if (this.playerInput.s){
+          //hook reset button, temp
+          this.hook.state = 'ready'
+          this.hook.x = this.x;
+          this.hook.y = this.y;
+          this.state = 0;
+        }
+    }
 
     if(this.playerInput[' '] && this.playerInput.canJump){
       this.state = 0;
+      this.hook.moving = 0;
       this.vspd = this.jumpSpd * -this.game.gravDir;
       this.playerInput.canJump = false;
     }
@@ -116,7 +127,13 @@ class Player extends GameEntity {
   update(viewPort){
     this.takeInput();
 
+    if(this.hook.state === 'hooked'){
+      this.state = 1;
+      console.log('player to swing state');
+    }
+
     this.stepCollisionCheck();
+    // this.stepPhysicsCollisionCheck();
     
     //reset jump limit
     if (this.platformCollision(this.x, this.y + (1 * this.game.gravDir), this) || this.physicsCollision(this.x, this.y + (1 * this.game.gravDir), this)) {

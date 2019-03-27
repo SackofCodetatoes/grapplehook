@@ -376,6 +376,7 @@ class Game {
 
     // this.entities.push(this.player);
     this.activeEntities['player'] = this.player;
+    this.activeEntities['hook'] = this.hook;
 
     // this.entities.push(this.cursor);
     this.activeEntities['cursor'] = this.cursor;
@@ -518,24 +519,24 @@ class GameEntity {
   }
 
   stepCollisionCheck(){
-    if (!this.platformCollision(this.x + this.hspd, this.y, this) && !this.physicsCollision(this.x + this.hspd, this.y, this)) {
+    if (!this.platformCollision(this.x + this.hspd, this.y, this) ) {
       this.x += this.hspd;
     } else {
       let sign = 1;
       this.hspd < 0 ? sign = -1 : sign = sign;
-      while (!this.platformCollision(this.x + sign, this.y, this) && !this.physicsCollision(this.x + sign, this.y, this)) {
+      while (!this.platformCollision(this.x + sign, this.y, this) ) {
         this.x += sign;
       }
     }
 
     this.hspd = 0;
 
-    if (!this.platformCollision(this.x, this.y + this.vspd, this) && !this.physicsCollision(this.x, this.y + this.vspd, this)) {
+    if (!this.platformCollision(this.x, this.y + this.vspd, this)) {
       this.y += this.vspd;
     } else {
       let sign = 1;
       this.vspd < 0 ? sign = -1 : sign = sign;
-      while (!this.platformCollision(this.x, this.y + sign, this) && !this.physicsCollision(this.x, this.y + sign, this)) {
+      while (!this.platformCollision(this.x, this.y + sign, this)) {
         this.y += sign;
       }
 
@@ -543,6 +544,36 @@ class GameEntity {
       this.vspd = 0;
     }
   }
+
+  stepPhysicsCollisionCheck(){
+    if (!this.physicsCollision(this.x + this.hspd, this.y, this)) {
+      this.x += this.hspd;
+    } else {
+      let sign = 1;
+      this.hspd < 0 ? sign = -1 : sign = sign;
+      while (!this.physicsCollision(this.x + sign, this.y, this)) {
+        this.x += sign;
+      }
+    }
+
+    this.hspd = 0;
+
+    if (!this.physicsCollision(this.x, this.y + this.vspd, this)) {
+      this.y += this.vspd;
+    } else {
+      let sign = 1;
+      this.vspd < 0 ? sign = -1 : sign = sign;
+      while (!this.physicsCollision(this.x, this.y + sign, this)) {
+        this.y += sign;
+      }
+
+
+      this.vspd = 0;
+    }
+  }
+
+
+
 
   positionMeeting(x, y, obj){
     if ((x + this.xLen > obj.x && x < obj.x + obj.xLen) &&
@@ -600,17 +631,26 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.defaultColor = 'red';
     this.spd = 10;
     this.moving = false;
+    this.state = 'ready';
   }
 
   //collides with walls and hook points
 
   update(viewPort){
-    if(this.moving){
-      this.x += this.hspd;
-      this.y += this.vspd;
+    // if(this.moving){
+    //   this.x += this.hspd;
+    //   this.y += this.vspd;
+    // }
+    if(this.state === 'moving' || this.state === 'hooked') {
+      if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
+        this.state = 'hooked';
+      }
+      else{
+        this.x += this.hspd;
+        this.y += this.vspd;
+      }
       this.draw(viewPort)
     }
-    // this.stepCollisionCheck();
   }  
 
   updateTarget(target, from){
@@ -619,10 +659,14 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.y = from.y;
     this.hspd = this.spd * Math.cos(angle);
     this.vspd = this.spd * Math.sin(angle);
-    this.moving = true;
+    // this.moving = true;
+    this.state = 'moving';
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Hook);
+
+//if hook is off screen by x amount, reset
+//review angles and speed
 
 /***/ }),
 
@@ -664,7 +708,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 // const PLAYER_KEYS = ['a', 'd', ' '];
 
 class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
@@ -739,7 +783,6 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       // console.log(targetPoint, {x: this.x, y: this.y});
       this.playerInput.mouseDown = true;
 
-      console.log('try active?')
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
     })
@@ -757,6 +800,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   //takeinput more of applying input action
   takeInput(viewPort){
     if(this.state === 0){
+      //free move state
       if (this.playerInput.a) {     
           this.hspd = -this.moveSpd;
       }
@@ -764,9 +808,20 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
           this.hspd = this.moveSpd;
       }
     }
+    else {
+      //swing state
+        if (this.playerInput.s){
+          //hook reset button, temp
+          this.hook.state = 'ready'
+          this.hook.x = this.x;
+          this.hook.y = this.y;
+          this.state = 0;
+        }
+    }
 
     if(this.playerInput[' '] && this.playerInput.canJump){
       this.state = 0;
+      this.hook.moving = 0;
       this.vspd = this.jumpSpd * -this.game.gravDir;
       this.playerInput.canJump = false;
     }
@@ -779,7 +834,13 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   update(viewPort){
     this.takeInput();
 
+    if(this.hook.state === 'hooked'){
+      this.state = 1;
+      console.log('player to swing state');
+    }
+
     this.stepCollisionCheck();
+    // this.stepPhysicsCollisionCheck();
     
     //reset jump limit
     if (this.platformCollision(this.x, this.y + (1 * this.game.gravDir), this) || this.physicsCollision(this.x, this.y + (1 * this.game.gravDir), this)) {
