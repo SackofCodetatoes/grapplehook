@@ -654,11 +654,11 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }  
 
   updateTarget(target, from){
-    let angle = Math.atan2(target.y - from.y, target.x - from.x);
+    this.angle = Math.atan2(target.y - from.y, target.x - from.x);
     this.x = from.x;
     this.y = from.y;
-    this.hspd = this.spd * Math.cos(angle);
-    this.vspd = this.spd * Math.sin(angle);
+    this.hspd = this.spd * Math.cos(this.angle);
+    this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
     this.state = 'moving';
   }
@@ -799,32 +799,37 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   //takeinput more of applying input action
   takeInput(viewPort){
-    if(this.state === 0){
+    switch(this.state){
+      case 0: 
       //free move state
-      if (this.playerInput.a) {     
-          this.hspd = -this.moveSpd;
-      }
-      if (this.playerInput.d) {
-          this.hspd = this.moveSpd;
-      }
-    }
-    else {
-      //swing state
-        if (this.playerInput.s){
-          //hook reset button, temp
-          this.hook.state = 'ready'
-          this.hook.x = this.x;
-          this.hook.y = this.y;
-          this.state = 0;
+        if (this.playerInput.a) {     
+            this.hspd = -this.moveSpd;
         }
+        if (this.playerInput.d) {
+            this.hspd = this.moveSpd;
+        }
+
+      break;
+
+      case 1:
+      //swing state
+      break;
     }
 
-    if(this.playerInput[' '] && this.playerInput.canJump){
-      this.state = 0;
-      this.hook.moving = 0;
-      this.vspd = this.jumpSpd * -this.game.gravDir;
-      this.playerInput.canJump = false;
+
+    if(this.playerInput[' ']){
+     if(this.playerInput.canJump || this.state === 1){
+       this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.playerInput.canJump = false;
+     }
+     if(this.state === 1){
+        this.hook.state = 'ready'
+        this.hook.x = this.x;
+        this.hook.y = this.y;
+        this.state = 0;
+     }
     }
+    
     // if(this.playerInput.ArrowUp && this.playerInput.canInvert) {
     //   this.game.gravDir = this.game.gravDir * -1;
     //   this.playerInput.canInvert = false;
@@ -836,7 +841,6 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     if(this.hook.state === 'hooked'){
       this.state = 1;
-      console.log('player to swing state');
     }
 
     this.stepCollisionCheck();

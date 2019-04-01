@@ -31,11 +31,11 @@ class Hook extends GameEntity {
   }  
 
   updateTarget(target, from){
-    let angle = Math.atan2(target.y - from.y, target.x - from.x);
+    this.angle = Math.atan2(target.y - from.y, target.x - from.x);
     this.x = from.x;
     this.y = from.y;
-    this.hspd = this.spd * Math.cos(angle);
-    this.vspd = this.spd * Math.sin(angle);
+    this.hspd = this.spd * Math.cos(this.angle);
+    this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
     this.state = 'moving';
   }
