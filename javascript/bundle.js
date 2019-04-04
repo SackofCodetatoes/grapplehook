@@ -525,6 +525,9 @@ class GameEntity {
       let sign = 1;
       this.hspd < 0 ? sign = -1 : sign = sign;
       while (!this.platformCollision(this.x + sign, this.y, this) ) {
+        if(this.state === 1){
+          this.ropeAngleVelocity = 0;
+        }
         this.x += sign;
       }
     }
@@ -537,6 +540,9 @@ class GameEntity {
       let sign = 1;
       this.vspd < 0 ? sign = -1 : sign = sign;
       while (!this.platformCollision(this.x, this.y + sign, this)) {
+        if (this.state === 1) {
+          this.ropeAngleVelocity = 0;
+        }
         this.y += sign;
       }
 
@@ -637,30 +643,30 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   //collides with walls and hook points
 
   update(viewPort){
-    // if(this.moving){
-    //   this.x += this.hspd;
-    //   this.y += this.vspd;
+    // if(this.state === 'moving' || this.state === 'hooked') {
+    //   if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
+    //     this.state = 'hooked';
+    //   }
+    //   else{
+    //     this.x += this.hspd;
+    //     this.y += this.vspd;
+    //   }
     // }
-    if(this.state === 'moving' || this.state === 'hooked') {
-      if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
-        this.state = 'hooked';
-      }
-      else{
-        this.x += this.hspd;
-        this.y += this.vspd;
-      }
-      this.draw(viewPort)
-    }
+    this.draw(viewPort)
   }  
 
   updateTarget(target, from){
     this.angle = Math.atan2(target.y - from.y, target.x - from.x);
-    this.x = from.x;
-    this.y = from.y;
-    this.hspd = this.spd * Math.cos(this.angle);
-    this.vspd = this.spd * Math.sin(this.angle);
+    // console.log("angle is: ", -this.angle * (180 / Math.PI));
+    // this.x = from.x;
+    // this.y = from.y;
+    this.x = target.x;
+    this.y = target.y;
+    this.state = 'hooked';
+    // this.hspd = this.spd * Math.cos(this.angle);
+    // this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
-    this.state = 'moving';
+    // this.state = 'moving';
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Hook);
@@ -816,7 +822,6 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       break;
     }
 
-
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
@@ -829,7 +834,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.state = 0;
      }
     }
-    
+
     // if(this.playerInput.ArrowUp && this.playerInput.canInvert) {
     //   this.game.gravDir = this.game.gravDir * -1;
     //   this.playerInput.canInvert = false;
@@ -838,12 +843,44 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   update(viewPort){
     this.takeInput();
-
     if(this.hook.state === 'hooked'){
+      if(this.state !== 1){
+        this.ropeAngleVelocity = 0;
+        this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
+        this.ropeX = this.x;
+        this.ropeY = this.y;
+        // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
+        // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
+      }
       this.state = 1;
+      
     }
 
-    this.stepCollisionCheck();
+
+    switch(this.state){
+      case 0: 
+        this.stepCollisionCheck();
+        break;
+
+
+      case 1:
+        this.ropeAccel = 0.01 * Math.cos(this.hook.angle);
+        // console.log(this.ropeAccel)
+        this.ropeAngleVelocity += this.ropeAccel;
+        this.hook.angle += this.ropeAngleVelocity;
+        this.ropeAngleVelocity *= 0.99;
+        this.ropeX = this.hook.x - (this.ropeLength * Math.cos(this.hook.angle));
+        this.ropeY = this.hook.y + (this.ropeLength * Math.sin(this.hook.angle));
+        console.log('ropex and x: ', this.ropeX, this.x);
+        console.log('ropey and y: ', this.ropeY, this.y);
+
+        this.hspd = this.ropeX - this.x;
+        this.vspd = this.ropeY - this.y;
+        this.stepCollisionCheck();
+        break;
+
+    }
+
     // this.stepPhysicsCollisionCheck();
     
     //reset jump limit
@@ -851,9 +888,12 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.canJump = true;
       this.playerInput.canInvert = true;
     }
-    
 
     this.draw(viewPort);
+  }
+
+  swingStep(){
+
   }
 
 

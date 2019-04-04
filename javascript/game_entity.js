@@ -38,6 +38,9 @@ class GameEntity {
       let sign = 1;
       this.hspd < 0 ? sign = -1 : sign = sign;
       while (!this.platformCollision(this.x + sign, this.y, this) ) {
+        if(this.state === 1){
+          this.ropeAngleVelocity = 0;
+        }
         this.x += sign;
       }
     }
@@ -50,6 +53,9 @@ class GameEntity {
       let sign = 1;
       this.vspd < 0 ? sign = -1 : sign = sign;
       while (!this.platformCollision(this.x, this.y + sign, this)) {
+        if (this.state === 1) {
+          this.ropeAngleVelocity = 0;
+        }
         this.y += sign;
       }
 

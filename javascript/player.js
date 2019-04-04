@@ -109,7 +109,6 @@ class Player extends GameEntity {
       break;
     }
 
-
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
@@ -122,7 +121,7 @@ class Player extends GameEntity {
         this.state = 0;
      }
     }
-    
+
     // if(this.playerInput.ArrowUp && this.playerInput.canInvert) {
     //   this.game.gravDir = this.game.gravDir * -1;
     //   this.playerInput.canInvert = false;
@@ -131,12 +130,44 @@ class Player extends GameEntity {
 
   update(viewPort){
     this.takeInput();
-
     if(this.hook.state === 'hooked'){
+      if(this.state !== 1){
+        this.ropeAngleVelocity = 0;
+        this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
+        this.ropeX = this.x;
+        this.ropeY = this.y;
+        // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
+        // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
+      }
       this.state = 1;
+      
     }
 
-    this.stepCollisionCheck();
+
+    switch(this.state){
+      case 0: 
+        this.stepCollisionCheck();
+        break;
+
+
+      case 1:
+        this.ropeAccel = 0.01 * Math.cos(this.hook.angle);
+        // console.log(this.ropeAccel)
+        this.ropeAngleVelocity += this.ropeAccel;
+        this.hook.angle += this.ropeAngleVelocity;
+        this.ropeAngleVelocity *= 0.99;
+        this.ropeX = this.hook.x - (this.ropeLength * Math.cos(this.hook.angle));
+        this.ropeY = this.hook.y + (this.ropeLength * Math.sin(this.hook.angle));
+        console.log('ropex and x: ', this.ropeX, this.x);
+        console.log('ropey and y: ', this.ropeY, this.y);
+
+        this.hspd = this.ropeX - this.x;
+        this.vspd = this.ropeY - this.y;
+        this.stepCollisionCheck();
+        break;
+
+    }
+
     // this.stepPhysicsCollisionCheck();
     
     //reset jump limit
@@ -144,9 +175,12 @@ class Player extends GameEntity {
       this.playerInput.canJump = true;
       this.playerInput.canInvert = true;
     }
-    
 
     this.draw(viewPort);
+  }
+
+  swingStep(){
+
   }
 
 
