@@ -263,6 +263,7 @@ class Game {
 
     window.onkeydown = function (event) {
       console.log('prevent input');
+      //prevent screen from moving
       // return (!event.keycode == 32);
     }
   }
@@ -643,30 +644,31 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   //collides with walls and hook points
 
   update(viewPort){
-    // if(this.state === 'moving' || this.state === 'hooked') {
-    //   if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
-    //     this.state = 'hooked';
-    //   }
-    //   else{
-    //     this.x += this.hspd;
-    //     this.y += this.vspd;
-    //   }
-    // }
+    if(this.state === 'moving' || this.state === 'hooked') {
+      if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
+        this.state = 'hooked';
+      }
+      else{
+        console.log('move me')
+        this.x += this.hspd;
+        this.y += this.vspd;
+      }
+    }
     this.draw(viewPort)
   }  
 
   updateTarget(target, from){
     this.angle = Math.atan2(target.y - from.y, target.x - from.x);
     // console.log("angle is: ", -this.angle * (180 / Math.PI));
-    // this.x = from.x;
-    // this.y = from.y;
-    this.x = target.x;
-    this.y = target.y;
+    this.x = from.x;
+    this.y = from.y;
+    // this.x = target.x;
+    // this.y = target.y;
     this.state = 'hooked';
-    // this.hspd = this.spd * Math.cos(this.angle);
-    // this.vspd = this.spd * Math.sin(this.angle);
+    this.hspd = this.spd * Math.cos(this.angle);
+    this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
-    // this.state = 'moving';
+    this.state = 'moving';
   }
 }
 /* harmony default export */ __webpack_exports__["default"] = (Hook);
@@ -843,18 +845,20 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   update(viewPort){
     this.takeInput();
-    if(this.hook.state === 'hooked'){
-      if(this.state !== 1){
-        this.ropeAngleVelocity = 0;
-        this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
-        this.ropeX = this.x;
-        this.ropeY = this.y;
-        // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
-        // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
-      }
-      this.state = 1;
+    //check for swing state
+    // if(this.hook.state === 'hooked'){
+    //   if(this.state !== 1){
+    //     //initialize swing movement
+    //     this.ropeAngleVelocity = 0;
+    //     this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
+    //     this.ropeX = this.x;
+    //     this.ropeY = this.y;
+    //     // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
+    //     // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
+    //   }
+    //   this.state = 1;
       
-    }
+    // }
 
 
     switch(this.state){
@@ -863,7 +867,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         break;
 
 
-      case 1:
+      case 1: //swing state
         this.ropeAccel = 0.01 * Math.cos(this.hook.angle);
         // console.log(this.ropeAccel)
         this.ropeAngleVelocity += this.ropeAccel;

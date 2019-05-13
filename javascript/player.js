@@ -130,18 +130,20 @@ class Player extends GameEntity {
 
   update(viewPort){
     this.takeInput();
-    if(this.hook.state === 'hooked'){
-      if(this.state !== 1){
-        this.ropeAngleVelocity = 0;
-        this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
-        this.ropeX = this.x;
-        this.ropeY = this.y;
-        // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
-        // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
-      }
-      this.state = 1;
+    //check for swing state
+    // if(this.hook.state === 'hooked'){
+    //   if(this.state !== 1){
+    //     //initialize swing movement
+    //     this.ropeAngleVelocity = 0;
+    //     this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
+    //     this.ropeX = this.x;
+    //     this.ropeY = this.y;
+    //     // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
+    //     // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
+    //   }
+    //   this.state = 1;
       
-    }
+    // }
 
 
     switch(this.state){
@@ -150,7 +152,7 @@ class Player extends GameEntity {
         break;
 
 
-      case 1:
+      case 1: //swing state
         this.ropeAccel = 0.01 * Math.cos(this.hook.angle);
         // console.log(this.ropeAccel)
         this.ropeAngleVelocity += this.ropeAccel;

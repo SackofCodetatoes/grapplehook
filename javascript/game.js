@@ -34,6 +34,7 @@ class Game {
 
     window.onkeydown = function (event) {
       console.log('prevent input');
+      //prevent screen from moving
       // return (!event.keycode == 32);
     }
   }
