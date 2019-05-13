@@ -129,6 +129,20 @@ class Game {
     // this.entities.push(this.platform2);
     this.activeEntities['platform4'] = this.platform4;
 
+
+    this.platform5 = new Platform({
+      x: 400,
+      y: 400,
+      xLen: 40,
+      yLen: 40,
+      context: this.context
+    })
+    this.platforms.push(this.platform5);
+    // this.entities.push(this.platform2);
+    this.activeEntities['platform5'] = this.platform5;
+
+
+    //old physics box
     this.box = new GameEntity(Object.assign({}, playerConfig, {x: 255, y: 205}));
     // this.entities.push(this.box);
     this.activeEntities['box'] = this.box;

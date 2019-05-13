@@ -1,7 +1,7 @@
 import GameEntity from "./game_entity.js";
 import Hook from "./hook.js";
 
-const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', '1', '2'];
 // const PLAYER_KEYS = ['a', 'd', ' '];
 
 class Player extends GameEntity {
@@ -16,6 +16,7 @@ class Player extends GameEntity {
     this.platformCollision = options.platformCollision;
     this.viewPort = options.viewPort;
     this.hook = options.hook;
+    this.debug = false;
     //state 0 = not-swinging, state 1 = swinging
 
     this.state = 0;
@@ -52,6 +53,7 @@ class Player extends GameEntity {
       canInvert: true,
       mouseDown: false,
       targetPoint: {x: this.x, y: this.y},
+      mousePos: {x: 0, y: 0}
     };
 
     const canvas = document.getElementById('game-canvas');
@@ -81,6 +83,11 @@ class Player extends GameEntity {
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
+    })
+
+    canvas.addEventListener('mousemove', (event) => {
+      this.playerInput.mousePos.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      this.playerInput.mousePos.y = event.clientY - canvas.offsetTop + this.viewPort.y;
     })
 
   }// end of keybind
@@ -121,14 +128,25 @@ class Player extends GameEntity {
         this.state = 0;
      }
     }
-
+    //GravShift Code
     // if(this.playerInput.ArrowUp && this.playerInput.canInvert) {
     //   this.game.gravDir = this.game.gravDir * -1;
     //   this.playerInput.canInvert = false;
     // }
+    
+    //Debug tool
+    if(this.playerInput['1']){
+      this.debug = true;
+    }
+    if(this.playerInput['2']){
+      this.debug = false;
+    }
   }
 
   update(viewPort){
+    if(this.debug){
+      console.log('X: ', this.playerInput.mousePos.x, 'Y: ', this.playerInput.mousePos.y)
+    }
     this.takeInput();
     //check for swing state
     // if(this.hook.state === 'hooked'){
