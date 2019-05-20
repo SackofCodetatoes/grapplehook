@@ -18,6 +18,7 @@ class Player extends GameEntity {
     this.hook = options.hook;
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
+    this.rotateSpd = 0.03;
     //state 0 = not-swinging, state 1 = swinging
 
     this.state = 0;
@@ -174,8 +175,13 @@ class Player extends GameEntity {
 
       case 1: //swing state
        //og swing code
-        this.ropeAngle = Math.atan2(this.playerInput.targetPoint.y - this.y, this.playerInput.targetPoint.x - this.x) * 180 / Math.PI;
-        this.swingNext.x = this.playerInput.targetPoint.x + 
+       let targetCenter = this.playerInput.targetPoint;
+        this.ropeAngle = Math.atan2(targetCenter.y - this.y, targetCenter.x - this.x) * 180 / Math.PI;
+        this.swingNext.x = (targetCenter.x + (this.x - targetCenter.x) * Math.cos(this.rotateSpd) + (targetCenter.y - this.y) * Math.sin(this.rotateSpd));
+        this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
+        this.hspd = this.swingNext.x - this.x;
+        this.vspd = this.swingNext.y - this.y;
+        
 
 
         this.stepCollisionCheck();
