@@ -79,6 +79,7 @@ class Player extends GameEntity {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
+      this.state = 1;
 
     })
     canvas.addEventListener('mouseup', (event) => {
@@ -171,18 +172,8 @@ class Player extends GameEntity {
 
 
       case 1: //swing state
-        this.ropeAccel = 0.01 * Math.cos(this.hook.angle);
-        // console.log(this.ropeAccel)
-        this.ropeAngleVelocity += this.ropeAccel;
-        this.hook.angle += this.ropeAngleVelocity;
-        this.ropeAngleVelocity *= 0.99;
-        this.ropeX = this.hook.x - (this.ropeLength * Math.cos(this.hook.angle));
-        this.ropeY = this.hook.y + (this.ropeLength * Math.sin(this.hook.angle));
-        console.log('ropex and x: ', this.ropeX, this.x);
-        console.log('ropey and y: ', this.ropeY, this.y);
-
-        this.hspd = this.ropeX - this.x;
-        this.vspd = this.ropeY - this.y;
+       //og swing code
+      
         this.stepCollisionCheck();
         break;
 
