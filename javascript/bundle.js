@@ -751,6 +751,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     //state 0 = not-swinging, state 1 = swinging
 
     this.state = 0;
+    this.spinDir = -1;
 
     // let hookConfig = {
     //   x: this.x,
@@ -810,7 +811,6 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-      this.state = 1;
 
     })
     canvas.addEventListener('mouseup', (event) => {
@@ -906,11 +906,15 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
        //og swing code
        let targetCenter = this.playerInput.targetPoint;
         this.ropeAngle = Math.atan2(targetCenter.y - this.y, targetCenter.x - this.x) * 180 / Math.PI;
+        if(this.ropeAngle < 0){
+          this.ropeAngle = 360 + this.ropeAngle;
+        }
+    
         this.swingNext.x = (targetCenter.x + (this.x - targetCenter.x) * Math.cos(this.rotateSpd) + (targetCenter.y - this.y) * Math.sin(this.rotateSpd));
         this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
-        this.hspd = this.swingNext.x - this.x;
-        this.vspd = this.swingNext.y - this.y;
-        
+        this.hspd = this.spinDir * (this.swingNext.x - this.x);
+        this.vspd = this.spinDir * (this.swingNext.y - this.y);
+
 
 
         this.stepCollisionCheck();
