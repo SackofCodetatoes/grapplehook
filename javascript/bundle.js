@@ -842,8 +842,16 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     //draw player
     this.context.fillStyle = 'blue';
     // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
-    this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+    //add states
+    if(this.vspd !== 0){
+      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+    }
+    else{
+      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+    }
+
   }
 
   //takeinput more of applying input action
