@@ -282,7 +282,7 @@ class Game {
       x: 205,
       y: 205,
       xLen: 25,
-      yLen: 25,
+      yLen: 30,
       context: this.context,
       game: this,
       platformCollision: this.platformCollision,
@@ -846,10 +846,10 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     //add states
     if(this.vspd !== 0){
-      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
     else{
-      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+      this.context.drawImage(this.image, 0, 256, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
 
   }

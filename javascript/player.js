@@ -107,10 +107,10 @@ class Player extends GameEntity {
 
     //add states
     if(this.vspd !== 0){
-      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
     else{
-      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+      this.context.drawImage(this.image, 0, 256, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
 
   }

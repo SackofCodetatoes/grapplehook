@@ -50,7 +50,7 @@ class Game {
       x: 205,
       y: 205,
       xLen: 25,
-      yLen: 25,
+      yLen: 30,
       context: this.context,
       game: this,
       platformCollision: this.platformCollision,
