@@ -14,6 +14,9 @@ class Game {
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
+    const spriteSheet = new Image();
+    spriteSheet.src = "./images/industrial.v2.png";
+    this.spriteSheet = spriteSheet;
 
 
     this.platforms = [];
@@ -56,6 +59,7 @@ class Game {
       viewPort: this.viewPort,
       // addEntity: this.addEntity,  //inteded to add hok atfirst
       deleteEntity: this.deleteEntity,
+      image: this.spriteSheet,
     }
 
     let hookConfig = {

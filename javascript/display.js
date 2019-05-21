@@ -4,6 +4,8 @@ class Display {
   constructor(){
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
+    this.spriteSheet;
+    console.log(this.background)
     this.viewPort = {
       x: 0,
       y: 0,
@@ -13,8 +15,9 @@ class Display {
       canvas: this.canvas,
       context: this.context,
       viewPort: this.viewPort,
+      spriteSheet: this.spriteSheet,
     }
-
+    // this.spriteSheet.onload = this.game = new Game(gameConfig);
     this.game = new Game(gameConfig);
     this.game.initialize();
 

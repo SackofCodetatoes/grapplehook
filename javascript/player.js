@@ -7,6 +7,7 @@ const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'Arrow
 class Player extends GameEntity {
   constructor(options){
     super(options);
+    this.image = options.image;
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
@@ -101,8 +102,9 @@ class Player extends GameEntity {
 
     //draw player
     this.context.fillStyle = 'blue';
-    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
-
+    // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
+    this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+    // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
   }
 
   //takeinput more of applying input action
@@ -181,7 +183,8 @@ class Player extends GameEntity {
         if(this.ropeAngle < 0){
           this.ropeAngle = 360 + this.ropeAngle;
         }
-    
+        //credit to the math-man i never could be:
+        //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         this.swingNext.x = (targetCenter.x + (this.x - targetCenter.x) * Math.cos(this.rotateSpd) + (targetCenter.y - this.y) * Math.sin(this.rotateSpd));
         this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
         this.hspd = this.spinDir * (this.swingNext.x - this.x);

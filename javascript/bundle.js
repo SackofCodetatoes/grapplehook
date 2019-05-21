@@ -177,6 +177,8 @@ class Display {
   constructor(){
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
+    this.spriteSheet;
+    console.log(this.background)
     this.viewPort = {
       x: 0,
       y: 0,
@@ -186,8 +188,9 @@ class Display {
       canvas: this.canvas,
       context: this.context,
       viewPort: this.viewPort,
+      spriteSheet: this.spriteSheet,
     }
-
+    // this.spriteSheet.onload = this.game = new Game(gameConfig);
     this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameConfig);
     this.game.initialize();
 
@@ -243,6 +246,9 @@ class Game {
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
+    const spriteSheet = new Image();
+    spriteSheet.src = "./images/industrial.v2.png";
+    this.spriteSheet = spriteSheet;
 
 
     this.platforms = [];
@@ -285,6 +291,7 @@ class Game {
       viewPort: this.viewPort,
       // addEntity: this.addEntity,  //inteded to add hok atfirst
       deleteEntity: this.deleteEntity,
+      image: this.spriteSheet,
     }
 
     let hookConfig = {
@@ -625,10 +632,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const display = new _display_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
 const background = new Image();
+const spriteSheet = new Image();
 background.src = "./images/city_background_night.png";
+spriteSheet.src = "./images/industrial.v2.png";
 display.background = background;
+display.spriteSheet = spriteSheet;
+// console.log(display.spriteSheet);
 background.onload = display.render;
-display.render;
+
+// display.render;
 
 /***/ }),
 
@@ -734,6 +746,7 @@ const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'Arrow
 class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
+    this.image = options.image;
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
@@ -828,8 +841,9 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     //draw player
     this.context.fillStyle = 'blue';
-    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
-
+    // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
+    this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
+    // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
   }
 
   //takeinput more of applying input action
@@ -908,7 +922,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         if(this.ropeAngle < 0){
           this.ropeAngle = 360 + this.ropeAngle;
         }
-    
+        //credit to the math-man i never could be:
+        //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
         this.swingNext.x = (targetCenter.x + (this.x - targetCenter.x) * Math.cos(this.rotateSpd) + (targetCenter.y - this.y) * Math.sin(this.rotateSpd));
         this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
         this.hspd = this.spinDir * (this.swingNext.x - this.x);
