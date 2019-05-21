@@ -424,8 +424,8 @@ class Game {
 
   update(){
     //each game step
-    // this.viewPort.x = this.player.x - (1280 / 2);
-    // this.viewPort.y = this.player.y - (720 / 2);
+    this.viewPort.x = this.player.x - (1280 / 2);
+    this.viewPort.y = this.player.y - (720 / 2);
     
     this.applyGravity();
     
@@ -759,6 +759,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
     this.rotateSpd = 0.05;
+
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
     this.state = 0;
@@ -827,11 +828,19 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
       this.context.beginPath();
       this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-      this.context.moveTo(this.x + this.xLen / 2, this.y + this.yLen / 2);
-      this.context.lineTo(this.hook.x + this.hook.xLen / 2, this.hook.y + this.yLen / 2);
+
+      //view for dynamic viewport (centers on player)
+      this.context.moveTo(this.x + this.xLen / 2 - (viewPort.x), this.y + this.yLen / 2 - (viewPort.y));
+      this.context.lineTo(this.hook.x + this.hook.xLen / 2 - (viewPort.x), this.hook.y + this.yLen / 2 - (viewPort.y));
+
+      //view for static viewport
+      // this.context.moveTo(this.x + this.xLen / 2, this.y + this.yLen / 2);
+      // this.context.lineTo(this.hook.x + this.hook.xLen / 2, this.hook.y + this.yLen / 2);
+
+
       this.context.stroke();
 
-      //draws ring around targetpoint
+      //draws ring around targetpoint (swing path)
       // this.context.beginPath();
       // this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
       // this.context.arc(this.hook.x - viewPort.x, this.hook.y - viewPort.y, this.ropeLength, 0, 2 * Math.PI);
@@ -839,12 +848,12 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       //bug with radial path expanding / decreasing 
     }
 
-    //draw player
-    this.context.fillStyle = 'blue';
+    //draw default player
+    // this.context.fillStyle = 'blue';
     // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
-    //add states
+    //Draw sprite
     if(this.vspd !== 0){
       this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }

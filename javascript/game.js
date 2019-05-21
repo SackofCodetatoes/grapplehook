@@ -192,8 +192,8 @@ class Game {
 
   update(){
     //each game step
-    // this.viewPort.x = this.player.x - (1280 / 2);
-    // this.viewPort.y = this.player.y - (720 / 2);
+    this.viewPort.x = this.player.x - (1280 / 2);
+    this.viewPort.y = this.player.y - (720 / 2);
     
     this.applyGravity();
     
