@@ -18,7 +18,7 @@ class Player extends GameEntity {
     this.hook = options.hook;
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
-    this.rotateSpd = 0.03;
+    this.rotateSpd = 0.05;
     //state 0 = not-swinging, state 1 = swinging
 
     this.state = 0;
@@ -82,6 +82,9 @@ class Player extends GameEntity {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
+
+
+      // this.state = 1;
 
     })
     canvas.addEventListener('mouseup', (event) => {
@@ -152,19 +155,14 @@ class Player extends GameEntity {
     }
     this.takeInput();
     //check for swing state
-    // if(this.hook.state === 'hooked'){
-    //   if(this.state !== 1){
-    //     //initialize swing movement
-    //     this.ropeAngleVelocity = 0;
-    //     this.ropeLength = Math.abs(Math.sqrt(Math.pow(this.x - this.hook.x, 2) + Math.pow(this.y - this.hook.y, 2)));
-    //     this.ropeX = this.x;
-    //     this.ropeY = this.y;
-    //     // console.log("b is: ", this.ropeLength * Math.cos(this.hook.angle));
-    //     // console.log("a is: ", this.ropeLength * Math.sin(this.hook.angle));
-    //   }
-    //   this.state = 1;
-      
-    // }
+    if(this.hook.state === 'hooked'){
+      if(this.state !== 1){
+        if (this.x > this.hook.x) {
+          this.spinDir = 1;
+        } else this.spinDir = -1;      
+        this.state = 1;
+      }
+  }
 
 
     switch(this.state){
@@ -175,7 +173,8 @@ class Player extends GameEntity {
 
       case 1: //swing state
        //og swing code
-       let targetCenter = this.playerInput.targetPoint;
+      //  let targetCenter = this.playerInput.targetPoint;
+        let targetCenter = {x: this.hook.x, y: this.hook.y};
         this.ropeAngle = Math.atan2(targetCenter.y - this.y, targetCenter.x - this.x) * 180 / Math.PI;
         if(this.ropeAngle < 0){
           this.ropeAngle = 360 + this.ropeAngle;
