@@ -663,12 +663,13 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.state = 'hooked';
       }
       else{
-        console.log('move me')
+        // console.log('move me')
         this.x += this.hspd;
         this.y += this.vspd;
       }
+      this.draw(viewPort)
+      //bug where while hooked, rehooking will immediatley spin in new pos
     }
-    this.draw(viewPort)
   }  
 
   updateTarget(target, from){
@@ -676,9 +677,6 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // console.log("angle is: ", -this.angle * (180 / Math.PI));
     this.x = from.x;
     this.y = from.y;
-    // this.x = target.x;
-    // this.y = target.y;
-    // this.state = 'hooked';
     this.hspd = this.spd * Math.cos(this.angle);
     this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
@@ -749,23 +747,10 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.swingNext = {x: this.x, y: this.y};
     this.rotateSpd = 0.05;
     //state 0 = not-swinging, state 1 = swinging
-
+    this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
 
-    // let hookConfig = {
-    //   x: this.x,
-    //   y: this.y,
-    //   xLen: 10,
-    //   yLen: 10,
-    //   context: this.context,
-    //   game: this,
-    //   platformCollision: this.platformCollision,
-    //   viewPort: this.viewPort,
-    // }
-
-    // this.hook = new Hook(hookConfig);
-    // this.addEntity(this.hook, 'hook');
 
 
     this.takeInput = this.takeInput.bind(this);
@@ -812,9 +797,6 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
-
-      // this.state = 1;
-
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
@@ -828,8 +810,26 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }// end of keybind
 
   draw(viewPort){
+    if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
+      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      this.context.beginPath();
+      this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      this.context.moveTo(this.x + this.xLen / 2, this.y + this.yLen / 2);
+      this.context.lineTo(this.hook.x + this.hook.xLen / 2, this.hook.y + this.yLen / 2);
+      this.context.stroke();
+
+      //draws ring around targetpoint
+      // this.context.beginPath();
+      // this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      // this.context.arc(this.hook.x - viewPort.x, this.hook.y - viewPort.y, this.ropeLength, 0, 2 * Math.PI);
+      // this.context.stroke();
+      //bug with radial path expanding / decreasing 
+    }
+
+    //draw player
     this.context.fillStyle = 'blue';
     this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
+
   }
 
   //takeinput more of applying input action
@@ -931,6 +931,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     this.draw(viewPort);
   }
+  
 
   swingStep(){
 

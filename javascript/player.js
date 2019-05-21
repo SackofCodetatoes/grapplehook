@@ -20,23 +20,10 @@ class Player extends GameEntity {
     this.swingNext = {x: this.x, y: this.y};
     this.rotateSpd = 0.05;
     //state 0 = not-swinging, state 1 = swinging
-
+    this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
 
-    // let hookConfig = {
-    //   x: this.x,
-    //   y: this.y,
-    //   xLen: 10,
-    //   yLen: 10,
-    //   context: this.context,
-    //   game: this,
-    //   platformCollision: this.platformCollision,
-    //   viewPort: this.viewPort,
-    // }
-
-    // this.hook = new Hook(hookConfig);
-    // this.addEntity(this.hook, 'hook');
 
 
     this.takeInput = this.takeInput.bind(this);
@@ -83,9 +70,6 @@ class Player extends GameEntity {
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
 
-
-      // this.state = 1;
-
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
@@ -99,8 +83,26 @@ class Player extends GameEntity {
   }// end of keybind
 
   draw(viewPort){
+    if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
+      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      this.context.beginPath();
+      this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      this.context.moveTo(this.x + this.xLen / 2, this.y + this.yLen / 2);
+      this.context.lineTo(this.hook.x + this.hook.xLen / 2, this.hook.y + this.yLen / 2);
+      this.context.stroke();
+
+      //draws ring around targetpoint
+      // this.context.beginPath();
+      // this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      // this.context.arc(this.hook.x - viewPort.x, this.hook.y - viewPort.y, this.ropeLength, 0, 2 * Math.PI);
+      // this.context.stroke();
+      //bug with radial path expanding / decreasing 
+    }
+
+    //draw player
     this.context.fillStyle = 'blue';
     this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
+
   }
 
   //takeinput more of applying input action
@@ -202,6 +204,7 @@ class Player extends GameEntity {
 
     this.draw(viewPort);
   }
+  
 
   swingStep(){
 

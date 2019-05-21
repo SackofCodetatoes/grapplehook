@@ -19,12 +19,13 @@ class Hook extends GameEntity {
         this.state = 'hooked';
       }
       else{
-        console.log('move me')
+        // console.log('move me')
         this.x += this.hspd;
         this.y += this.vspd;
       }
+      this.draw(viewPort)
+      //bug where while hooked, rehooking will immediatley spin in new pos
     }
-    this.draw(viewPort)
   }  
 
   updateTarget(target, from){
@@ -32,9 +33,6 @@ class Hook extends GameEntity {
     // console.log("angle is: ", -this.angle * (180 / Math.PI));
     this.x = from.x;
     this.y = from.y;
-    // this.x = target.x;
-    // this.y = target.y;
-    // this.state = 'hooked';
     this.hspd = this.spd * Math.cos(this.angle);
     this.vspd = this.spd * Math.sin(this.angle);
     // this.moving = true;
