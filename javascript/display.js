@@ -19,7 +19,7 @@ class Display {
     }
     // this.spriteSheet.onload = this.game = new Game(gameConfig);
     this.game = new Game(gameConfig);
-    this.game.initialize();
+    // this.game.initialize();
 
 
     this.render = this.render.bind(this);

@@ -86,7 +86,7 @@ class Player extends GameEntity {
 
   draw(viewPort){
     if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
-      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      // this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
       this.context.beginPath();
       this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
 

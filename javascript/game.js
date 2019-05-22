@@ -11,13 +11,15 @@ const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
 class Game {
   constructor(options){
    //preload 
+    const spriteSheet = new Image();
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
-    const spriteSheet = new Image();
     spriteSheet.src = "./images/industrial.v2.png";
     this.spriteSheet = spriteSheet;
-
+    this.keyCodePress = {13: false}
+    this.gameState = 0;
+    //state 0 = title screen, state 1 = active
 
     this.platforms = [];
     this.entities = [];
@@ -34,7 +36,14 @@ class Game {
     this.addEntity = this.addEntity.bind(this);
     this.deleteEntity = this.deleteEntity.bind(this);
 
+    const canvas = document.getElementById('game-canvas');
 
+    document.addEventListener('keydown', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = true;
+      }
+    });
+    //add keybind to change states
     window.onkeydown = function (event) {
       console.log('prevent input');
       //prevent screen from moving
@@ -45,6 +54,8 @@ class Game {
 
   initialize(){
     //give each object an id
+
+    //init with seed file?
     //game init
     let playerConfig = {
       x: 205,
@@ -192,19 +203,35 @@ class Game {
 
   update(){
     //each game step
-    this.viewPort.x = this.player.x - (1280 / 2);
-    this.viewPort.y = this.player.y - (720 / 2);
-    
-    this.applyGravity();
-    
-    this.camera.x = this.player.x - (1280 / 2);
-    this.camera.y = this.player.y - (720 / 2);
+    switch(this.gameState){
+      //start screen
+      case 0: 
+        if(this.keyCodePress['enter'] === true){
+          this.gameState = 1;
+          this.initialize();
+        }
+        this.viewPort.x += 0.2;
+      break;
 
-    for(let i = 0; i < this.entities.length; i++){
-      if(this.entities[i].active) {
-        this.entities[i].update(this.viewPort);
-      }
+
+      //game logic
+      case 1: 
+        this.viewPort.x = this.player.x - (1280 / 2);
+        this.viewPort.y = this.player.y - (720 / 2);
+        
+        this.applyGravity();
+        
+        // this.camera.x = this.player.x - (1280 / 2);
+        // this.camera.y = this.player.y - (720 / 2);
+    
+        for(let i = 0; i < this.entities.length; i++){
+          if(this.entities[i].active) {
+            this.entities[i].update(this.viewPort);
+          }
+        }
+      break;
     }
+
   }
 
   physicsCollision(x, y, obj){
