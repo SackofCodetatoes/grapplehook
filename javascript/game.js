@@ -18,11 +18,15 @@ class Game {
     spriteSheet.src = "./images/industrial.v2.png";
     this.spriteSheet = spriteSheet;
     this.keyCodePress = {13: false}
+    this.score = 0;
+    
     this.gameState = 0;
-    //state 0 = title screen, state 1 = active
+    //state 0 = title screen, state 1 = active, possibly each state represents a level?
 
     this.platforms = [];
     this.entities = [];
+    this.coins = [];
+
     this.physicsObjs = [];
     this.staticObjs = [];
 
@@ -59,7 +63,7 @@ class Game {
     //game init
     let playerConfig = {
       x: 205,
-      y: 205,
+      y: 566,
       xLen: 25,
       yLen: 30,
       context: this.context,
@@ -227,6 +231,13 @@ class Game {
         for(let i = 0; i < this.entities.length; i++){
           if(this.entities[i].active) {
             this.entities[i].update(this.viewPort);
+          }
+        }
+        //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
+        for(let i = 0; i < this.coins.length; i++){
+          if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.score += 10;
+            this.coins[i].active = false;
           }
         }
       break;

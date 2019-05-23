@@ -201,10 +201,11 @@ class Display {
   render(){
     //create request animation loop
     this.context.clearRect(0, 0, 1280, 720);
-
+    //draw UI (title screen, instructions, game)
     this.context.drawImage(this.background, 0, 300, 1584, 1020, -this.viewPort.x, -this.viewPort.y, 1584, 1020);
 
     this.game.update();
+    
 
     requestAnimationFrame(() => this.render());
   }
@@ -250,11 +251,15 @@ class Game {
     spriteSheet.src = "./images/industrial.v2.png";
     this.spriteSheet = spriteSheet;
     this.keyCodePress = {13: false}
+    this.score = 0;
+    
     this.gameState = 0;
-    //state 0 = title screen, state 1 = active
+    //state 0 = title screen, state 1 = active, possibly each state represents a level?
 
     this.platforms = [];
     this.entities = [];
+    this.coins = [];
+
     this.physicsObjs = [];
     this.staticObjs = [];
 
@@ -291,7 +296,7 @@ class Game {
     //game init
     let playerConfig = {
       x: 205,
-      y: 205,
+      y: 566,
       xLen: 25,
       yLen: 30,
       context: this.context,
@@ -459,6 +464,13 @@ class Game {
         for(let i = 0; i < this.entities.length; i++){
           if(this.entities[i].active) {
             this.entities[i].update(this.viewPort);
+          }
+        }
+        //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
+        for(let i = 0; i < this.coins.length; i++){
+          if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.score += 10;
+            this.coins[i].active = false;
           }
         }
       break;
@@ -630,7 +642,7 @@ class GameEntity {
 
 
 
-  positionMeeting(x, y, obj){
+  positionMeeting(x = this.x, y = this.y, obj){
     if ((x + this.xLen > obj.x && x < obj.x + obj.xLen) &&
       (y + this.yLen > obj.y && y < obj.y + obj.yLen)
     ) {

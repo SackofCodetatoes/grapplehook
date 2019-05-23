@@ -94,7 +94,7 @@ class GameEntity {
 
 
 
-  positionMeeting(x, y, obj){
+  positionMeeting(x = this.x, y = this.y, obj){
     if ((x + this.xLen > obj.x && x < obj.x + obj.xLen) &&
       (y + this.yLen > obj.y && y < obj.y + obj.yLen)
     ) {
