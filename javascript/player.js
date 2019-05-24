@@ -11,7 +11,7 @@ class Player extends GameEntity {
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
-    this.moveSpd = 4;
+    this.moveSpd = 4.5;
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
