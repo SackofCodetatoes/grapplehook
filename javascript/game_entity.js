@@ -4,16 +4,19 @@ class GameEntity {
     this.y = options.y;
     this.xLen = options.xLen;
     this.yLen = options.yLen;
-    this.vspd = 0;
-    this.hspd = 0;
-    this.physicsObj = false || options.physicsObj;
     this.defaultColor = options.color || 'gray'
-
     this.context = options.context;
     this.platformCollision = options.platformCollision;
     this.physicsCollision = options.physicsCollision;
-
     this.active = options.active || true;
+    this.physicsObj = false || options.physicsObj;
+    
+    
+    
+    this.vspd = 0;
+    this.hspd = 0;
+
+
     this.draw = this.draw.bind(this);
     this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }

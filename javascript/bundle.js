@@ -115,6 +115,29 @@ class Camera extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 /***/ }),
 
+/***/ "./javascript/coin.js":
+/*!****************************!*\
+  !*** ./javascript/coin.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+
+class Coin extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"]{
+  constructor(options){
+    super(options);
+
+  }
+
+}
+/* harmony default export */ __webpack_exports__["default"] = (Coin);
+
+/***/ }),
+
 /***/ "./javascript/cursor.js":
 /*!******************************!*\
   !*** ./javascript/cursor.js ***!
@@ -231,6 +254,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 /* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
 /* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+
 
 
 
@@ -335,6 +360,19 @@ class Game {
     }
     this.cursor = new _cursor_js__WEBPACK_IMPORTED_MODULE_5__["default"](cursorConfig);
 
+    let coinConfig = {
+      x: 600,
+      y: 566,
+      xLen: 40,
+      yLen: 40,
+      context: this.context,
+      color: "yellow",
+    };
+
+    let testCoin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"](coinConfig);
+    this.activeEntities['coin1'] = testCoin;
+    this.coins.push(testCoin);
+    // this.coins.push(testCoin);
 
     //put all these in a seed file and use call/apply 
     this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
@@ -402,6 +440,9 @@ class Game {
 
 
 
+
+
+
     //add player to game
     //hook object created below hookConfig
     this.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
@@ -443,6 +484,12 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+      this.context.fillStyle = 'white'
+      this.context.font = "64px Montserrat";
+      this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
+      this.context.font = "32px Arial";
+      this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value / 2 - (30 * 5), this.canvas.attributes.height.value / 2 + 30);
+
         if(this.keyCodePress['enter'] === true){
           this.gameState = 1;
           this.initialize();
@@ -552,16 +599,19 @@ class GameEntity {
     this.y = options.y;
     this.xLen = options.xLen;
     this.yLen = options.yLen;
-    this.vspd = 0;
-    this.hspd = 0;
-    this.physicsObj = false || options.physicsObj;
     this.defaultColor = options.color || 'gray'
-
     this.context = options.context;
     this.platformCollision = options.platformCollision;
     this.physicsCollision = options.physicsCollision;
-
     this.active = options.active || true;
+    this.physicsObj = false || options.physicsObj;
+    
+    
+    
+    this.vspd = 0;
+    this.hspd = 0;
+
+
     this.draw = this.draw.bind(this);
     this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }

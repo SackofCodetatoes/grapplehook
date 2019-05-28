@@ -47,3 +47,8 @@ body {
 * {
   -webkit-user-select: none;
 }
+
+@font-face{
+  font-family: 'Montserrat';
+  src: url('https://fonts.googleapis.com/css?family=Montserrat&display=swap')
+}

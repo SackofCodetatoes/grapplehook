@@ -2,8 +2,9 @@ import Player from "./player.js";
 import Camera from "./camera.js";
 import Hook from "./hook.js";
 import GameEntity from "./game_entity.js";
-import Platform from "./platform.js"
-import Cursor from "./cursor.js"
+import Platform from "./platform.js";
+import Cursor from "./cursor.js";
+import Coin from "./coin.js";
 
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 
@@ -102,6 +103,19 @@ class Game {
     }
     this.cursor = new Cursor(cursorConfig);
 
+    let coinConfig = {
+      x: 600,
+      y: 566,
+      xLen: 40,
+      yLen: 40,
+      context: this.context,
+      color: "yellow",
+    };
+
+    let testCoin = new Coin(coinConfig);
+    this.activeEntities['coin1'] = testCoin;
+    this.coins.push(testCoin);
+    // this.coins.push(testCoin);
 
     //put all these in a seed file and use call/apply 
     this.platform = new Platform({
@@ -169,6 +183,9 @@ class Game {
 
 
 
+
+
+
     //add player to game
     //hook object created below hookConfig
     this.player = new Player(playerConfig);
@@ -210,6 +227,12 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+      this.context.fillStyle = 'white'
+      this.context.font = "64px Montserrat";
+      this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
+      this.context.font = "32px Arial";
+      this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value / 2 - (30 * 5), this.canvas.attributes.height.value / 2 + 30);
+
         if(this.keyCodePress['enter'] === true){
           this.gameState = 1;
           this.initialize();
