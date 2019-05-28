@@ -511,11 +511,10 @@ class Game {
       //run preview
 
 
-      let viewMove = 1;
-      console.log(this.viewPort.x)
+      let viewMove = 0.5;
+      // console.log(this.viewPort.x)
       if(this.viewPort.x + viewMove >= 4192){
         this.viewPort.x = 0;
-        console.log('reset it')
       } 
       this.viewPort.x += viewMove;
       this.cursor.draw();
