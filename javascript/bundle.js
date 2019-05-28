@@ -225,7 +225,7 @@ class Display {
     //create request animation loop
     this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
-    this.context.drawImage(this.background, 0, 300, 1584, 1020, -this.viewPort.x, -this.viewPort.y, 1584, 1020);
+    this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
     this.game.update();
     
@@ -319,11 +319,14 @@ class Game {
     this.run = false;
     this.cursor = new _cursor_js__WEBPACK_IMPORTED_MODULE_5__["default"](cursorConfig);
     
-    window.run = false;
-    this.preview = window.setInterval(function(){
-      console.log('hey there')
-      window.run = !window.run;
-    }, 3000)
+
+    //test timer
+    // window.run = false;
+    // this.preview = window.setInterval(function(){
+    //   console.log('hey there')
+    //   window.run = !window.run;
+    // }, 3000)
+
     // this.entities.push(this.cursor);
     // this.activeEntities['cursor'] = this.cursor;
   }
@@ -482,6 +485,7 @@ class Game {
     this.entities = Object.values(this.activeEntities)
   }
 
+  //main game logic loop
   update(){
     //each game step
     switch(this.gameState){
@@ -501,14 +505,19 @@ class Game {
         this.initialize();
       }
 
-      if(window.run){
-        this.viewPort.x += 0.2;
-      }
+      // if(window.run){
+      //   this.viewPort.x += 0.2;
+      // }
       //run preview
 
 
-
-      // this.viewPort.x += 0.2;
+      let viewMove = 1;
+      console.log(this.viewPort.x)
+      if(this.viewPort.x + viewMove >= 4192){
+        this.viewPort.x = 0;
+        console.log('reset it')
+      } 
+      this.viewPort.x += viewMove;
       this.cursor.draw();
       break;
 
@@ -544,6 +553,8 @@ class Game {
       }
     
   }
+
+
 
   physicsCollision(x, y, obj){
     //check collision with physics objs

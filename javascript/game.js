@@ -62,11 +62,14 @@ class Game {
     this.run = false;
     this.cursor = new Cursor(cursorConfig);
     
-    window.run = false;
-    this.preview = window.setInterval(function(){
-      console.log('hey there')
-      window.run = !window.run;
-    }, 3000)
+
+    //test timer
+    // window.run = false;
+    // this.preview = window.setInterval(function(){
+    //   console.log('hey there')
+    //   window.run = !window.run;
+    // }, 3000)
+
     // this.entities.push(this.cursor);
     // this.activeEntities['cursor'] = this.cursor;
   }
@@ -225,6 +228,7 @@ class Game {
     this.entities = Object.values(this.activeEntities)
   }
 
+  //main game logic loop
   update(){
     //each game step
     switch(this.gameState){
@@ -244,14 +248,19 @@ class Game {
         this.initialize();
       }
 
-      if(window.run){
-        this.viewPort.x += 0.2;
-      }
+      // if(window.run){
+      //   this.viewPort.x += 0.2;
+      // }
       //run preview
 
 
-
-      // this.viewPort.x += 0.2;
+      let viewMove = 1;
+      console.log(this.viewPort.x)
+      if(this.viewPort.x + viewMove >= 4192){
+        this.viewPort.x = 0;
+        console.log('reset it')
+      } 
+      this.viewPort.x += viewMove;
       this.cursor.draw();
       break;
 
@@ -287,6 +296,8 @@ class Game {
       }
     
   }
+
+
 
   physicsCollision(x, y, obj){
     //check collision with physics objs
