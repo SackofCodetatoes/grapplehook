@@ -11,8 +11,6 @@ class GameEntity {
     this.active = options.active || true;
     this.physicsObj = false || options.physicsObj;
     
-    
-    
     this.vspd = 0;
     this.hspd = 0;
 
