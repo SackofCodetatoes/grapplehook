@@ -184,6 +184,172 @@ class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 /***/ }),
 
+/***/ "./javascript/debug.js":
+/*!*****************************!*\
+  !*** ./javascript/debug.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+/* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+
+
+
+
+
+
+
+
+
+const debugSeed = function (game) {
+let playerConfig = {
+      x: 205,
+      y: 566,
+      xLen: 25,
+      yLen: 30,
+      context: game.context,
+      game: game,
+      platformCollision: game.platformCollision,
+      physicsObj: true,
+      physicsCollision: game.physicsCollision,
+      viewPort: game.viewPort,
+      // addEntity: game.addEntity,  //inteded to add hok atfirst
+      deleteEntity: game.deleteEntity,
+      image: game.spriteSheet,
+    }
+    
+    let hookConfig = {
+      x: playerConfig.x,
+      y: playerConfig.y,
+      xLen: 10,
+      yLen: 10,
+      active: false,
+      context: game.context,
+      game: game,
+      platformCollision: game.platformCollision,
+      viewPort: game.viewPort,
+    }
+    game.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
+    
+    playerConfig.hook = game.hook;
+    
+    
+    let coinConfig = {
+      x: 600,
+      y: 566,
+      xLen: 40,
+      yLen: 40,
+      context: game.context,
+      color: "yellow",
+    };
+
+    let testCoin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"](coinConfig);
+    game.activeEntities['coin1'] = testCoin;
+    game.coins.push(testCoin);
+    // game.coins.push(testCoin);
+
+    //put all these in a seed file and use call/apply 
+    let platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      x: 0,
+      y: game.canvas.attributes.height.value - 50,
+      xLen: game.canvas.attributes.width.value,
+      yLen: 25,
+      context: game.context
+    })
+    game.platforms.push(platform);
+    // game.entities.push(game.platform);
+    game.activeEntities['platform1'] = platform;
+
+    game.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      x: 50,
+      y: 0,
+      xLen: 25,
+      yLen: game.canvas.attributes.height.value,
+      context: game.context
+    })
+    game.platforms.push(game.platform2);
+    // game.entities.push(game.platform2);
+    game.activeEntities['platform2'] = game.platform2;
+
+    game.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      x: 0,
+      y: 25,
+      xLen: game.canvas.attributes.width.value,
+      yLen: 25,
+      context: game.context
+    })
+    game.platforms.push(game.platform3);
+    // game.entities.push(game.platform3);
+    game.activeEntities['platform3'] = game.platform3;
+
+    game.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      x: game.canvas.attributes.width.value - 50,
+      y: 0,
+      xLen: 25,
+      yLen: game.canvas.attributes.height.value,
+      context: game.context
+    })
+    game.platforms.push(game.platform4);
+    // game.entities.push(game.platform2);
+    game.activeEntities['platform4'] = game.platform4;
+
+
+    game.platform5 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+      x: 400,
+      y: 400,
+      xLen: 40,
+      yLen: 40,
+      context: game.context
+    })
+    game.platforms.push(game.platform5);
+    // game.entities.push(game.platform2);
+    game.activeEntities['platform5'] = game.platform5;
+
+
+    //old physics box
+    game.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_3__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
+    // game.entities.push(game.box);
+    game.activeEntities['box'] = game.box;
+    game.physicsObjs.push(game.box);
+
+
+
+
+
+
+    //add player to game
+    //hook object created below hookConfig
+    game.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
+    game.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
+    game.camera.x = 0;
+    game.camera.y = 0;
+    game.camera.center = {x: game.x + (1280 / 2), y: game.y + (720 / 2)}
+
+
+
+    // game.entities.push(game.player);
+    game.activeEntities['player'] = game.player;
+    game.activeEntities['hook'] = game.hook;
+
+    
+    game.physicsObjs.push(game.player);
+
+
+    game.entities = Object.values(game.activeEntities);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (debugSeed);
+
+/***/ }),
+
 /***/ "./javascript/display.js":
 /*!*******************************!*\
   !*** ./javascript/display.js ***!
@@ -255,6 +421,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
 /* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
 /* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+/* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./debug.js */ "./javascript/debug.js");
+
 
 
 
@@ -333,144 +501,144 @@ class Game {
   
   
   initialize(){
-    //give each object an id
+    // //give each object an id
+    Object(_debug_js__WEBPACK_IMPORTED_MODULE_7__["default"])(this);
+    // //init with seed file?
+    // //game init
+    // let playerConfig = {
+    //   x: 205,
+    //   y: 566,
+    //   xLen: 25,
+    //   yLen: 30,
+    //   context: this.context,
+    //   game: this,
+    //   platformCollision: this.platformCollision,
+    //   physicsObj: true,
+    //   physicsCollision: this.physicsCollision,
+    //   viewPort: this.viewPort,
+    //   // addEntity: this.addEntity,  //inteded to add hok atfirst
+    //   deleteEntity: this.deleteEntity,
+    //   image: this.spriteSheet,
+    // }
     
-    //init with seed file?
-    //game init
-    let playerConfig = {
-      x: 205,
-      y: 566,
-      xLen: 25,
-      yLen: 30,
-      context: this.context,
-      game: this,
-      platformCollision: this.platformCollision,
-      physicsObj: true,
-      physicsCollision: this.physicsCollision,
-      viewPort: this.viewPort,
-      // addEntity: this.addEntity,  //inteded to add hok atfirst
-      deleteEntity: this.deleteEntity,
-      image: this.spriteSheet,
-    }
+    // let hookConfig = {
+    //   x: playerConfig.x,
+    //   y: playerConfig.y,
+    //   xLen: 10,
+    //   yLen: 10,
+    //   active: false,
+    //   context: this.context,
+    //   game: this,
+    //   platformCollision: this.platformCollision,
+    //   viewPort: this.viewPort,
+    // }
+    // this.hook = new Hook(hookConfig);
     
-    let hookConfig = {
-      x: playerConfig.x,
-      y: playerConfig.y,
-      xLen: 10,
-      yLen: 10,
-      active: false,
-      context: this.context,
-      game: this,
-      platformCollision: this.platformCollision,
-      viewPort: this.viewPort,
-    }
-    this.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
-    
-    playerConfig.hook = this.hook;
+    // playerConfig.hook = this.hook;
     
     
-    let coinConfig = {
-      x: 600,
-      y: 566,
-      xLen: 40,
-      yLen: 40,
-      context: this.context,
-      color: "yellow",
-    };
+    // let coinConfig = {
+    //   x: 600,
+    //   y: 566,
+    //   xLen: 40,
+    //   yLen: 40,
+    //   context: this.context,
+    //   color: "yellow",
+    // };
 
-    let testCoin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"](coinConfig);
-    this.activeEntities['coin1'] = testCoin;
-    this.coins.push(testCoin);
+    // let testCoin = new Coin(coinConfig);
+    // this.activeEntities['coin1'] = testCoin;
     // this.coins.push(testCoin);
+    // // this.coins.push(testCoin);
 
-    //put all these in a seed file and use call/apply 
-    this.platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-      x: 0,
-      y: this.canvas.attributes.height.value - 50,
-      xLen: this.canvas.attributes.width.value,
-      yLen: 25,
-      context: this.context
-    })
-    this.platforms.push(this.platform);
-    // this.entities.push(this.platform);
-    this.activeEntities['platform1'] = this.platform;
+    // //put all these in a seed file and use call/apply 
+    // let platform = new Platform({
+    //   x: 0,
+    //   y: this.canvas.attributes.height.value - 50,
+    //   xLen: this.canvas.attributes.width.value,
+    //   yLen: 25,
+    //   context: this.context
+    // })
+    // this.platforms.push(platform);
+    // // this.entities.push(this.platform);
+    // this.activeEntities['platform1'] = platform;
 
-    this.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-      x: 50,
-      y: 0,
-      xLen: 25,
-      yLen: this.canvas.attributes.height.value,
-      context: this.context
-    })
-    this.platforms.push(this.platform2);
-    // this.entities.push(this.platform2);
-    this.activeEntities['platform2'] = this.platform2;
+    // this.platform2 = new Platform({
+    //   x: 50,
+    //   y: 0,
+    //   xLen: 25,
+    //   yLen: this.canvas.attributes.height.value,
+    //   context: this.context
+    // })
+    // this.platforms.push(this.platform2);
+    // // this.entities.push(this.platform2);
+    // this.activeEntities['platform2'] = this.platform2;
 
-    this.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-      x: 0,
-      y: 25,
-      xLen: this.canvas.attributes.width.value,
-      yLen: 25,
-      context: this.context
-    })
-    this.platforms.push(this.platform3);
-    // this.entities.push(this.platform3);
-    this.activeEntities['platform3'] = this.platform3;
+    // this.platform3 = new Platform({
+    //   x: 0,
+    //   y: 25,
+    //   xLen: this.canvas.attributes.width.value,
+    //   yLen: 25,
+    //   context: this.context
+    // })
+    // this.platforms.push(this.platform3);
+    // // this.entities.push(this.platform3);
+    // this.activeEntities['platform3'] = this.platform3;
 
-    this.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-      x: this.canvas.attributes.width.value - 50,
-      y: 0,
-      xLen: 25,
-      yLen: this.canvas.attributes.height.value,
-      context: this.context
-    })
-    this.platforms.push(this.platform4);
-    // this.entities.push(this.platform2);
-    this.activeEntities['platform4'] = this.platform4;
-
-
-    this.platform5 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-      x: 400,
-      y: 400,
-      xLen: 40,
-      yLen: 40,
-      context: this.context
-    })
-    this.platforms.push(this.platform5);
-    // this.entities.push(this.platform2);
-    this.activeEntities['platform5'] = this.platform5;
+    // this.platform4 = new Platform({
+    //   x: this.canvas.attributes.width.value - 50,
+    //   y: 0,
+    //   xLen: 25,
+    //   yLen: this.canvas.attributes.height.value,
+    //   context: this.context
+    // })
+    // this.platforms.push(this.platform4);
+    // // this.entities.push(this.platform2);
+    // this.activeEntities['platform4'] = this.platform4;
 
 
-    //old physics box
-    this.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_3__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
-    // this.entities.push(this.box);
-    this.activeEntities['box'] = this.box;
-    this.physicsObjs.push(this.box);
+    // this.platform5 = new Platform({
+    //   x: 400,
+    //   y: 400,
+    //   xLen: 40,
+    //   yLen: 40,
+    //   context: this.context
+    // })
+    // this.platforms.push(this.platform5);
+    // // this.entities.push(this.platform2);
+    // this.activeEntities['platform5'] = this.platform5;
 
 
-
+    // //old physics box
+    // this.box = new GameEntity(Object.assign({}, playerConfig, {x: 255, y: 205}));
+    // // this.entities.push(this.box);
+    // this.activeEntities['box'] = this.box;
+    // this.physicsObjs.push(this.box);
 
 
 
-    //add player to game
-    //hook object created below hookConfig
-    this.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
-    this.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
-    this.camera.x = 0;
-    this.camera.y = 0;
-    this.camera.center = {x: this.x + (1280 / 2), y: this.y + (720 / 2)}
 
 
 
-    // this.entities.push(this.player);
-    this.activeEntities['player'] = this.player;
-    this.activeEntities['hook'] = this.hook;
+    // //add player to game
+    // //hook object created below hookConfig
+    // this.player = new Player(playerConfig);
+    // this.camera = new Camera(playerConfig);
+    // this.camera.x = 0;
+    // this.camera.y = 0;
+    // this.camera.center = {x: this.x + (1280 / 2), y: this.y + (720 / 2)}
+
+
+
+    // // this.entities.push(this.player);
+    // this.activeEntities['player'] = this.player;
+    // this.activeEntities['hook'] = this.hook;
 
     
-    this.physicsObjs.push(this.player);
+    // this.physicsObjs.push(this.player);
 
 
-    this.entities = Object.values(this.activeEntities);
+    // this.entities = Object.values(this.activeEntities);
   }
 
   
@@ -867,7 +1035,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
-    this.moveSpd = 4.5;
+    this.moveSpd = 3;
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
