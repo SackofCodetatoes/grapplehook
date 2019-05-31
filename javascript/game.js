@@ -6,7 +6,7 @@ import Platform from "./platform.js";
 import Cursor from "./cursor.js";
 import Coin from "./coin.js";
 import debugSeed from "./debug.js";
-
+import levelOneSeed from "./levelOneSeed.js";
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 
 
@@ -77,7 +77,8 @@ class Game {
   
   
   initialize(){
-    debugSeed(this);
+    // debugSeed(this);
+    levelOneSeed(this);
 
   }
 
@@ -138,7 +139,7 @@ class Game {
       
       // this.camera.x = this.player.x - (1280 / 2);
       // this.camera.y = this.player.y - (720 / 2);
-      
+      // debugger
       for(let i = 0; i < this.entities.length; i++){
         if(this.entities[i].active) {
           this.entities[i].update(this.viewPort);

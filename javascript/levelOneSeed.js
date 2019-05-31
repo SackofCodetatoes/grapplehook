@@ -9,8 +9,8 @@ import Coin from "./coin.js";
 
 const levelOneSeed = function (game) {
   //give each object an id
-  let coinConfig, coin, platformConfig
-
+  let coinConfig, coin, platformConfig, platform;
+  game.entities = [];
   // let coinConfig = {
   //   x: 600,
   //   y: 566,
@@ -23,28 +23,309 @@ const levelOneSeed = function (game) {
   //Seed Platforms
   platform = new Platform({
     x: 0,
-    y: game.canvas.attributes.height.value - 50,
-    xLen: game.canvas.attributes.width.value,
-    yLen: 25,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
     context: game.context
   })
   game.platforms.push(platform);
-  game.activeEntities['platform1'] = platform;
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 1152,
+    y: 800,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new Platform({
+    x: 1600,
+    y: 960,
+    xLen: 64,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new Platform({
+    x: 1728,
+    y: 928,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new Platform({
+    x: 1856,
+    y: 896,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new Platform({
+    x: 1952,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 2240,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 2464,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 2990,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 3040,
+    y: 832,
+    xLen: 576,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 3680,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 3840,
+    y: 768,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 4000,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 4032,
+    y: 352,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 4224,
+    y: 96,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 4544,
+    y: 192,
+    xLen: 256,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 5184,
+    y: 256,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 5536,
+    y: 416,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 5792,
+    y: 448,
+    xLen: 160,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 5952,
+    y: 928,
+    xLen: 416,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 6400,
+    y: 768,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 6560,
+    y: 854,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 6848,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 6784,
+    y: 480,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 6784,
+    y: 256,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 7072,
+    y: 224,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 7136,
+    y: 96,
+    xLen: 640,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 7584,
+    y: 544,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new Platform({
+    x: 7616,
+    y: 896,
+    xLen: 384,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
 
 
 
 // ================================================================
   //Seed Coins
   coin = new Coin({
-    x: 600,
-    y: 566,
+    x: 480,
+    y: 928,
     xLen: 40,
     yLen: 40,
     context: game.context,
     color: "yellow",
   })
   game.coins.push(coin);
-  game.activeEntities['coin1'] = coin;
+  game.entities.push(coin);
+
 
 
 
@@ -55,8 +336,8 @@ const levelOneSeed = function (game) {
   
 
   let playerConfig = {
-    x: 205,
-    y: 566,
+    x: 192,
+    y: 928,
     xLen: 25,
     yLen: 30,
     context: game.context,
@@ -102,12 +383,15 @@ const levelOneSeed = function (game) {
   // game.entities.push(game.player);
   game.activeEntities['player'] = game.player;
   game.activeEntities['hook'] = game.hook;
-
+  
+  
+  game.entities.push(game.player);
+  game.entities.push(hook);
 
   game.physicsObjs.push(game.player);
 
 
-  game.entities = Object.values(game.activeEntities);
+  // game.entities = Object.values(game.activeEntities);
 }
 
 export default levelOneSeed;

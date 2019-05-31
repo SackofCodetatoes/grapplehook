@@ -424,6 +424,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
 /* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./debug.js */ "./javascript/debug.js");
+/* harmony import */ var _levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./levelOneSeed.js */ "./javascript/levelOneSeed.js");
 
 
 
@@ -503,7 +504,8 @@ class Game {
   
   
   initialize(){
-    Object(_debug_js__WEBPACK_IMPORTED_MODULE_7__["default"])(this);
+    // debugSeed(this);
+    Object(_levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__["default"])(this);
 
   }
 
@@ -564,7 +566,7 @@ class Game {
       
       // this.camera.x = this.player.x - (1280 / 2);
       // this.camera.y = this.player.y - (720 / 2);
-      
+      // debugger
       for(let i = 0; i < this.entities.length; i++){
         if(this.entities[i].active) {
           this.entities[i].update(this.viewPort);
@@ -850,6 +852,422 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
 //if hook is off screen by x amount, reset
 //review angles and speed
+
+/***/ }),
+
+/***/ "./javascript/levelOneSeed.js":
+/*!************************************!*\
+  !*** ./javascript/levelOneSeed.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+/* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+
+
+
+
+
+
+
+
+
+const levelOneSeed = function (game) {
+  //give each object an id
+  let coinConfig, coin, platformConfig, platform;
+  game.entities = [];
+  // let coinConfig = {
+  //   x: 600,
+  //   y: 566,
+  //   xLen: 40,
+  //   yLen: 40,
+  //   context: game.context,
+  //   color: "yellow",
+  // };
+  // ===============================================================
+  //Seed Platforms
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1152,
+    y: 800,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1600,
+    y: 960,
+    xLen: 64,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1728,
+    y: 928,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1856,
+    y: 896,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1952,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2240,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2464,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2990,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3040,
+    y: 832,
+    xLen: 576,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3680,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3840,
+    y: 768,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4000,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4032,
+    y: 352,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4224,
+    y: 96,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4544,
+    y: 192,
+    xLen: 256,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5184,
+    y: 256,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5536,
+    y: 416,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5792,
+    y: 448,
+    xLen: 160,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5952,
+    y: 928,
+    xLen: 416,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6400,
+    y: 768,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6560,
+    y: 854,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6848,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6784,
+    y: 480,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6784,
+    y: 256,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7072,
+    y: 224,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7136,
+    y: 96,
+    xLen: 640,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7584,
+    y: 544,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7616,
+    y: 896,
+    xLen: 384,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+
+
+// ================================================================
+  //Seed Coins
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 480,
+    y: 928,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+    color: "yellow",
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+
+
+
+
+
+
+
+  
+
+  let playerConfig = {
+    x: 192,
+    y: 928,
+    xLen: 25,
+    yLen: 30,
+    context: game.context,
+    game: game,
+    platformCollision: game.platformCollision,
+    physicsObj: true,
+    physicsCollision: game.physicsCollision,
+    viewPort: game.viewPort,
+    // addEntity: game.addEntity,  //inteded to add hok atfirst
+    deleteEntity: game.deleteEntity,
+    image: game.spriteSheet,
+  }
+
+  let hookConfig = {
+    x: playerConfig.x,
+    y: playerConfig.y,
+    xLen: 10,
+    yLen: 10,
+    active: false,
+    context: game.context,
+    game: game,
+    platformCollision: game.platformCollision,
+    viewPort: game.viewPort,
+  }
+  let hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
+
+  playerConfig.hook = hook;
+
+  //add player to game
+  //hook object created below hookConfig
+  //player and camera should be game attritbutes for update funciton
+  game.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
+  game.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
+  game.camera.x = 0;
+  game.camera.y = 0;
+  game.camera.center = {
+    x: game.x + (1280 / 2),
+    y: game.y + (720 / 2)
+  }
+
+
+
+  // game.entities.push(game.player);
+  game.activeEntities['player'] = game.player;
+  game.activeEntities['hook'] = game.hook;
+  
+  
+  game.entities.push(game.player);
+  game.entities.push(hook);
+
+  game.physicsObjs.push(game.player);
+
+
+  // game.entities = Object.values(game.activeEntities);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (levelOneSeed);
 
 /***/ }),
 
