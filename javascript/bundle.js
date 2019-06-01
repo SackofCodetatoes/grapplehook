@@ -384,7 +384,6 @@ class Display {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.spriteSheet;
-    console.log(this.background)
     this.viewPort = {
       x: 0,
       y: 0,
@@ -395,6 +394,7 @@ class Display {
       context: this.context,
       viewPort: this.viewPort,
       spriteSheet: this.spriteSheet,
+      background: this.background,
     }
     // this.spriteSheet.onload = this.game = new Game(gameConfig);
     this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameConfig);
@@ -408,7 +408,7 @@ class Display {
     //create request animation loop
     this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
-    this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+    // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
     this.game.update();
     
@@ -456,11 +456,15 @@ class Game {
   constructor(options){
    //preload 
     const spriteSheet = new Image();
+    const background = new Image();
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
+    background.src = "./images/city_background_night.png";
+
     this.spriteSheet = spriteSheet;
+    this.background = background;
     this.keyCodePress = {13: false}
     this.score = 0;
     
@@ -542,6 +546,8 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
       this.context.fillText("GrappleHook", 120, 150);
@@ -576,6 +582,7 @@ class Game {
       case 1: 
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
       
       this.applyGravity();
       
@@ -816,8 +823,8 @@ const background = new Image();
 const spriteSheet = new Image();
 background.src = "./images/city_background_night.png";
 spriteSheet.src = "./images/industrial.v2.png";
-display.background = background;
-display.spriteSheet = spriteSheet;
+// display.background = background;
+// display.spriteSheet = spriteSheet;
 // console.log(display.spriteSheet);
 background.onload = display.render;
 
@@ -843,7 +850,7 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options)
     this.defaultColor = 'red';
-    this.spd = 20;
+    this.spd = 31;
     this.moving = false;
     this.state = 'ready';
   }
@@ -1705,10 +1712,12 @@ const levelOneSeed = function (game) {
 
 
   
+  //offset is temporary fix to platform placements
+  let offset = 150;
 
   let playerConfig = {
     x: 192,
-    y: 928 - 200,
+    y: 928 - offset,
     xLen: 25,
     yLen: 30,
     context: game.context,
@@ -1762,13 +1771,13 @@ const levelOneSeed = function (game) {
   game.physicsObjs.push(game.player);
 
   for(let i = 0; i < game.entities.length; i++){
-    game.entities[i].y -= 200;
+    game.entities[i].y -= offset;
   }
   for(let i = 0; i < game.coins.length; i++){
-    game.coins[i].y -= 200;
+    game.coins[i].y -= offset;
   }
   for(let i = 0; i < game.platforms.length; i++){
-    game.platforms[i].y -= 200;
+    game.platforms[i].y -= offset;
   }
 
 
@@ -1919,17 +1928,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
       this.context.stroke();
 
-      //draws ring around targetpoint (swing path)
-      // this.context.beginPath();
-      // this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-      // this.context.arc(this.hook.x - viewPort.x, this.hook.y - viewPort.y, this.ropeLength, 0, 2 * Math.PI);
-      // this.context.stroke();
-      //bug with radial path expanding / decreasing 
     }
 
-    //draw default player
-    // this.context.fillStyle = 'blue';
-    // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite

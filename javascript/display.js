@@ -5,7 +5,6 @@ class Display {
     this.canvas = document.getElementById('game-canvas');
     this.context = this.canvas.getContext('2d');
     this.spriteSheet;
-    console.log(this.background)
     this.viewPort = {
       x: 0,
       y: 0,
@@ -16,6 +15,7 @@ class Display {
       context: this.context,
       viewPort: this.viewPort,
       spriteSheet: this.spriteSheet,
+      background: this.background,
     }
     // this.spriteSheet.onload = this.game = new Game(gameConfig);
     this.game = new Game(gameConfig);
@@ -29,7 +29,7 @@ class Display {
     //create request animation loop
     this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
-    this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+    // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
     this.game.update();
     

@@ -14,11 +14,15 @@ class Game {
   constructor(options){
    //preload 
     const spriteSheet = new Image();
+    const background = new Image();
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
+    background.src = "./images/city_background_night.png";
+
     this.spriteSheet = spriteSheet;
+    this.background = background;
     this.keyCodePress = {13: false}
     this.score = 0;
     
@@ -100,6 +104,8 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
       this.context.fillText("GrappleHook", 120, 150);
@@ -134,6 +140,7 @@ class Game {
       case 1: 
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
       
       this.applyGravity();
       

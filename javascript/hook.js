@@ -6,7 +6,7 @@ class Hook extends GameEntity {
   constructor(options){
     super(options)
     this.defaultColor = 'red';
-    this.spd = 20;
+    this.spd = 31;
     this.moving = false;
     this.state = 'ready';
   }

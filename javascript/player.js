@@ -103,17 +103,8 @@ class Player extends GameEntity {
 
       this.context.stroke();
 
-      //draws ring around targetpoint (swing path)
-      // this.context.beginPath();
-      // this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-      // this.context.arc(this.hook.x - viewPort.x, this.hook.y - viewPort.y, this.ropeLength, 0, 2 * Math.PI);
-      // this.context.stroke();
-      //bug with radial path expanding / decreasing 
     }
 
-    //draw default player
-    // this.context.fillStyle = 'blue';
-    // this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 25, 25);
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite

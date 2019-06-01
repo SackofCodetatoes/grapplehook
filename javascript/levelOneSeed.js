@@ -804,10 +804,12 @@ const levelOneSeed = function (game) {
 
 
   
+  //offset is temporary fix to platform placements
+  let offset = 150;
 
   let playerConfig = {
     x: 192,
-    y: 928 - 200,
+    y: 928 - offset,
     xLen: 25,
     yLen: 30,
     context: game.context,
@@ -861,13 +863,13 @@ const levelOneSeed = function (game) {
   game.physicsObjs.push(game.player);
 
   for(let i = 0; i < game.entities.length; i++){
-    game.entities[i].y -= 200;
+    game.entities[i].y -= offset;
   }
   for(let i = 0; i < game.coins.length; i++){
-    game.coins[i].y -= 200;
+    game.coins[i].y -= offset;
   }
   for(let i = 0; i < game.platforms.length; i++){
-    game.platforms[i].y -= 200;
+    game.platforms[i].y -= offset;
   }
 
 
