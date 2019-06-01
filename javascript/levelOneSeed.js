@@ -321,7 +321,477 @@ const levelOneSeed = function (game) {
     xLen: 40,
     yLen: 40,
     context: game.context,
-    color: "yellow",
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 864,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 1152,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 1664,
+    y: 896,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 1792,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 1952,
+    y: 608,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 2272,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 2464,
+    y: 800,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 2624,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 2688,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 2880,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 3040,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 3296,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 3616,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 3808,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4032,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4128,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  // ???????
+  coin = new Coin({
+    x: 4032,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 3904,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4032,
+    y: 224,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4224,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4384,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4576,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 4992,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 5088,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 5312,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 5440,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 5632,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 5792,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6016,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6016,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6016,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6720,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6848,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6976,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6880,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6688,
+    y: 544,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6656,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6816,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 6912,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7232,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7456,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7648,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7776,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7776,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new Coin({
+    x: 7776,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
   })
   game.coins.push(coin);
   game.entities.push(coin);
@@ -337,7 +807,7 @@ const levelOneSeed = function (game) {
 
   let playerConfig = {
     x: 192,
-    y: 928,
+    y: 928 - 200,
     xLen: 25,
     yLen: 30,
     context: game.context,
@@ -389,6 +859,16 @@ const levelOneSeed = function (game) {
   game.entities.push(hook);
 
   game.physicsObjs.push(game.player);
+
+  for(let i = 0; i < game.entities.length; i++){
+    game.entities[i].y -= 200;
+  }
+  for(let i = 0; i < game.coins.length; i++){
+    game.coins[i].y -= 200;
+  }
+  for(let i = 0; i < game.platforms.length; i++){
+    game.platforms[i].y -= 200;
+  }
 
 
   // game.entities = Object.values(game.activeEntities);

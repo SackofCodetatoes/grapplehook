@@ -130,10 +130,22 @@ __webpack_require__.r(__webpack_exports__);
 class Coin extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"]{
   constructor(options){
     super(options);
-
+    this.defaultColor = 'yellow';
+  }
+//add gravity mechanic to move towards player when near.
+  draw(viewPort){
+    this.context.beginPath();
+    this.context.lineWidth = 2;
+    this.context.strokeStyle = 'orange';
+    this.context.fillStyle = 'yellow';
+    this.context.arc(this.x + this.xLen / 2 - viewPort.x, this.y + this.yLen / 2 - viewPort.y, 20, 0, 2 * Math.PI);
+    this.context.fill();
+    this.context.stroke();
   }
 
 }
+
+
 /* harmony default export */ __webpack_exports__["default"] = (Coin);
 
 /***/ }),
@@ -153,7 +165,8 @@ __webpack_require__.r(__webpack_exports__);
 class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
-    this.defaultColor = 'yellow';
+    this.defaultColor = 'red';
+    // this.defaultColor = 'yellow';
     this.active = true;
     this.keybind();
   }
@@ -168,8 +181,10 @@ class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   draw(){
     // unique draw
     this.context.beginPath();
-    this.context.strokeStyle = 'yellow';
+    this.context.strokeStyle = this.defaultColor;
     this.context.lineWidth = 2.5;
+    this.context.setLineDash([10,10]);
+    // this.context.setLineDash([4,5]);
     this.context.arc(this.x, this.y, 10, 0, 2* Math.PI);
     this.context.stroke();
   }
@@ -566,7 +581,17 @@ class Game {
       
       // this.camera.x = this.player.x - (1280 / 2);
       // this.camera.y = this.player.y - (720 / 2);
-      // debugger
+
+      //draw guideline infront
+      this.context.beginPath();
+      // this.context.setLineDash([5, 15]);
+      this.context.setLineDash([5, 10]);
+      this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
+      this.context.lineTo(this.cursor.x, this.cursor.y);
+      this.context.stroke();
+      this.context.setLineDash([]);
+
+
       for(let i = 0; i < this.entities.length; i++){
         if(this.entities[i].active) {
           this.entities[i].update(this.viewPort);
@@ -583,7 +608,10 @@ class Game {
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
         this.context.fillText(`Points: ${this.score}`, this.canvas.attributes.width.value - 220, 100);
+        
+        //draw cursor infront
         this.cursor.draw();
+        
         break;
       }
     
@@ -1194,7 +1222,477 @@ const levelOneSeed = function (game) {
     xLen: 40,
     yLen: 40,
     context: game.context,
-    color: "yellow",
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 864,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1152,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1664,
+    y: 896,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1792,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1952,
+    y: 608,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2272,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2464,
+    y: 800,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2624,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2688,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2880,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3040,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3296,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3616,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3808,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4128,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  // ???????
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3904,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 224,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4224,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4384,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4576,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4992,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5088,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5312,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5440,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5632,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5792,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6720,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6848,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6976,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6880,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6688,
+    y: 544,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6656,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6816,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6912,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7232,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7456,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7648,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
   })
   game.coins.push(coin);
   game.entities.push(coin);
@@ -1210,7 +1708,7 @@ const levelOneSeed = function (game) {
 
   let playerConfig = {
     x: 192,
-    y: 928,
+    y: 928 - 200,
     xLen: 25,
     yLen: 30,
     context: game.context,
@@ -1262,6 +1760,16 @@ const levelOneSeed = function (game) {
   game.entities.push(hook);
 
   game.physicsObjs.push(game.player);
+
+  for(let i = 0; i < game.entities.length; i++){
+    game.entities[i].y -= 200;
+  }
+  for(let i = 0; i < game.coins.length; i++){
+    game.coins[i].y -= 200;
+  }
+  for(let i = 0; i < game.platforms.length; i++){
+    game.platforms[i].y -= 200;
+  }
 
 
   // game.entities = Object.values(game.activeEntities);
@@ -1319,7 +1827,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
-    this.moveSpd = 3;
+    this.moveSpd = 4;//3 for slower
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
@@ -1327,7 +1835,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.hook = options.hook;
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
-    this.rotateSpd = 0.05;
+    // this.rotateSpd = 0.05;
+    this.rotateSpd = 0.04;
 
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
@@ -1373,6 +1882,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     });
 
     canvas.addEventListener('mousedown', (event) => {
+      this.state = 0;
       this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
@@ -1514,7 +2024,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
         this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
         this.hspd = this.spinDir * (this.swingNext.x - this.x);
         this.vspd = this.spinDir * (this.swingNext.y - this.y);
-
+        //fix hooked and then hook bug
 
 
         this.stepCollisionCheck();

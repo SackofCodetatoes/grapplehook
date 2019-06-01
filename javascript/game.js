@@ -139,7 +139,17 @@ class Game {
       
       // this.camera.x = this.player.x - (1280 / 2);
       // this.camera.y = this.player.y - (720 / 2);
-      // debugger
+
+      //draw guideline infront
+      this.context.beginPath();
+      // this.context.setLineDash([5, 15]);
+      this.context.setLineDash([5, 10]);
+      this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
+      this.context.lineTo(this.cursor.x, this.cursor.y);
+      this.context.stroke();
+      this.context.setLineDash([]);
+
+
       for(let i = 0; i < this.entities.length; i++){
         if(this.entities[i].active) {
           this.entities[i].update(this.viewPort);
@@ -156,7 +166,10 @@ class Game {
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
         this.context.fillText(`Points: ${this.score}`, this.canvas.attributes.width.value - 220, 100);
+        
+        //draw cursor infront
         this.cursor.draw();
+        
         break;
       }
     

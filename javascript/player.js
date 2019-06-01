@@ -11,7 +11,7 @@ class Player extends GameEntity {
     this.addEntity = options.addEntity;
     // this.deleteEntity = options.deleteEntity;
     this.hook = options.hook;
-    this.moveSpd = 3;
+    this.moveSpd = 4;//3 for slower
     this.jumpSpd = 6;
     this.game = options.game;
     this.platformCollision = options.platformCollision;
@@ -19,7 +19,8 @@ class Player extends GameEntity {
     this.hook = options.hook;
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
-    this.rotateSpd = 0.05;
+    // this.rotateSpd = 0.05;
+    this.rotateSpd = 0.04;
 
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
@@ -65,6 +66,7 @@ class Player extends GameEntity {
     });
 
     canvas.addEventListener('mousedown', (event) => {
+      this.state = 0;
       this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
       this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
       // console.log(targetPoint, {x: this.x, y: this.y});
@@ -206,7 +208,7 @@ class Player extends GameEntity {
         this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
         this.hspd = this.spinDir * (this.swingNext.x - this.x);
         this.vspd = this.spinDir * (this.swingNext.y - this.y);
-
+        //fix hooked and then hook bug
 
 
         this.stepCollisionCheck();
