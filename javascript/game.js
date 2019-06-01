@@ -20,7 +20,7 @@ class Game {
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
-
+    
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -151,6 +151,7 @@ class Game {
       this.context.beginPath();
       // this.context.setLineDash([5, 15]);
       this.context.setLineDash([5, 10]);
+      this.context.strokeStyle = 'rgba(178, 34, 34, 0.5)';
       this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
       this.context.lineTo(this.cursor.x, this.cursor.y);
       this.context.stroke();

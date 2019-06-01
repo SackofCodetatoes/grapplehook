@@ -14,6 +14,7 @@ class Hook extends GameEntity {
   //collides with walls and hook points
 
   update(viewPort){
+    // console.log('hook state: ', this.state)
     if(this.state === 'moving' || this.state === 'hooked') {
       if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
         this.state = 'hooked';

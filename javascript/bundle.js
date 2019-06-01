@@ -462,7 +462,7 @@ class Game {
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
-
+    
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -593,6 +593,7 @@ class Game {
       this.context.beginPath();
       // this.context.setLineDash([5, 15]);
       this.context.setLineDash([5, 10]);
+      this.context.strokeStyle = 'rgba(178, 34, 34, 0.5)';
       this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
       this.context.lineTo(this.cursor.x, this.cursor.y);
       this.context.stroke();
@@ -858,6 +859,7 @@ class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   //collides with walls and hook points
 
   update(viewPort){
+    // console.log('hook state: ', this.state)
     if(this.state === 'moving' || this.state === 'hooked') {
       if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
         this.state = 'hooked';
@@ -1852,7 +1854,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.state = 0;
     this.spinDir = -1;
 
-
+    //limit rope length to 300
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -1912,10 +1914,11 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   }// end of keybind
 
   draw(viewPort){
+    //draw rope if hook is in motion
     if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
-      // this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
       this.context.beginPath();
-      this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      this.context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
 
       //view for dynamic viewport (centers on player)
       this.context.moveTo(this.x + this.xLen / 2 - (viewPort.x), this.y + this.yLen / 2 - (viewPort.y));
@@ -1967,10 +1970,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
        this.playerInput.canJump = false;
      }
      if(this.state === 1){
-        this.hook.state = 'ready'
-        this.hook.x = this.x;
-        this.hook.y = this.y;
-        this.state = 0;
+        this.resetHook();
      }
     }
     //GravShift Code
@@ -1986,6 +1986,13 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     if(this.playerInput['2']){
       this.debug = false;
     }
+  }
+  resetHook(){
+    this.hook.state = 'ready'
+    this.hook.x = this.x;
+    this.hook.y = this.y;
+    this.state = 0;
+
   }
 
   update(viewPort){
@@ -2038,6 +2045,11 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     if (this.platformCollision(this.x, this.y + (1 * this.game.gravDir), this) || this.physicsCollision(this.x, this.y + (1 * this.game.gravDir), this)) {
       this.playerInput.canJump = true;
       this.playerInput.canInvert = true;
+    }
+
+    if(this.ropeLength > 350){
+      this.ropeLength = 0;
+      this.resetHook();
     }
 
     this.draw(viewPort);

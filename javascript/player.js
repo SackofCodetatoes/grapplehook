@@ -27,7 +27,7 @@ class Player extends GameEntity {
     this.state = 0;
     this.spinDir = -1;
 
-
+    //limit rope length to 300
 
     this.takeInput = this.takeInput.bind(this);
     this.keyBind();
@@ -87,10 +87,11 @@ class Player extends GameEntity {
   }// end of keybind
 
   draw(viewPort){
+    //draw rope if hook is in motion
     if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
-      // this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
       this.context.beginPath();
-      this.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      this.context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
 
       //view for dynamic viewport (centers on player)
       this.context.moveTo(this.x + this.xLen / 2 - (viewPort.x), this.y + this.yLen / 2 - (viewPort.y));
@@ -142,10 +143,7 @@ class Player extends GameEntity {
        this.playerInput.canJump = false;
      }
      if(this.state === 1){
-        this.hook.state = 'ready'
-        this.hook.x = this.x;
-        this.hook.y = this.y;
-        this.state = 0;
+        this.resetHook();
      }
     }
     //GravShift Code
@@ -161,6 +159,13 @@ class Player extends GameEntity {
     if(this.playerInput['2']){
       this.debug = false;
     }
+  }
+  resetHook(){
+    this.hook.state = 'ready'
+    this.hook.x = this.x;
+    this.hook.y = this.y;
+    this.state = 0;
+
   }
 
   update(viewPort){
@@ -213,6 +218,11 @@ class Player extends GameEntity {
     if (this.platformCollision(this.x, this.y + (1 * this.game.gravDir), this) || this.physicsCollision(this.x, this.y + (1 * this.game.gravDir), this)) {
       this.playerInput.canJump = true;
       this.playerInput.canInvert = true;
+    }
+
+    if(this.ropeLength > 350){
+      this.ropeLength = 0;
+      this.resetHook();
     }
 
     this.draw(viewPort);
