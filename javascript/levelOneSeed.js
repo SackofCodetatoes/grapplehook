@@ -11,6 +11,8 @@ const levelOneSeed = function (game) {
   //give each object an id
   let coinConfig, coin, platformConfig, platform;
   game.entities = [];
+  game.platforms = [];
+  game.coins = [];
   // let coinConfig = {
   //   x: 600,
   //   y: 566,

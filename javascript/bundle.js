@@ -620,6 +620,10 @@ class Game {
         //draw cursor infront
         this.cursor.draw();
         
+
+        if(this.player.y > 1200){
+          this.initialize();
+        }
         break;
       }
     
@@ -921,6 +925,8 @@ const levelOneSeed = function (game) {
   //give each object an id
   let coinConfig, coin, platformConfig, platform;
   game.entities = [];
+  game.platforms = [];
+  game.coins = [];
   // let coinConfig = {
   //   x: 600,
   //   y: 566,
@@ -1828,7 +1834,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PLAYER_KEYS = ['a', 'd', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', '1', '2'];
+const PLAYER_KEYS = ['a', 'A', 'd', 'D', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', '1', '2'];
 // const PLAYER_KEYS = ['a', 'd', ' '];
 
 class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
@@ -1847,7 +1853,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.debug = false;
     this.swingNext = {x: this.x, y: this.y};
     // this.rotateSpd = 0.05;
-    this.rotateSpd = 0.04;
+    this.rotateSpd = 0.05;
 
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
@@ -1864,6 +1870,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     this.playerInput = {
       a: false,
       d: false,
+      1: false,
+      2: false,
       ArrowLeft: false,
       ArrowRight: false, 
       ArrowUp: false, 
@@ -1880,15 +1888,23 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
     //key press
     document.addEventListener('keydown', (event) => {
-      const keyName = event.key;
+      let keyName = event.key;
       if(PLAYER_KEYS.includes(event.key)){
-        this.playerInput[event.key] = true;
+        if(event.key == 'A' || event.key == 'D'){
+          keyName = keyName.toLocaleLowerCase();
+          // event.key = event.key.toLocaleLowerCase();
+        }
+        this.playerInput[keyName] = true;
       }
     });
     // key release
     document.addEventListener('keyup', (event) => {
+      let keyName = event.key;
       if (PLAYER_KEYS.includes(event.key)) {
-        this.playerInput[event.key] = false;
+        if(event.key == 'A' || event.key == 'D'){
+          keyName = keyName.toLowerCase();
+        }
+        this.playerInput[keyName] = false;
       }
     });
 
@@ -1950,10 +1966,10 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     switch(this.state){
       case 0: 
       //free move state
-        if (this.playerInput.a) {     
+        if (this.playerInput.a || this.playerInput.A) {     
             this.hspd = -this.moveSpd;
         }
-        if (this.playerInput.d) {
+        if (this.playerInput.d || this.playerInput.D) {
             this.hspd = this.moveSpd;
         }
 
@@ -1997,7 +2013,8 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   update(viewPort){
     if(this.debug){
-      console.log('X: ', this.playerInput.mousePos.x, 'Y: ', this.playerInput.mousePos.y)
+      // console.log('X: ', this.playerInput.mousePos.x, 'Y: ', this.playerInput.mousePos.y)
+      console.log(this.playerInput);
     }
     this.takeInput();
     //check for swing state

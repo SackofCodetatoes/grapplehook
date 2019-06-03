@@ -178,6 +178,10 @@ class Game {
         //draw cursor infront
         this.cursor.draw();
         
+
+        if(this.player.y > 1200){
+          this.initialize();
+        }
         break;
       }
     
