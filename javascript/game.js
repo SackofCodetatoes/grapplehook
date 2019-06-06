@@ -1,309 +1,307 @@
-const Player = require("./player.js");
-const GameEntity = require("./game_entity.js");
-const Platform = require("./platform.js");
-const Coin = require("./coin.js");
-const Hook = require("./hook.js");
-const HookPoint = require("./hook_point.js");
+import Player from "./player.js";
+import Camera from "./camera.js";
+import Hook from "./hook.js";
+import GameEntity from "./game_entity.js";
+import Platform from "./platform.js";
+import Cursor from "./cursor.js";
+import Coin from "./coin.js";
+import debugSeed from "./debug.js";
+import levelOneSeed from "./levelOneSeed.js";
+const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const startLives = 5;
+
 
 class Game {
-  constructor() {
-    this.entities = {};
-    this.canvas = document.getElementById('game-canvas');
-    this.context = this.canvas.getContext('2d');
+  constructor(options){
+   //preload 
+    const spriteSheet = new Image();
+    const background = new Image();
+    this.canvas = options.canvas;
+    this.context = options.context;
+    this.viewPort = options.viewPort;
+    spriteSheet.src = "./images/industrial.v2.png";
+    background.src = "./images/city_background_night.png";
+    
+    this.spriteSheet = spriteSheet;
+    this.background = background;
+    this.keyCodePress = {13: false}
+    this.score = 0;
+    this.lives = startLives;
+    this.playerStart = {x: 0, y: 0};
+    this.maxCoins = 0;
+    this.gameover = 0;
+    this.gameState = 0;
+
+    //state 0 = title screen, state 1 = active, possibly each state represents a level?
+    
     this.platforms = [];
+    this.entities = [];
     this.coins = [];
-    this.spriteSheet;
-    // this.spriteSheet.onload = draw;
-  }
-
-
-  init() {
-    //testing purposes
-    // debugger
-    this.platforms = [];
     
-    const coinOptions = {
-      x: 400,
-        y: 650,
-        context: this.context,
-        color: 'yellow',
-        x_len: 25,
-        y_len: 25,
-        game: this,
-        // image: this.spriteSheet
-      };
-      
-      const playerOptions = {
-        x: 125,
-        y: 25,
-        context: this.context,
-        color: 'blue',
-        x_len: 25,
-        y_len: 25,
-        game: this,
-        image: this.spriteSheet,
-      };
-      
-      const platformOptions = {
-        x: 0,
-        y: 700,
-        color: 'black',
-        context: this.context,
-        x_len: 640,
-        y_len: 100,
-        image: this.spriteSheet,
+    this.physicsObjs = [];
+    this.staticObjs = [];
+    this.activeEntities = {};
+    
+    this.gravDir = 1;
+
+    this.platformCollision = this.platformCollision.bind(this);
+    this.physicsCollision = this.physicsCollision.bind(this);
+    this.addEntity = this.addEntity.bind(this);
+    this.deleteEntity = this.deleteEntity.bind(this);
+    
+    const canvas = document.getElementById('game-canvas');
+
+    document.addEventListener('keydown', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = true;
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = false;
+      }
+    });
+    //add keybind to change states
+    window.onkeydown = function (event) {
+      console.log('prevent input');
+      //prevent screen from moving
+      // return (!event.keycode == 32);
     }
-    const platformOptions2 = {
-      x: 320,
-      y: 350,
-      color: 'black',
+    let cursorConfig = {
+      x: 300,
+      y: 300,
+      xLen: 25,
+      yLen: 25,
       context: this.context,
-      x_len: 100,
-      y_len: 50,
-      image: this.spriteSheet,
     }
-    const platformOptions3 = {
-      x: 400,
-      y: 0,
-      color: 'black',
-      context: this.context,
-      x_len: 20,
-      y_len: 400,
-      image: this.spriteSheet,
-    }
-    const grappleHookOptions = {
-      x: playerOptions.x,
-      y: playerOptions.y,
-      color: 'black',
-      context: this.context,
-      x_len: 0,
-      y_len: 0,
-    }
-    const hookPointOptions = {
-      x: playerOptions.x + playerOptions.x_len/2,
-      y: playerOptions.y + playerOptions.y_len/2,
-      color: 'yellow',
-      context: this.context,
-      x_len: 10,
-      y_len: 10,
-    }
+    this.run = false;
+    this.cursor = new Cursor(cursorConfig);
     
-    // this.move_dir = 1;
-    this.entities['coin'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin);
-    
-    this.entities['platform'] = new Platform(platformOptions);
-    platformOptions2.y = 650; 
-    platformOptions2.x = 620;
-    this.entities['platform2'] = new Platform(platformOptions2);
-    platformOptions2.y = 250;
-    
-    
-    coinOptions.x = 1000;
-    this.entities['coin1'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin1);
-    
-    coinOptions.x = 1500;
-    coinOptions.y = 550;
-    this.entities['coin2'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin2);
-    // this.entities['platform2'] = new Platform(platformOptions3);
-    platformOptions.x = 600;
-    this.entities['platform3'] = new Platform(platformOptions);
-    
-    
-    
-    platformOptions2.x = 600;
-    platformOptions2.y = 650;
-    platformOptions2.x_len = 300;
-    platformOptions2.y_len = 200;
-    this.entities['platform4'] = new Platform(platformOptions2);
-    
-    
-    platformOptions2.x = 1200;
-    platformOptions2.y = 650;
-    this.entities['platform5'] = new Platform(platformOptions2);
-    
-    platformOptions2.x = 1400;
-    platformOptions2.y = 600;
-    this.entities['platform20'] = new Platform(platformOptions2);
-    
-    coinOptions.x = 1840;
-    coinOptions.y = 500;
-    this.entities['coin3'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin3);
-    
-    platformOptions2.x_len = 100
-    platformOptions2.y_len = 50
-    platformOptions2.y = 550;
-    platformOptions2.x = 1800;
-    this.entities['platform6'] = new Platform(platformOptions2);
-    
-    
-    coinOptions.x = 2140;
-    coinOptions.y = 500;
-    this.entities['coin4'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin4);
-    platformOptions2.x = 2000;
-    this.entities['platform7'] = new Platform(platformOptions2);
-    
-    
-    coinOptions.x = 2440;
-    coinOptions.y = 500;
-    this.entities['coin5'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin5);
-    platformOptions2.x = 2200;
-    this.entities['platform8'] = new Platform(platformOptions2)
-    
-    //add some coins
-    
-    
-    coinOptions.x = 3040;
-    coinOptions.y = 550;
-    this.entities['coin6'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin6);
-    coinOptions.x = 3240;
-    coinOptions.y = 500;
-    this.entities['coin7'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin7);
-    coinOptions.x = 3440;
-    coinOptions.y = 450;
-    this.entities['coin8'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin8);
-    
-    platformOptions2.y = 250;
-    platformOptions.x = 2500;
-    platformOptions.x_len = 1500;
-    this.entities['platform9'] = new Platform(platformOptions);
-    
-    platformOptions3.x = 2700;
-    platformOptions3.x_len = 50;
-    
-    this.entities['platform10'] = new Platform(platformOptions3);
-    platformOptions2.x = 2700;
-    platformOptions2.x_len = 950;
-    platformOptions2.y_len = 350;
-    platformOptions2.y = 0;
-    this.entities['platform11'] = new Platform(platformOptions2);
-    
-    platformOptions2.y = 650;
-    platformOptions2.x_len = 100
-    platformOptions2.y_len = 50
-    platformOptions2.x = 3900;
-    this.entities['platform12'] = new Platform(platformOptions2);
-    
-    platformOptions2.x = 4000;
-    platformOptions2.y = 600;
-    platformOptions2.y_len = 600;
-    
-    this.entities['platform13'] = new Platform(platformOptions2);
-    // platformOptions2.x_len = 100
-    // platformOptions2.y_len = 50
-    
-    
-    this.entities['hook'] = new Hook(grappleHookOptions);
-    this.entities['hookPoint'] = new HookPoint(hookPointOptions);
-    
-    this.platforms.push(this.entities.platform); 
-    this.platforms.push(this.entities.platform2); 
-    this.platforms.push(this.entities.platform3); 
-    this.platforms.push(this.entities.platform4); 
-    this.platforms.push(this.entities.platform5); 
-    this.platforms.push(this.entities.platform6); 
-    this.platforms.push(this.entities.platform7); 
-    this.platforms.push(this.entities.platform8); 
-    this.platforms.push(this.entities.platform9); 
-    this.platforms.push(this.entities.platform10); 
-    this.platforms.push(this.entities.platform11); 
-    this.platforms.push(this.entities.platform12); 
-    this.platforms.push(this.entities.platform13); 
-    
-    for(let i = 14; i < 20; i ++){
-      let name = 'platform';
-      platformOptions2.x += 100;
-      platformOptions2.y -= 50;
-      
-      this.entities[name+i] = new Platform(platformOptions2);
-      this.platforms.push(this.entities[name+i]);
-    }
-    this.platforms.push(this.entities.platform20);
-    
-    platformOptions2.x = 4650;
-    platformOptions2.y = 0;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 750;
-    this.entities['platform21'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform21);
-    
-    coinOptions.x = 4840;
-    coinOptions.y = 300;
-    this.entities['coin9'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin9);
-    
-    coinOptions.x = 5040;
-    coinOptions.y = 350;
-    this.entities['coin10'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin10);
-    
-    coinOptions.x = 5240;
-    coinOptions.y = 400;
-    this.entities['coin11'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin11);
 
-    platformOptions2.x = 5400;
-    platformOptions2.y = 650;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 2500;
-    this.entities['platform22'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform22);
-    
-    platformOptions2.y = 300;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 100;
+    //test timer
+    // window.run = false;
+    // this.preview = window.setInterval(function(){
+    //   console.log('hey there')
+    //   window.run = !window.run;
+    // }, 3000)
 
-
-    // let moveFactor = 
-    for (let i = 23; i < 50; i++) {
-      let name = 'platform';
-      platformOptions2.x += 400;
-      // platformOptions2.y += moveFactor
-
-      this.entities[name + i] = new Platform(platformOptions2);
-      this.platforms.push(this.entities[name + i]);
-    }
-
-    platformOptions2.y = 350;
-    platformOptions2.x = 250;
-    this.entities['platform50'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform50);
-
-    
-    this.entities['newPlayer'] = new Player(playerOptions);
-    this.entities.newPlayer.collisionCheck = this.collisionCheck;
-    // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
-  }
-  gravStep(obj){
-    obj.vspd += 2;
-    return obj;
+    // this.entities.push(this.cursor);
+    // this.activeEntities['cursor'] = this.cursor;
   }
   
-  collisionCheck(obj) {
-    // debugger
-    let platforms = this.platforms;
-    for(let i = 0; i < platforms.length; i++){
+  
+  initialize(){
+    // debugSeed(this);
+    levelOneSeed(this);
+    this.maxCoins = this.coins.length;
+    this.playerStart = {x: this.player.x, y: this.player.y};
+
+  }
+
+  
+  addEntity(entity, id) {
+    this.activeEntities[id] = entity;
+    this.entities = Object.values(this.activeEntities);
+  }
+  
+
+  deleteEntity(id) {
+    delete this.activeEntities[id];
+    this.entities = Object.values(this.activeEntities)
+  }
+
+  resetGame(){
+    this.lives = startLives;
+    this.gameover = 0;
+    this.initialize();
+  }
+
+  //main game logic loop
+  update(){
+    //each game step
+    switch(this.gameState){
+      //start screen
+      case 0: 
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
+      this.context.fillStyle = 'white'
+      this.context.font = "bold 64px Montserrat";
+      this.context.fillText("GrappleHook", 120, 150);
+      
+      
+      this.context.font = "32px Montserrat";
+      this.context.fillText("Press 'A' and 'D' to move Left and Right", 150, 240);
+      this.context.fillText("Press the Space Bar to Jump", 150, 280);
+      this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
+      this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+
+      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
+      this.context.font = "32px Montserrat";
+      this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
+      // this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value / 2 - (30 * 5), this.canvas.attributes.height.value / 2 + 30);
+      
+      if(this.keyCodePress['enter'] === true){
+        this.gameState = 1;
+        clearInterval(this.preview);
+        this.initialize();
+      }
+
+      // if(window.run){
+      //   this.viewPort.x += 0.2;
+      // }
+      //run preview
+
+
+      let viewMove = 0.5;
+      // console.log(this.viewPort.x)
+      if(this.viewPort.x + viewMove >= 4192){
+        this.viewPort.x = 0;
+      } 
+      this.viewPort.x += viewMove;
+      this.cursor.draw();
+      break;
+
+
+      //game logic
+      case 1: 
+      
+      this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
+      this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
+      
+      this.applyGravity();
+      
+      // this.camera.x = this.player.x - (1280 / 2);
+      // this.camera.y = this.player.y - (720 / 2);
+
+      //draw guideline infront
+      this.context.beginPath();
+      // this.context.setLineDash([5, 15]);
+      this.context.setLineDash([5, 10]);
+      this.context.strokeStyle = 'rgba(178, 34, 34, 0.5)';
+      this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
+      this.context.lineTo(this.cursor.x, this.cursor.y);
+      this.context.stroke();
+      this.context.setLineDash([]);
+
+
+      for(let i = 0; i < this.entities.length; i++){
+        if(this.entities[i].active) {
+          this.entities[i].update(this.viewPort);
+        }
+      }
+      //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
+      for(let i = 0; i < this.coins.length; i++){
+        if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.score += 1;
+            this.coins[i].active = false;
+          }
+        }
+        //draw in game UI (score)
+        this.context.fillStyle = 'white'
+        this.context.font = "bold 32px Montserrat";
+        this.context.fillText(`Lives: ${this.lives}`, 100, 100);
+        this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        
+        //draw cursor infront
+        this.cursor.draw();
+        
+        
+        if(this.score === this.maxCoins){
+          this.context.fillStyle = "rgba(0, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`You Win!`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if (this.keyCodePress.enter) {
+            this.resetGame();
+          }
+        }
+        else if(this.player.y > 1100){
+          if(this.lives > 0){
+            this.lives--;
+            // this.initialize();
+            this.player.x = this.playerStart.x;
+            this.player.y = this.playerStart.y;
+          }
+          else {
+            this.gameover = 1;
+          }
+        }
+        if(this.gameover){
+          //dark overlay with gameover and enable press enter to restart
+          this.player.x = 0;
+          this.player.y = 1100
+          this.context.fillStyle = "rgba(200, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`Game Over`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if(this.keyCodePress.enter){
+            this.resetGame();
+          }
+        }
+        break;
+      }
+      
+    }
+
+
+    
+  physicsCollision(x, y, obj){
+    //check collision with physics objs
+    for (let i = 0; i < this.physicsObjs.length; i++) {
       // obj.positionMeeting(obj.x, obj.y, platforms[i]);
-      if( 
+      if (
         (
-          (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
-          (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
-        ) {
-          return true;
+          (x + obj.xLen > this.physicsObjs[i].x && x < this.physicsObjs[i].x + this.physicsObjs[i].xLen) &&
+          (y + obj.yLen > this.physicsObjs[i].y && y < this.physicsObjs[i].y + this.physicsObjs[i].yLen) && 
+          obj != this.physicsObjs[i]
+        )
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  platformCollision(x, y, obj){
+  //check if new position overlaps with any platforms in platforms entitity
+    for (let i = 0; i < this.platforms.length; i++) {
+      // obj.positionMeeting(obj.x, obj.y, platforms[i]);
+      if (
+        (
+          (x + obj.xLen > this.platforms[i].x && x < this.platforms[i].x + this.platforms[i].xLen) &&
+          (y + obj.yLen > this.platforms[i].y && y < this.platforms[i].y + this.platforms[i].yLen)
+          )
+      ) {
+        return true;
       }
     }
     return false;
   }
 
 
-} //end of scope
+  applyGravity(){
+    //iterate over list of entities and apply gravity
+    for(let i = 0; i < this.physicsObjs.length; i++){
+      let curObj = this.physicsObjs[i];
+      
+      //normal gravity
+      if(this.gravDir > 0){
+        if(curObj.vspd < 6 && !this.platformCollision(curObj.x, curObj.y + curObj.vspd, curObj)){
+          curObj.vspd += 0.2;
+        }
+      }
+      else {
+        if(curObj.vspd > -6 && !this.platformCollision(curObj.x, curObj.y + curObj.vspd, curObj)) {
+          curObj.vspd -= 0.2;
+        }
+      }
+    }
+  }
 
-module.exports = Game;
+}
+
+export default Game;

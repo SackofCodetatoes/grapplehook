@@ -2,9 +2,11 @@ body {
   background: #eee;
 }
 
+#game-canvas{
+  border-radius: 5px;
+}
 #game-canvas:hover {
   cursor: none;
-  border-radius: 5px;
 }
 
 .controls-div, .description {
@@ -21,7 +23,9 @@ body {
   color: white;
   /* display: inline; */
 }
-
+.controls-div{
+  display: none;
+}
 
 .description {
   left: 250px;
@@ -30,8 +34,8 @@ body {
   display: none;
 }
 * {
-  font-family: 'M PLUS Rounded 1c',
-  sans-serif;
+  font-family: 'Montserrat', sans-serif;
+  /* font-family: 'M PLUS Rounded 1c', */
   /* text-align: center; */
 }
 .text {
@@ -44,4 +48,10 @@ body {
 }
 * {
   -webkit-user-select: none;
+}
+/* canvas font guide */
+/* https: //stackoverflow.com/questions/2608022/how-can-i-use-custom-fonts-in-an-html5-canvas-element */
+@font-face{
+  font-family: 'Montserrat';
+  src: url('https://fonts.googleapis.com/css?family=Montserrat&display=swap')
 }

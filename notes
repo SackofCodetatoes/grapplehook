@@ -1,0 +1,2 @@
+if hook hits wall, change to swing state
+if jump button, player state = 0;

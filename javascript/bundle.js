@@ -86,38 +86,284 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./javascript/coin.js":
-/*!****************************!*\
-  !*** ./javascript/coin.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./javascript/camera.js":
+/*!******************************!*\
+  !*** ./javascript/camera.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const GameEntitiy = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 
-class Coin extends GameEntitiy {
+
+class Camera extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
   }
 
-  draw(viewPort) {
+
+  draw(){
+    this.context.beginPath();
+    this.context.rect(0, 0, 1280, 720);
+    this.context.stroke();
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Camera);
+
+/***/ }),
+
+/***/ "./javascript/coin.js":
+/*!****************************!*\
+  !*** ./javascript/coin.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+
+
+class Coin extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"]{
+  constructor(options){
+    super(options);
+    this.defaultColor = 'yellow';
+  }
+//add gravity mechanic to move towards player when near.
+  draw(viewPort){
     this.context.beginPath();
     this.context.lineWidth = 2;
     this.context.strokeStyle = 'orange';
     this.context.fillStyle = 'yellow';
-    this.context.arc(this.x + this.x_len / 2 - viewPort.x, this.y + this.y_len / 2 - viewPort.y, 10, 0, 2 * Math.PI);
+    this.context.arc(this.x + this.xLen / 2 - viewPort.x, this.y + this.yLen / 2 - viewPort.y, 20, 0, 2 * Math.PI);
     this.context.fill();
     this.context.stroke();
   }
 
+}
 
-  move(moveSpd){
-    this.x += moveSpd;
+
+/* harmony default export */ __webpack_exports__["default"] = (Coin);
+
+/***/ }),
+
+/***/ "./javascript/cursor.js":
+/*!******************************!*\
+  !*** ./javascript/cursor.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ui_entity.js */ "./javascript/ui_entity.js");
+
+
+class Cursor extends _ui_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(options){
+    super(options);
+    this.defaultColor = 'red';
+    // this.defaultColor = 'yellow';
+    this.active = true;
+    this.keybind();
+  }
+
+  keybind(){
+    this.canvas.addEventListener('mousemove', (event) => {
+      this.x = event.clientX - this.canvas.offsetLeft;
+      this.y = event.clientY - this.canvas.offsetTop;
+    })
+  }
+
+  draw(){
+    // unique draw
+    this.context.beginPath();
+    this.context.strokeStyle = this.defaultColor;
+    this.context.lineWidth = 2.5;
+    this.context.setLineDash([10,10]);
+    // this.context.setLineDash([4,5]);
+    this.context.arc(this.x, this.y, 10, 0, 2* Math.PI);
+    this.context.stroke();
+  }
+
+  update(viewPort){
+    this.draw(viewPort)
   }
 
 }
 
-module.exports = Coin;
+/* harmony default export */ __webpack_exports__["default"] = (Cursor);
+
+/***/ }),
+
+/***/ "./javascript/debug.js":
+/*!*****************************!*\
+  !*** ./javascript/debug.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+/* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+
+
+
+
+
+
+
+
+
+const debugSeed = function (game) {
+    // //give each object an id
+
+  let playerConfig = {
+        x: 205,
+        y: 566,
+        xLen: 25,
+        yLen: 30,
+        context: game.context,
+        game: game,
+        platformCollision: game.platformCollision,
+        physicsObj: true,
+        physicsCollision: game.physicsCollision,
+        viewPort: game.viewPort,
+        // addEntity: game.addEntity,  //inteded to add hok atfirst
+        deleteEntity: game.deleteEntity,
+        image: game.spriteSheet,
+      }
+      
+  let hookConfig = {
+    x: playerConfig.x,
+    y: playerConfig.y,
+    xLen: 10,
+    yLen: 10,
+    active: false,
+    context: game.context,
+    game: game,
+    platformCollision: game.platformCollision,
+    viewPort: game.viewPort,
+  }
+  game.hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
+  
+  playerConfig.hook = game.hook;
+  
+  
+  let coinConfig = {
+    x: 600,
+    y: 566,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+    color: "yellow",
+  };
+
+  let testCoin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"](coinConfig);
+  game.activeEntities['coin1'] = testCoin;
+  game.coins.push(testCoin);
+  // game.coins.push(testCoin);
+
+  //put all these in a seed file and use call/apply 
+  let platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: game.canvas.attributes.height.value - 50,
+    xLen: game.canvas.attributes.width.value,
+    yLen: 25,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  // game.entities.push(game.platform);
+  game.activeEntities['platform1'] = platform;
+
+  game.platform2 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 50,
+    y: 0,
+    xLen: 25,
+    yLen: game.canvas.attributes.height.value,
+    context: game.context
+  })
+  game.platforms.push(game.platform2);
+  // game.entities.push(game.platform2);
+  game.activeEntities['platform2'] = game.platform2;
+
+  game.platform3 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: 25,
+    xLen: game.canvas.attributes.width.value,
+    yLen: 25,
+    context: game.context
+  })
+  game.platforms.push(game.platform3);
+  // game.entities.push(game.platform3);
+  game.activeEntities['platform3'] = game.platform3;
+
+  game.platform4 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: game.canvas.attributes.width.value - 50,
+    y: 0,
+    xLen: 25,
+    yLen: game.canvas.attributes.height.value,
+    context: game.context
+  })
+  game.platforms.push(game.platform4);
+  // game.entities.push(game.platform2);
+  game.activeEntities['platform4'] = game.platform4;
+
+
+  game.platform5 = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 400,
+    y: 400,
+    xLen: 40,
+    yLen: 40,
+    context: game.context
+  })
+  game.platforms.push(game.platform5);
+  // game.entities.push(game.platform2);
+  game.activeEntities['platform5'] = game.platform5;
+
+
+  //old physics box
+  game.box = new _game_entity_js__WEBPACK_IMPORTED_MODULE_3__["default"](Object.assign({}, playerConfig, {x: 255, y: 205}));
+  // game.entities.push(game.box);
+  game.activeEntities['box'] = game.box;
+  game.physicsObjs.push(game.box);
+
+
+
+
+
+
+  //add player to game
+  //hook object created below hookConfig
+  game.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
+  game.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
+  game.camera.x = 0;
+  game.camera.y = 0;
+  game.camera.center = {x: game.x + (1280 / 2), y: game.y + (720 / 2)}
+
+
+
+  // game.entities.push(game.player);
+  game.activeEntities['player'] = game.player;
+  game.activeEntities['hook'] = game.hook;
+
+  
+  game.physicsObjs.push(game.player);
+
+
+  game.entities = Object.values(game.activeEntities);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (debugSeed);
 
 /***/ }),
 
@@ -125,399 +371,54 @@ module.exports = Coin;
 /*!*******************************!*\
   !*** ./javascript/display.js ***!
   \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
-const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
-const PLAYER_KEYS = ['w', 'a', 's', 'd', 'f'];
-const WebFont = __webpack_require__(/*! webfontloader */ "./node_modules/webfontloader/webfontloader.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
+
 
 class Display {
-  constructor(game){
-    this.game = game;  
-    this.game = this.game  
-    this.playerInput = {
-      a: false,
-      d: false,
-      w: false,
-      s: false,
-      ' ': false,
-      c: false,
-      canJump: 'true',
-      mousePos: {x: 0, y: 0},
-      shootHook: false,
-      hookTarget: {},
-    }
-    this.grav = 1;
-    WebFont.load({
-      google: {
-        families: ['M PLUS Rounded 1c']
-      }
-    });
-
+  constructor(){
+    this.canvas = document.getElementById('game-canvas');
+    this.context = this.canvas.getContext('2d');
+    this.spriteSheet;
     this.viewPort = {
       x: 0,
-      y: 0
+      y: 0,
     }
 
-    this.keyBind();
+    let gameConfig = {
+      canvas: this.canvas,
+      context: this.context,
+      viewPort: this.viewPort,
+      spriteSheet: this.spriteSheet,
+      background: this.background,
+    }
+    // this.spriteSheet.onload = this.game = new Game(gameConfig);
+    this.game = new _game_js__WEBPACK_IMPORTED_MODULE_0__["default"](gameConfig);
+    // this.game.initialize();
+
+
     this.render = this.render.bind(this);
-    this.startRender = this.startRender.bind(this);
-    this.startScreenRender = this.startScreenRender.bind(this);
-    this.getInput = this.getInput.bind(this);
-    this.applyPhysics = this.applyPhysics.bind(this);
   }
 
+  render(){
+    //create request animation loop
+    this.context.clearRect(0, 0, 1280, 720);
+    //draw UI (title screen, instructions, game)
+    // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
-  //source of inspiration for omni-directional movement/fluidity
-  //https://stackoverflow.com/questions/12273451/how-to-fix-delay-in-javascript-keydown
-  keyBind() {
-    let timer;
-    document.addEventListener('keydown', (event) => {
-      const keyName = event.key;
-      if (PLAYER_KEYS.includes(event.key)) {
-        this.playerInput[event.key] = true;
-      }
-    });
-    document.addEventListener('keyup', (event) => {
-      if (PLAYER_KEYS.includes(event.key)) {
-        this.playerInput[event.key] = false;
-      }
-    });
-    document.addEventListener('keydown', (event) => {
-      if(event.key === ' ' && this.playerInput.canJump === true){
-        this.playerInput.canJump = false;
-        this.game.entities.newPlayer.vspd = -4;
-      }
-    })
-    //gravity flip
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'c') {
-        this.grav = -this.grav;
-      }
-    })
-    this.game.canvas.addEventListener('mousemove', (event) => {
-      this.playerInput.mousePos.x = event.clientX - this.game.canvas.offsetLeft;
-      this.playerInput.mousePos.y = event.clientY - this.game.canvas.offsetTop;
-    })
-    this.game.canvas.addEventListener('mousedown', (event) => {
-      let player = this.game.entities.newPlayer;
-      this.playerInput.shootHook = true;
-      this.playerInput.hookTarget = {x: event.clientX - this.game.canvas.offsetLeft + this.viewPort.x, y: event.clientY - this.game.canvas.offsetTop + this.viewPort.y};
-
-      this.game.entities.hookPoint.x = player.x + player.x_len / 2;
-      this.game.entities.hookPoint.y = player.y + player.y_len / 2;
-      this.game.entities.hookPoint.target = this.playerInput.hookTarget;
-      this.game.entities.hookPoint.active = true;
-      this.game.entities.hookPoint['fired'] = true;
-      this.game.entities.hookPoint.calcSpd();
-    })
-    document.addEventListener('mouseup', (event) => {
-      this.hookOff();
-    })
-  }
-  hookOff(){
-    let player = this.game.entities.newPlayer;
-    this.playerInput['shootHook'] = false;
-    this.game.entities.hookPoint.active = false;
-    this.game.entities.hookPoint.reset(player.x + player.x_len / 2, player.y + player.y_len / 2);
-    this.game.entities.newPlayer.state = 'move';
-    this.game.entities.hookPoint['fired'] = false;
- 
-  }
-
-  getInput() {
-    let player = this.game.entities.newPlayer;
-    let next;
-    if (this.playerInput['a'] === true) {
-      this.game.entities.newPlayer.faceDir = -1;
-
-      if(this.game.entities.newPlayer.state != 'swing'){
-        this.game.entities.newPlayer.hspd = -this.game.entities.newPlayer.moveSpd;
-        // this.game.entities.newPlayer.move();
-      }
-   
-    } 
-  
-    else if(this.playerInput['d'] === true) {
-        if(this.game.entities.newPlayer.state != 'swing'){
-          this.game.entities.newPlayer.faceDir = 1;
-          // this.game.entities.newPlayer.hspd = 2;
-          this.game.entities.newPlayer.hspd = this.game.entities.newPlayer.moveSpd;
-          // this.game.entities.newPlayer.move();
-        }
-      }
-       
-    else {
-      this.game.entities.newPlayer.hspd = 0;
-    }
-
-
-    if(this.playerInput.shootHook === true){
-      let hookPoint = this.game.entities.hookPoint;
-      let hook = this.game.entities.hook;
-      let newPlayer = this.game.entities.newPlayer;
-      
-      this.game.entities.hook.targetX = hookPoint.x + hookPoint.x_len/2;
-      this.game.entities.hook.targetY = hookPoint.y + hookPoint.y_len/2;
-      
-      let checkLen = Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-      
-      if(checkLen > 500){
-        this.hookOff();
-      }
-      
-      if(this.game.collisionCheck(this.game.entities.hookPoint)){
-        //on collide
-        this.game.entities.newPlayer.targetPoint = this.playerInput.hookTarget;
-        if(!this.game.entities.hookPoint.collided){
-          this.playerInput['ropeLen'] = 
-          Math.sqrt((Math.pow(Math.abs(hook.x - hookPoint.x), 2) + Math.pow(Math.abs(hook.y - hookPoint.y), 2)));
-          this.game.entities.newPlayer.ropeLen = this.playerInput.ropeLen;
-
-          if(newPlayer.x < newPlayer.targetPoint.x) {
-            // console.log('spds', newPlayer.hspd, newPlayer.vspd);
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd) * -1; 
-            // newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd))/150 * -1; 
-          } 
-          else {
-            newPlayer.rotateSpd = Math.abs(newPlayer.rotateSpd);
-            // newPlayer.rotateSpd = (Math.abs(newPlayer.hspd) + Math.abs(newPlayer.vspd)) / 150;
-          }
-        }
-        this.game.entities.hookPoint.collided = true;
-        this.game.entities.newPlayer.state = 'swing';
-        this.game.context.beginPath();
-        this.game.context.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-        this.game.context.arc(hookPoint.x - this.viewPort.x, hookPoint.y - this.viewPort.y,
-          this.playerInput.ropeLen, 0, 2 * Math.PI);
-        this.game.context.stroke();
-      }
-      //set hsnapshot, also draws line
-      this.game.entities.hook.draw(this.viewPort);
-    }
-
-  }
-
-  applyPhysics(obj){
-    let nextStep = obj;
-    let checkStep = Object.assign({}, obj);
-
-    if(this.grav > 0){
-      checkStep.y = checkStep.y + checkStep.vspd + 1;
-  
-      if(obj.vspd < 6){
-        obj.vspd += 0.2;
-      }
-  
-      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-        nextStep.y += nextStep.vspd;
-        //fall
-      } else {
-        obj.vspd = 0;
-        this.playerInput.canJump = true;
-        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-          while (!this.game.collisionCheck(obj)) {
-            this.game.entities.newPlayer.y += 2;
-          }
-          this.game.entities.newPlayer.y -= 2;
-  
-        }
-      }
-    }
-    //reverse grav attempt
-    else {
-      // debugger
-      checkStep.y = checkStep.y - checkStep.vspd - 1;
-
-      if (obj.vspd > -6) {
-        obj.vspd -= 0.2;
-      }
-
-      if (!this.game.collisionCheck(Object.assign({}, obj, checkStep))) {
-        nextStep.y -= nextStep.vspd;
-        console.log(nextStep.y);
-        // debugger
-        // ???
-        //fall
-      } else {
-        console.log('wadu')
-        obj.vspd = 0;
-        if (this.game.collisionCheck(Object.assign({}, obj, nextStep))) {
-          while (!this.game.collisionCheck(obj)) {
-            this.game.entities.newPlayer.y -= 2;
-          }
-          this.game.entities.newPlayer.y += 2;
-
-        }
-      }
-    }
-
-  }
-
-
-  newGame(){
-    this.game.init();
-    this.render();
-
-  }
-
-
-  startScreenRender(canvas, context, game, mousePos, imageX){
-    if(this.playerInput.shootHook){
-      this.render();
-    }
-    else {
-      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      if(imageX + 0.2 >= 4192 - canvas.attributes.width.value){
-        imageX = 0;
-      }
-      imageX += 0.2;
-      
-      context.drawImage(game.background, imageX, 300, 4192, 1024, 0, 0, 4192, 1024);
-      
-      context.fillStyle= 'white'
-      context.font = "64px Helvetica";
-      context.fillText("GrappleHook", canvas.attributes.width.value / 2 - (30 * 6), canvas.attributes.height.value / 2 - 10);
-      context.font = "32px Arial";
-      context.fillText("Click on screen to Start", canvas.attributes.width.value / 2 - (30 * 5), canvas.attributes.height.value / 2 + 30);
-  
-      
-      context.beginPath();
-      context.strokeStyle = 'red';
-      context.arc(mousePos.x, mousePos.y, 10, 0, 2 * Math.PI);
-      context.stroke();
-      requestAnimationFrame(() => this.startScreenRender(canvas, context, game, mousePos, imageX));
-    }
-  }
-  
-  
-  startRender(){
-    const canvas = this.game.canvas;
-    const context = this.game.context;
-    const game = this.game;
-    const mousePos = this.playerInput.mousePos;
-
-    let imageX = 0;
-    this.startScreenRender(canvas, context, game, mousePos, imageX);
-  
-  }
-
-
-  render(){  
-    const canvas = this.game.canvas;
-    const context = this.game.context;
-    const backCanvas = this.game.backCanvas;
-    const backContext = this.game.backContext;
-
-
-    let newPlayer = this.game.entities.newPlayer;
-    let staticEntity = this.game.entities.staticEntity;
-    let move_dir = this.game.entities.move_dir;
-    let entities = this.game.entities;
-    let getInput = this.getInput;
-    let mousePos = this.playerInput.mousePos;
-    let platforms = this.game.platforms;
-    let applyPhysics = this.applyPhysics;
-    let shootHook = this.playerInput.shootHook;
-    let hookTarget = this.playerInput.hookTarget;
-    let hook = this.game.entities.hook;
-    let hookPoint = this.game.entities.hookPoint;
-    let ropeLen = this.playerInput.ropeLen;
-    let newGame = this.newGame.bind(this);
-    let startScreen = this.startRender.bind(this);
-    let game = this.game;
-    let imageX = 0;
-    let coinCounter = 0;
-    let viewPort = this.viewPort;
-
-
-    let coins = this.game.coins;
+    this.game.update();
     
-    const moveSpd = 0;
-    
-    let run = setInterval(function () {
-      context.clearRect(0, 0, canvas.attributes.width.value, canvas.attributes.height.value);
-      
-      if(newPlayer.y >  1400){
-        newGame();
-        clearInterval(run);
-      }
-      else {
-        // imageX += 0.5;
-        
-        context.drawImage(game.background, 0, 300, 4192, 1024, 0 - (viewPort.x * 0.2) - 200, 0 - (viewPort.y * 0.3), 4192, 1024);
-        
-        viewPort.x = newPlayer.x - (1280 / 2);
-        viewPort.y = newPlayer.y - (720 / 2);
-        if(!hookPoint.collided){
-          
-          applyPhysics(newPlayer);
-        }
-        
-        
-        for(let i = 0; i < coins.length; i++){
-          coins[i].move(moveSpd);
-          if(newPlayer.positionMeeting(newPlayer.x, newPlayer.y, coins[i])){
-            if(!coins[i].active) { continue; }
-            coinCounter += 1;
-            coins[i].active = false;
-          }
-        }
-        
-        
-        hook.x = newPlayer.x + newPlayer.x_len/2;
-        hook.y = newPlayer.y + newPlayer.y_len/2;
-        if(!hookPoint.active){
-          hookPoint.x = newPlayer.x + newPlayer.x_len / 2;
-          hookPoint.y = newPlayer.y + newPlayer.y_len / 2;
-        }
-        
-        hookPoint.move(moveSpd);
-        for(let i = 0; i < platforms.length; i++){
-          platforms[i].move(moveSpd, newPlayer);
-        }
-        
-        newPlayer.move(moveSpd);
-        getInput();
 
-        
-        for(let i = 0; i < Object.values(entities).length; i++){
-          if(Object.values(entities)[i].active){
-            Object.values(entities)[i].draw(viewPort);
-          }
-        }
-        
-        // if(newPlayer.y < 0){
-        //   //draw triangle at x position
-        //   context.beginPath();
-        //   context.moveTo(newPlayer.x + newPlayer.x_len / 2, 25);
-        //   context.lineTo(newPlayer.x + newPlayer.x_len, 50);
-        //   context.lineTo(newPlayer.x, 50);
-        //   context.closePath();
-        
-        //   context.fillStyle = "red";
-        //   context.fill();
-        // }
-        
-        context.fillStyle = 'white'
-        context.font = "bold 24px Helvetica";
-        context.fillText(`Score: ${coinCounter}`, canvas.attributes.width.value - 200, 100);
-        context.beginPath();
-        context.strokeStyle = 'red';
-        context.lineWidth= 2.5;
-        context.arc(mousePos.x, mousePos.y, 10, 0, 2* Math.PI);
-        context.stroke();
-      }    
-      
-    }, 1000 / 60);
+    requestAnimationFrame(() => this.render());
   }
+
 }
 
-module.exports = Display;
-
+/* harmony default export */ __webpack_exports__["default"] = (Display);
 
 /***/ }),
 
@@ -525,318 +426,327 @@ module.exports = Display;
 /*!****************************!*\
   !*** ./javascript/game.js ***!
   \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const Player = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
-const Platform = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
-const Coin = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
-const Hook = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
-const HookPoint = __webpack_require__(/*! ./hook_point.js */ "./javascript/hook_point.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+/* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
+/* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./debug.js */ "./javascript/debug.js");
+/* harmony import */ var _levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./levelOneSeed.js */ "./javascript/levelOneSeed.js");
+
+
+
+
+
+
+
+
+
+const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const startLives = 5;
+
 
 class Game {
-  constructor() {
-    this.entities = {};
-    this.canvas = document.getElementById('game-canvas');
-    this.context = this.canvas.getContext('2d');
+  constructor(options){
+   //preload 
+    const spriteSheet = new Image();
+    const background = new Image();
+    this.canvas = options.canvas;
+    this.context = options.context;
+    this.viewPort = options.viewPort;
+    spriteSheet.src = "./images/industrial.v2.png";
+    background.src = "./images/city_background_night.png";
+    
+    this.spriteSheet = spriteSheet;
+    this.background = background;
+    this.keyCodePress = {13: false}
+    this.score = 0;
+    this.lives = startLives;
+    this.playerStart = {x: 0, y: 0};
+    this.maxCoins = 0;
+    this.gameover = 0;
+    this.gameState = 0;
+
+    //state 0 = title screen, state 1 = active, possibly each state represents a level?
+    
     this.platforms = [];
+    this.entities = [];
     this.coins = [];
-    this.spriteSheet;
-    // this.spriteSheet.onload = draw;
-  }
-
-
-  init() {
-    //testing purposes
-    // debugger
-    this.platforms = [];
     
-    const coinOptions = {
-      x: 400,
-        y: 650,
-        context: this.context,
-        color: 'yellow',
-        x_len: 25,
-        y_len: 25,
-        game: this,
-        // image: this.spriteSheet
-      };
-      
-      const playerOptions = {
-        x: 125,
-        y: 25,
-        context: this.context,
-        color: 'blue',
-        x_len: 25,
-        y_len: 25,
-        game: this,
-        image: this.spriteSheet,
-      };
-      
-      const platformOptions = {
-        x: 0,
-        y: 700,
-        color: 'black',
-        context: this.context,
-        x_len: 640,
-        y_len: 100,
-        image: this.spriteSheet,
+    this.physicsObjs = [];
+    this.staticObjs = [];
+    this.activeEntities = {};
+    
+    this.gravDir = 1;
+
+    this.platformCollision = this.platformCollision.bind(this);
+    this.physicsCollision = this.physicsCollision.bind(this);
+    this.addEntity = this.addEntity.bind(this);
+    this.deleteEntity = this.deleteEntity.bind(this);
+    
+    const canvas = document.getElementById('game-canvas');
+
+    document.addEventListener('keydown', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = true;
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = false;
+      }
+    });
+    //add keybind to change states
+    window.onkeydown = function (event) {
+      console.log('prevent input');
+      //prevent screen from moving
+      // return (!event.keycode == 32);
     }
-    const platformOptions2 = {
-      x: 320,
-      y: 350,
-      color: 'black',
+    let cursorConfig = {
+      x: 300,
+      y: 300,
+      xLen: 25,
+      yLen: 25,
       context: this.context,
-      x_len: 100,
-      y_len: 50,
-      image: this.spriteSheet,
     }
-    const platformOptions3 = {
-      x: 400,
-      y: 0,
-      color: 'black',
-      context: this.context,
-      x_len: 20,
-      y_len: 400,
-      image: this.spriteSheet,
-    }
-    const grappleHookOptions = {
-      x: playerOptions.x,
-      y: playerOptions.y,
-      color: 'black',
-      context: this.context,
-      x_len: 0,
-      y_len: 0,
-    }
-    const hookPointOptions = {
-      x: playerOptions.x + playerOptions.x_len/2,
-      y: playerOptions.y + playerOptions.y_len/2,
-      color: 'yellow',
-      context: this.context,
-      x_len: 10,
-      y_len: 10,
-    }
+    this.run = false;
+    this.cursor = new _cursor_js__WEBPACK_IMPORTED_MODULE_5__["default"](cursorConfig);
     
-    // this.move_dir = 1;
-    this.entities['coin'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin);
-    
-    this.entities['platform'] = new Platform(platformOptions);
-    platformOptions2.y = 650; 
-    platformOptions2.x = 620;
-    this.entities['platform2'] = new Platform(platformOptions2);
-    platformOptions2.y = 250;
-    
-    
-    coinOptions.x = 1000;
-    this.entities['coin1'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin1);
-    
-    coinOptions.x = 1500;
-    coinOptions.y = 550;
-    this.entities['coin2'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin2);
-    // this.entities['platform2'] = new Platform(platformOptions3);
-    platformOptions.x = 600;
-    this.entities['platform3'] = new Platform(platformOptions);
-    
-    
-    
-    platformOptions2.x = 600;
-    platformOptions2.y = 650;
-    platformOptions2.x_len = 300;
-    platformOptions2.y_len = 200;
-    this.entities['platform4'] = new Platform(platformOptions2);
-    
-    
-    platformOptions2.x = 1200;
-    platformOptions2.y = 650;
-    this.entities['platform5'] = new Platform(platformOptions2);
-    
-    platformOptions2.x = 1400;
-    platformOptions2.y = 600;
-    this.entities['platform20'] = new Platform(platformOptions2);
-    
-    coinOptions.x = 1840;
-    coinOptions.y = 500;
-    this.entities['coin3'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin3);
-    
-    platformOptions2.x_len = 100
-    platformOptions2.y_len = 50
-    platformOptions2.y = 550;
-    platformOptions2.x = 1800;
-    this.entities['platform6'] = new Platform(platformOptions2);
-    
-    
-    coinOptions.x = 2140;
-    coinOptions.y = 500;
-    this.entities['coin4'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin4);
-    platformOptions2.x = 2000;
-    this.entities['platform7'] = new Platform(platformOptions2);
-    
-    
-    coinOptions.x = 2440;
-    coinOptions.y = 500;
-    this.entities['coin5'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin5);
-    platformOptions2.x = 2200;
-    this.entities['platform8'] = new Platform(platformOptions2)
-    
-    //add some coins
-    
-    
-    coinOptions.x = 3040;
-    coinOptions.y = 550;
-    this.entities['coin6'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin6);
-    coinOptions.x = 3240;
-    coinOptions.y = 500;
-    this.entities['coin7'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin7);
-    coinOptions.x = 3440;
-    coinOptions.y = 450;
-    this.entities['coin8'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin8);
-    
-    platformOptions2.y = 250;
-    platformOptions.x = 2500;
-    platformOptions.x_len = 1500;
-    this.entities['platform9'] = new Platform(platformOptions);
-    
-    platformOptions3.x = 2700;
-    platformOptions3.x_len = 50;
-    
-    this.entities['platform10'] = new Platform(platformOptions3);
-    platformOptions2.x = 2700;
-    platformOptions2.x_len = 950;
-    platformOptions2.y_len = 350;
-    platformOptions2.y = 0;
-    this.entities['platform11'] = new Platform(platformOptions2);
-    
-    platformOptions2.y = 650;
-    platformOptions2.x_len = 100
-    platformOptions2.y_len = 50
-    platformOptions2.x = 3900;
-    this.entities['platform12'] = new Platform(platformOptions2);
-    
-    platformOptions2.x = 4000;
-    platformOptions2.y = 600;
-    platformOptions2.y_len = 600;
-    
-    this.entities['platform13'] = new Platform(platformOptions2);
-    // platformOptions2.x_len = 100
-    // platformOptions2.y_len = 50
-    
-    
-    this.entities['hook'] = new Hook(grappleHookOptions);
-    this.entities['hookPoint'] = new HookPoint(hookPointOptions);
-    
-    this.platforms.push(this.entities.platform); 
-    this.platforms.push(this.entities.platform2); 
-    this.platforms.push(this.entities.platform3); 
-    this.platforms.push(this.entities.platform4); 
-    this.platforms.push(this.entities.platform5); 
-    this.platforms.push(this.entities.platform6); 
-    this.platforms.push(this.entities.platform7); 
-    this.platforms.push(this.entities.platform8); 
-    this.platforms.push(this.entities.platform9); 
-    this.platforms.push(this.entities.platform10); 
-    this.platforms.push(this.entities.platform11); 
-    this.platforms.push(this.entities.platform12); 
-    this.platforms.push(this.entities.platform13); 
-    
-    for(let i = 14; i < 20; i ++){
-      let name = 'platform';
-      platformOptions2.x += 100;
-      platformOptions2.y -= 50;
-      
-      this.entities[name+i] = new Platform(platformOptions2);
-      this.platforms.push(this.entities[name+i]);
-    }
-    this.platforms.push(this.entities.platform20);
-    
-    platformOptions2.x = 4650;
-    platformOptions2.y = 0;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 750;
-    this.entities['platform21'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform21);
-    
-    coinOptions.x = 4840;
-    coinOptions.y = 300;
-    this.entities['coin9'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin9);
-    
-    coinOptions.x = 5040;
-    coinOptions.y = 350;
-    this.entities['coin10'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin10);
-    
-    coinOptions.x = 5240;
-    coinOptions.y = 400;
-    this.entities['coin11'] = new Coin(coinOptions);
-    this.coins.push(this.entities.coin11);
 
-    platformOptions2.x = 5400;
-    platformOptions2.y = 650;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 2500;
-    this.entities['platform22'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform22);
-    
-    platformOptions2.y = 300;
-    platformOptions2.y_len = 50;
-    platformOptions2.x_len = 100;
+    //test timer
+    // window.run = false;
+    // this.preview = window.setInterval(function(){
+    //   console.log('hey there')
+    //   window.run = !window.run;
+    // }, 3000)
 
-
-    // let moveFactor = 
-    for (let i = 23; i < 50; i++) {
-      let name = 'platform';
-      platformOptions2.x += 400;
-      // platformOptions2.y += moveFactor
-
-      this.entities[name + i] = new Platform(platformOptions2);
-      this.platforms.push(this.entities[name + i]);
-    }
-
-    platformOptions2.y = 350;
-    platformOptions2.x = 250;
-    this.entities['platform50'] = new Platform(platformOptions2);
-    this.platforms.push(this.entities.platform50);
-
-    
-    this.entities['newPlayer'] = new Player(playerOptions);
-    this.entities.newPlayer.collisionCheck = this.collisionCheck;
-    // this.entities['camera'] = {prevX: this.entities.newPlayer.x}
-  }
-  gravStep(obj){
-    obj.vspd += 2;
-    return obj;
+    // this.entities.push(this.cursor);
+    // this.activeEntities['cursor'] = this.cursor;
   }
   
-  collisionCheck(obj) {
-    // debugger
-    let platforms = this.platforms;
-    for(let i = 0; i < platforms.length; i++){
+  
+  initialize(){
+    // debugSeed(this);
+    Object(_levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__["default"])(this);
+    this.maxCoins = this.coins.length;
+    this.playerStart = {x: this.player.x, y: this.player.y};
+
+  }
+
+  
+  addEntity(entity, id) {
+    this.activeEntities[id] = entity;
+    this.entities = Object.values(this.activeEntities);
+  }
+  
+
+  deleteEntity(id) {
+    delete this.activeEntities[id];
+    this.entities = Object.values(this.activeEntities)
+  }
+
+  resetGame(){
+    this.lives = startLives;
+    this.gameover = 0;
+    this.initialize();
+  }
+
+  //main game logic loop
+  update(){
+    //each game step
+    switch(this.gameState){
+      //start screen
+      case 0: 
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
+      this.context.fillStyle = 'white'
+      this.context.font = "bold 64px Montserrat";
+      this.context.fillText("GrappleHook", 120, 150);
+      
+      
+      this.context.font = "32px Montserrat";
+      this.context.fillText("Press 'A' and 'D' to move Left and Right", 150, 240);
+      this.context.fillText("Press the Space Bar to Jump", 150, 280);
+      this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
+      this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+
+      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
+      this.context.font = "32px Montserrat";
+      this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
+      // this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value / 2 - (30 * 5), this.canvas.attributes.height.value / 2 + 30);
+      
+      if(this.keyCodePress['enter'] === true){
+        this.gameState = 1;
+        clearInterval(this.preview);
+        this.initialize();
+      }
+
+      // if(window.run){
+      //   this.viewPort.x += 0.2;
+      // }
+      //run preview
+
+
+      let viewMove = 0.5;
+      // console.log(this.viewPort.x)
+      if(this.viewPort.x + viewMove >= 4192){
+        this.viewPort.x = 0;
+      } 
+      this.viewPort.x += viewMove;
+      this.cursor.draw();
+      break;
+
+
+      //game logic
+      case 1: 
+      
+      this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
+      this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
+      
+      this.applyGravity();
+      
+      // this.camera.x = this.player.x - (1280 / 2);
+      // this.camera.y = this.player.y - (720 / 2);
+
+      //draw guideline infront
+      this.context.beginPath();
+      // this.context.setLineDash([5, 15]);
+      this.context.setLineDash([5, 10]);
+      this.context.strokeStyle = 'rgba(178, 34, 34, 0.5)';
+      this.context.moveTo((this.canvas.attributes.width.value / 2) + (this.player.xLen / 2), (this.canvas.attributes.height.value / 2) + (this.player.yLen / 2));
+      this.context.lineTo(this.cursor.x, this.cursor.y);
+      this.context.stroke();
+      this.context.setLineDash([]);
+
+
+      for(let i = 0; i < this.entities.length; i++){
+        if(this.entities[i].active) {
+          this.entities[i].update(this.viewPort);
+        }
+      }
+      //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
+      for(let i = 0; i < this.coins.length; i++){
+        if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.score += 1;
+            this.coins[i].active = false;
+          }
+        }
+        //draw in game UI (score)
+        this.context.fillStyle = 'white'
+        this.context.font = "bold 32px Montserrat";
+        this.context.fillText(`Lives: ${this.lives}`, 100, 100);
+        this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        
+        //draw cursor infront
+        this.cursor.draw();
+        
+        
+        if(this.score === this.maxCoins){
+          this.context.fillStyle = "rgba(0, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`You Win!`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if (this.keyCodePress.enter) {
+            this.resetGame();
+          }
+        }
+        else if(this.player.y > 1100){
+          if(this.lives > 0){
+            this.lives--;
+            // this.initialize();
+            this.player.x = this.playerStart.x;
+            this.player.y = this.playerStart.y;
+          }
+          else {
+            this.gameover = 1;
+          }
+        }
+        if(this.gameover){
+          //dark overlay with gameover and enable press enter to restart
+          this.player.x = 0;
+          this.player.y = 1100
+          this.context.fillStyle = "rgba(200, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`Game Over`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if(this.keyCodePress.enter){
+            this.resetGame();
+          }
+        }
+        break;
+      }
+      
+    }
+
+
+    
+  physicsCollision(x, y, obj){
+    //check collision with physics objs
+    for (let i = 0; i < this.physicsObjs.length; i++) {
       // obj.positionMeeting(obj.x, obj.y, platforms[i]);
-      if( 
+      if (
         (
-          (obj.x + obj.x_len > platforms[i].x && obj.x < platforms[i].x + platforms[i].x_len) &&
-          (obj.y + obj.y_len > platforms[i].y && obj.y < platforms[i].y + platforms[i].y_len))
-        ) {
-          return true;
+          (x + obj.xLen > this.physicsObjs[i].x && x < this.physicsObjs[i].x + this.physicsObjs[i].xLen) &&
+          (y + obj.yLen > this.physicsObjs[i].y && y < this.physicsObjs[i].y + this.physicsObjs[i].yLen) && 
+          obj != this.physicsObjs[i]
+        )
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  platformCollision(x, y, obj){
+  //check if new position overlaps with any platforms in platforms entitity
+    for (let i = 0; i < this.platforms.length; i++) {
+      // obj.positionMeeting(obj.x, obj.y, platforms[i]);
+      if (
+        (
+          (x + obj.xLen > this.platforms[i].x && x < this.platforms[i].x + this.platforms[i].xLen) &&
+          (y + obj.yLen > this.platforms[i].y && y < this.platforms[i].y + this.platforms[i].yLen)
+          )
+      ) {
+        return true;
       }
     }
     return false;
   }
 
 
-} //end of scope
+  applyGravity(){
+    //iterate over list of entities and apply gravity
+    for(let i = 0; i < this.physicsObjs.length; i++){
+      let curObj = this.physicsObjs[i];
+      
+      //normal gravity
+      if(this.gravDir > 0){
+        if(curObj.vspd < 6 && !this.platformCollision(curObj.x, curObj.y + curObj.vspd, curObj)){
+          curObj.vspd += 0.2;
+        }
+      }
+      else {
+        if(curObj.vspd > -6 && !this.platformCollision(curObj.x, curObj.y + curObj.vspd, curObj)) {
+          curObj.vspd -= 0.2;
+        }
+      }
+    }
+  }
 
-module.exports = Game;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Game);
 
 /***/ }),
 
@@ -844,47 +754,119 @@ module.exports = Game;
 /*!***********************************!*\
   !*** ./javascript/game_entity.js ***!
   \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 class GameEntity {
   constructor(options){
     this.x = options.x;
     this.y = options.y;
+    this.xLen = options.xLen;
+    this.yLen = options.yLen;
+    this.defaultColor = options.color || 'gray'
     this.context = options.context;
-    this.color = options.color;
-    this.x_len = options.x_len;
-    this.y_len = options.y_len;
-    this.draw = this.draw.bind(this);
-    this.hspd = 0;
+    this.platformCollision = options.platformCollision;
+    this.physicsCollision = options.physicsCollision;
+    this.active = options.active || true;
+    this.physicsObj = false || options.physicsObj;
+    
     this.vspd = 0;
-    this.active = true;
-    this.faceDir = 1;
-  }
-  draw(viewPort) {
-    this.context.fillStyle = this.color;
-    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.x_len, this.y_len);
+    this.hspd = 0;
+
+
+    this.draw = this.draw.bind(this);
+    this.stepCollisionCheck = this.stepCollisionCheck.bind(this);
   }
 
-  move() {
-    this.x += this.hspd;
-    this.y += this.vspd;
+  draw(viewPort){
+    //check if sprite, else draw green
+    this.context.fillStyle = this.defaultColor;
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.xLen, this.yLen);
   }
-  
-  positionMeeting(x, y, otherObj){
-    //return true or false if new position intersects other objects position
 
-    //check right side
-    if((x + this.x_len > otherObj.x && x < otherObj.x + otherObj.x_len) && 
-      (y + this.y_len > otherObj.y && y < otherObj.y + otherObj.y_len)
+  update(viewPort){
+    if(this.physicsObj){
+      this.stepCollisionCheck();
+    }
+    this.draw(viewPort);
+  }
+
+  stepCollisionCheck(){
+    if (!this.platformCollision(this.x + this.hspd, this.y, this) ) {
+      this.x += this.hspd;
+    } else {
+      let sign = 1;
+      this.hspd < 0 ? sign = -1 : sign = sign;
+      while (!this.platformCollision(this.x + sign, this.y, this) ) {
+        if(this.state === 1){
+          this.ropeAngleVelocity = 0;
+        }
+        this.x += sign;
+      }
+    }
+
+    this.hspd = 0;
+
+    if (!this.platformCollision(this.x, this.y + this.vspd, this)) {
+      this.y += this.vspd;
+    } else {
+      let sign = 1;
+      this.vspd < 0 ? sign = -1 : sign = sign;
+      while (!this.platformCollision(this.x, this.y + sign, this)) {
+        if (this.state === 1) {
+          this.ropeAngleVelocity = 0;
+        }
+        this.y += sign;
+      }
+
+
+      this.vspd = 0;
+    }
+  }
+
+  stepPhysicsCollisionCheck(){
+    if (!this.physicsCollision(this.x + this.hspd, this.y, this)) {
+      this.x += this.hspd;
+    } else {
+      let sign = 1;
+      this.hspd < 0 ? sign = -1 : sign = sign;
+      while (!this.physicsCollision(this.x + sign, this.y, this)) {
+        this.x += sign;
+      }
+    }
+
+    this.hspd = 0;
+
+    if (!this.physicsCollision(this.x, this.y + this.vspd, this)) {
+      this.y += this.vspd;
+    } else {
+      let sign = 1;
+      this.vspd < 0 ? sign = -1 : sign = sign;
+      while (!this.physicsCollision(this.x, this.y + sign, this)) {
+        this.y += sign;
+      }
+
+
+      this.vspd = 0;
+    }
+  }
+
+
+
+
+  positionMeeting(x = this.x, y = this.y, obj){
+    if ((x + this.xLen > obj.x && x < obj.x + obj.xLen) &&
+      (y + this.yLen > obj.y && y < obj.y + obj.yLen)
     ) {
-      // console.log('aw shoot');
       return true;
-    }// end of if
+    } // end of if
     return false;
   }
 }
-module.exports = GameEntity;
+
+/* harmony default export */ __webpack_exports__["default"] = (GameEntity);
 
 /***/ }),
 
@@ -892,34 +874,26 @@ module.exports = GameEntity;
 /*!***********************************!*\
   !*** ./javascript/grapplehook.js ***!
   \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const Display = __webpack_require__(/*! ./display.js */ "./javascript/display.js");
-const Game = __webpack_require__(/*! ./game.js */ "./javascript/game.js");
-// const WebFont = require('webfontloader');
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _display_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./display.js */ "./javascript/display.js");
 
 
-// console.log('all is dandy!');
-let spriteSheet = new Image();
-spriteSheet.src = "./images/industrial.v2.png";
 
-let background = new Image();
+const display = new _display_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+const background = new Image();
+const spriteSheet = new Image();
 background.src = "./images/city_background_night.png";
-const game = new Game();
-game.spriteSheet = spriteSheet;
-game.background = background;
-game.init();
-const testDisplay = new Display(game);
-background.onload = testDisplay.startRender;
+spriteSheet.src = "./images/industrial.v2.png";
+// display.background = background;
+// display.spriteSheet = spriteSheet;
+// console.log(display.spriteSheet);
+background.onload = display.render;
 
-
-
-
-
-
-
-
+// display.render;
 
 /***/ }),
 
@@ -927,98 +901,959 @@ background.onload = testDisplay.startRender;
 /*!****************************!*\
   !*** ./javascript/hook.js ***!
   \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity */ "./javascript/game_entity.js");
 
-class GrappleHook extends GameEntity {
+
+
+//hook object is the moving grapplehook
+class Hook extends _game_entity__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
-    super(options);
-    this.active = false;
+    super(options)
+    this.defaultColor = 'red';
+    this.spd = 31;
+    this.moving = false;
+    this.state = 'ready';
   }
 
-  draw(viewPort){
-    this.context.strokeStyle = 'lightgray';
-    this.context.beginPath();
-    this.context.moveTo(this.x - viewPort.x, this.y - viewPort.y);
-    this.context.lineTo(this.targetX - viewPort.x, this.targetY - viewPort.y);
-    this.context.stroke();
-  }
-  snapshot(){
-    return {x: this.x, y: this.y}
+  //collides with walls and hook points
+
+  update(viewPort){
+    // console.log('hook state: ', this.state)
+    if(this.state === 'moving' || this.state === 'hooked') {
+      if(this.platformCollision(this.x + this.hspd, this.y + this.vspd, this)){
+        this.state = 'hooked';
+      }
+      else{
+        // console.log('move me')
+        this.x += this.hspd;
+        this.y += this.vspd;
+      }
+      this.draw(viewPort)
+      //bug where while hooked, rehooking will immediatley spin in new pos
+    }
+  }  
+
+  updateTarget(target, from){
+    this.angle = Math.atan2(target.y - from.y, target.x - from.x);
+    // console.log("angle is: ", -this.angle * (180 / Math.PI));
+    this.x = from.x;
+    this.y = from.y;
+    this.hspd = this.spd * Math.cos(this.angle);
+    this.vspd = this.spd * Math.sin(this.angle);
+    // this.moving = true;
+    this.state = 'moving';
   }
 }
-module.exports = GrappleHook;
+/* harmony default export */ __webpack_exports__["default"] = (Hook);
+
+//if hook is off screen by x amount, reset
+//review angles and speed
 
 /***/ }),
 
-/***/ "./javascript/hook_point.js":
-/*!**********************************!*\
-  !*** ./javascript/hook_point.js ***!
-  \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./javascript/levelOneSeed.js":
+/*!************************************!*\
+  !*** ./javascript/levelOneSeed.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _player_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player.js */ "./javascript/player.js");
+/* harmony import */ var _camera_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./camera.js */ "./javascript/camera.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _platform_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./platform.js */ "./javascript/platform.js");
+/* harmony import */ var _cursor_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./cursor.js */ "./javascript/cursor.js");
+/* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
 
-class HookPoint extends GameEntity {
-  constructor(options){
-    super(options);
-    this.active = false;
-    this.moveSpd = 40;
-    this.target = {x: 0, y: 0};
-    this.collided = false;
-    this.snapCalc = false;
-  }
-  draw(viewPort) {
-    this.context.fillStyle = 'yellow';
-    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, 10, 10);
-    // this.context.restore();
-  }
-  reset(x, y){
-    this.x = x;
-    this.y = y;
-    this.hspd = 0;
-    this.vspd = 0;
-    this.collided = false;
-  }
-  calcSpd(){
-    // https: //gist.github.com/conorbuck/2606166
-    let angle = Math.atan2(this.target.y - this.y, this.target.x - this.x);
-    // console.log('heres an angle', angle);
-    this.hspd = this.moveSpd * Math.cos(angle);
-    this.vspd = this.moveSpd * Math.sin(angle);
-    // debugger
 
-  }
-  move(moveSpd){
-    if(this.active){
-     if(!this.collided){
-       this.x += this.hspd;
-       this.y += this.vspd;
-      }
-      else if(this.collided){
-        this.x += moveSpd;
-      }
-    }
 
-    //  else {
 
-    //   // debugger
-    //   console.log('spds', this.hspd, this.vspd)
-    //   this.x += this.hspd;
-    //   this.y += this.vspd;
-    //  }
-  //      this.hspd = 0;
-  //      this.vspd = 0;
-  //    }
-  //  }
 
-   } 
+
+
+
+
+const levelOneSeed = function (game) {
+  //give each object an id
+  let coinConfig, coin, platformConfig, platform;
+  game.score = 0;
+  game.entities = [];
+  game.platforms = [];
+  game.coins = [];
+  // let coinConfig = {
+  //   x: 600,
+  //   y: 566,
+  //   xLen: 40,
+  //   yLen: 40,
+  //   context: game.context,
+  //   color: "yellow",
+  // };
+  // ===============================================================
+  //Seed Platforms
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1152,
+    y: 800,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
   
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1600,
+    y: 960,
+    xLen: 64,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1728,
+    y: 928,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1856,
+    y: 896,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+  
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 1952,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2240,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2464,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 2790,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3040,
+    y: 832,
+    xLen: 576,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3680,
+    y: 800,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 3840,
+    y: 768,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4000,
+    y: 608,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4032,
+    y: 352,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4224,
+    y: 96,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 4544,
+    y: 192,
+    xLen: 256,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5184,
+    y: 256,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5536,
+    y: 416,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5792,
+    y: 448,
+    xLen: 160,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 5952,
+    y: 928,
+    xLen: 416,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6400,
+    y: 768,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6560,
+    y: 854,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6848,
+    y: 704,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6784,
+    y: 480,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 6784,
+    y: 256,
+    xLen: 64,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7072,
+    y: 224,
+    xLen: 96,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7136,
+    y: 96,
+    xLen: 640,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7584,
+    y: 544,
+    xLen: 32,
+    yLen: 32,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 7616,
+    y: 896,
+    xLen: 384,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
+
+
+
+// ================================================================
+  //Seed Coins
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 480,
+    y: 928,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 864,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1152,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1664,
+    y: 896,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1792,
+    y: 864,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 1952,
+    y: 608,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2272,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2464,
+    y: 800,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2624,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2688,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 2880,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3040,
+    y: 512,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3296,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3616,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3808,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4128,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  // ???????
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 3904,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4032,
+    y: 224,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4224,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4384,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4576,
+    y: 96,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 4992,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5088,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5312,
+    y: 384,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5440,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5632,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 5792,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 640,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6016,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6464,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6720,
+    y: 768,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6848,
+    y: 832,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6976,
+    y: 736,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6880,
+    y: 576,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6688,
+    y: 544,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6656,
+    y: 416,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6816,
+    y: 352,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 6912,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7232,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7456,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7648,
+    y: 192,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 256,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 480,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+  coin = new _coin_js__WEBPACK_IMPORTED_MODULE_6__["default"]({
+    x: 7776,
+    y: 704,
+    xLen: 40,
+    yLen: 40,
+    context: game.context,
+  })
+  game.coins.push(coin);
+  game.entities.push(coin);
+
+
+
+
+
+
+
+
+  
+  //offset is temporary fix to platform placements
+  let offset = 150;
+
+  let playerConfig = {
+    x: 192,
+    y: 928 - offset,
+    xLen: 25,
+    yLen: 30,
+    context: game.context,
+    game: game,
+    platformCollision: game.platformCollision,
+    physicsObj: true,
+    physicsCollision: game.physicsCollision,
+    viewPort: game.viewPort,
+    // addEntity: game.addEntity,  //inteded to add hok atfirst
+    deleteEntity: game.deleteEntity,
+    image: game.spriteSheet,
+  }
+
+  let hookConfig = {
+    x: playerConfig.x,
+    y: playerConfig.y,
+    xLen: 10,
+    yLen: 10,
+    active: false,
+    context: game.context,
+    game: game,
+    platformCollision: game.platformCollision,
+    viewPort: game.viewPort,
+  }
+  let hook = new _hook_js__WEBPACK_IMPORTED_MODULE_2__["default"](hookConfig);
+
+  playerConfig.hook = hook;
+
+  //add player to game
+  //hook object created below hookConfig
+  //player and camera should be game attritbutes for update funciton
+  game.player = new _player_js__WEBPACK_IMPORTED_MODULE_0__["default"](playerConfig);
+  game.camera = new _camera_js__WEBPACK_IMPORTED_MODULE_1__["default"](playerConfig);
+  game.camera.x = 0;
+  game.camera.y = 0;
+  game.camera.center = {
+    x: game.x + (1280 / 2),
+    y: game.y + (720 / 2)
+  }
+
+
+
+  // game.entities.push(game.player);
+  game.activeEntities['player'] = game.player;
+  game.activeEntities['hook'] = game.hook;
+  
+  
+  game.entities.push(game.player);
+  game.entities.push(hook);
+
+  game.physicsObjs.push(game.player);
+
+  for(let i = 0; i < game.entities.length; i++){
+    game.entities[i].y -= offset;
+  }
+  for(let i = 0; i < game.coins.length; i++){
+    game.coins[i].y -= offset;
+  }
+  for(let i = 0; i < game.platforms.length; i++){
+    game.platforms[i].y -= offset;
+  }
+
+
+  // game.entities = Object.values(game.activeEntities);
 }
-module.exports = HookPoint;
+
+/* harmony default export */ __webpack_exports__["default"] = (levelOneSeed);
 
 /***/ }),
 
@@ -1026,35 +1861,23 @@ module.exports = HookPoint;
 /*!********************************!*\
   !*** ./javascript/platform.js ***!
   \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const GameEntity = __webpack_require__(/*! ./game_entity */ "./javascript/game_entity.js");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
 
-class Platform extends GameEntity {
+
+class Platform extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
   constructor(options){
     super(options);
-    this.color = 'darkgray';
-    this.image = options.image;
-
-  }
-  draw(viewPort){
-      this.context.fillStyle = this.color;
-      this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.x_len, this.y_len);
   }
 
-  move(moveSpd, otherObj){
-    if(this.positionMeeting(this.x+moveSpd, this.y, otherObj)){
-      otherObj.x += moveSpd;
-      // otherObj.vspd = 0;
-      // otherObj.y += 1;
-    }
-    this.x += moveSpd;
-  }
-  
+
 }
-module.exports = Platform;
-module.exports = Platform;
+
+/* harmony default export */ __webpack_exports__["default"] = (Platform);
 
 /***/ }),
 
@@ -1062,176 +1885,315 @@ module.exports = Platform;
 /*!******************************!*\
   !*** ./javascript/player.js ***!
   \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-const GameEntity = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js")
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _game_entity_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./game_entity.js */ "./javascript/game_entity.js");
+/* harmony import */ var _hook_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hook.js */ "./javascript/hook.js");
 
-const MOVE_STATES = ['move', 'fixed']
-// const KEY_LEFT = (event.key === 'a');
-class Player extends GameEntity {
-  constructor(options) {
+
+
+const PLAYER_KEYS = ['a', 'A', 'd', 'D', 's', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' ', '1', '2'];
+// const PLAYER_KEYS = ['a', 'd', ' '];
+
+class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(options){
     super(options);
-    this.moveSpd = 5;
-    this.state = 'move';
-    this.ropeLen = 0;
-    this.ropeAngle;
-    this.targetPoint = {}
-    this.collsionCheck;
-    this.game = options.game;
     this.image = options.image;
-    this.snapX;
-    this.snapY;
-    this.rotateSpd = 0.03;
+    this.addEntity = options.addEntity;
+    // this.deleteEntity = options.deleteEntity;
+    this.hook = options.hook;
+    this.moveSpd = 4;//3 for slower
+    this.jumpSpd = 6;
+    this.game = options.game;
+    this.platformCollision = options.platformCollision;
+    this.viewPort = options.viewPort;
+    this.hook = options.hook;
+    this.debug = false;
+    this.swingNext = {x: this.x, y: this.y};
+    // this.rotateSpd = 0.05;
+    this.rotateSpd = 0.05;
+
+    //state 0 = not-swinging, state 1 = swinging
+    this.ropeLength = 0;
+    this.state = 0;
+    this.spinDir = -1;
+
+    //limit rope length to 300
+
+    this.takeInput = this.takeInput.bind(this);
+    this.keyBind();
+  }
+
+  keyBind() {
+    this.playerInput = {
+      a: false,
+      d: false,
+      1: false,
+      2: false,
+      ArrowLeft: false,
+      ArrowRight: false, 
+      ArrowUp: false, 
+      ArrowDown: false,
+      ' ': false,
+      canJump: true,
+      canInvert: true,
+      mouseDown: false,
+      targetPoint: {x: this.x, y: this.y},
+      mousePos: {x: 0, y: 0}
+    };
+
+    const canvas = document.getElementById('game-canvas');
+
+    //key press
+    document.addEventListener('keydown', (event) => {
+      let keyName = event.key;
+      if(PLAYER_KEYS.includes(event.key)){
+        if(event.key == 'A' || event.key == 'D'){
+          keyName = keyName.toLocaleLowerCase();
+          // event.key = event.key.toLocaleLowerCase();
+        }
+        this.playerInput[keyName] = true;
+      }
+    });
+    // key release
+    document.addEventListener('keyup', (event) => {
+      let keyName = event.key;
+      if (PLAYER_KEYS.includes(event.key)) {
+        if(event.key == 'A' || event.key == 'D'){
+          keyName = keyName.toLowerCase();
+        }
+        this.playerInput[keyName] = false;
+      }
+    });
+
+    canvas.addEventListener('mousedown', (event) => {
+      this.state = 0;
+      this.playerInput.targetPoint.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      this.playerInput.targetPoint.y = event.clientY - canvas.offsetTop + this.viewPort.y;
+      // console.log(targetPoint, {x: this.x, y: this.y});
+      this.playerInput.mouseDown = true;
+
+      this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
+
+    })
+    canvas.addEventListener('mouseup', (event) => {
+      this.playerInput.mouseDown = false;
+    })
+
+    canvas.addEventListener('mousemove', (event) => {
+      this.playerInput.mousePos.x = event.clientX - canvas.offsetLeft + this.viewPort.x;
+      this.playerInput.mousePos.y = event.clientY - canvas.offsetTop + this.viewPort.y;
+    })
+
+  }// end of keybind
+
+  draw(viewPort){
+    //draw rope if hook is in motion
+    if(this.hook.state === 'moving' || this.hook.state === 'hooked'){
+      this.ropeLength = Math.sqrt(Math.pow(Math.abs(this.x - this.hook.x), 2) + Math.pow(Math.abs(this.y - this.hook.y), 2));
+      this.context.beginPath();
+      this.context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+
+      //view for dynamic viewport (centers on player)
+      this.context.moveTo(this.x + this.xLen / 2 - (viewPort.x), this.y + this.yLen / 2 - (viewPort.y));
+      this.context.lineTo(this.hook.x + this.hook.xLen / 2 - (viewPort.x), this.hook.y + this.yLen / 2 - (viewPort.y));
+
+      //view for static viewport
+      // this.context.moveTo(this.x + this.xLen / 2, this.y + this.yLen / 2);
+      // this.context.lineTo(this.hook.x + this.hook.xLen / 2, this.hook.y + this.yLen / 2);
+
+
+      this.context.stroke();
+
+    }
+
+    // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+    //Draw sprite
+    if(this.vspd !== 0){
+      this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
+    }
+    else{
+      this.context.drawImage(this.image, 0, 256, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
+    }
+
+  }
+
+  //takeinput more of applying input action
+  takeInput(viewPort){
+    switch(this.state){
+      case 0: 
+      //free move state
+        if (this.playerInput.a || this.playerInput.A) {     
+            this.hspd = -this.moveSpd;
+        }
+        if (this.playerInput.d || this.playerInput.D) {
+            this.hspd = this.moveSpd;
+        }
+
+      break;
+
+      case 1:
+      //swing state
+      break;
+    }
+
+    if(this.playerInput[' ']){
+     if(this.playerInput.canJump || this.state === 1){
+       this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.playerInput.canJump = false;
+     }
+     if(this.state === 1){
+        this.resetHook();
+     }
+    }
+    //GravShift Code
+    // if(this.playerInput.ArrowUp && this.playerInput.canInvert) {
+    //   this.game.gravDir = this.game.gravDir * -1;
+    //   this.playerInput.canInvert = false;
+    // }
+    
+    //Debug tool
+    if(this.playerInput['1']){
+      this.debug = true;
+    }
+    if(this.playerInput['2']){
+      this.debug = false;
+    }
+  }
+  resetHook(){
+    this.hook.state = 'ready'
+    this.hook.x = this.x;
+    this.hook.y = this.y;
+    this.state = 0;
+
+  }
+
+  update(viewPort){
+    if(this.debug){
+      // console.log('X: ', this.playerInput.mousePos.x, 'Y: ', this.playerInput.mousePos.y)
+      console.log(this.playerInput);
+    }
+    this.takeInput();
+    //check for swing state
+    if(this.hook.state === 'hooked'){
+      if(this.state !== 1){
+        if (this.x > this.hook.x) {
+          this.spinDir = 1;
+        } else this.spinDir = -1;      
+        this.state = 1;
+      }
+  }
+
+
+    switch(this.state){
+      case 0: 
+        this.stepCollisionCheck();
+        break;
+
+
+      case 1: //swing state
+       //og swing code
+      //  let targetCenter = this.playerInput.targetPoint;
+        let targetCenter = {x: this.hook.x, y: this.hook.y};
+        this.ropeAngle = Math.atan2(targetCenter.y - this.y, targetCenter.x - this.x) * 180 / Math.PI;
+        if(this.ropeAngle < 0){
+          this.ropeAngle = 360 + this.ropeAngle;
+        }
+        //credit to the math-man i never could be:
+        //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
+        this.swingNext.x = (targetCenter.x + (this.x - targetCenter.x) * Math.cos(this.rotateSpd) + (targetCenter.y - this.y) * Math.sin(this.rotateSpd));
+        this.swingNext.y = (targetCenter.y + (this.y - targetCenter.y) * Math.cos(this.rotateSpd) + (this.x - targetCenter.x) * Math.sin(this.rotateSpd));
+        this.hspd = this.spinDir * (this.swingNext.x - this.x);
+        this.vspd = this.spinDir * (this.swingNext.y - this.y);
+        //fix hooked and then hook bug
+
+
+        this.stepCollisionCheck();
+        break;
+
+    }
+
+    // this.stepPhysicsCollisionCheck();
+    
+    //reset jump limit
+    if (this.platformCollision(this.x, this.y + (1 * this.game.gravDir), this) || this.physicsCollision(this.x, this.y + (1 * this.game.gravDir), this)) {
+      this.playerInput.canJump = true;
+      this.playerInput.canInvert = true;
+    }
+
+    if(this.ropeLength > 350){
+      this.ropeLength = 0;
+      this.resetHook();
+    }
+
+    this.draw(viewPort);
   }
   
-  move(swingMove){
-    switch (this.state) {
-      case 'move':
-      // console.log(this.hspd, this.vspd)
 
-        let testObj = Object.assign({}, this);
-        testObj.x += testObj.hspd + 1;
-        
-        if(!this.game.collisionCheck(testObj)){
-          this.x = Math.floor(this.x + this.hspd);
-        } else {
-          testObj.x -= testObj.hspd;
-        }
+  swingStep(){
 
-        testObj.y += testObj.vspd * 1.5;
-
-        if (!this.game.collisionCheck(testObj)) {
-          this.y += this.vspd;
-        }
-
-        else { 
-          console.log('collision');
-          this.x += -this.hspd;
-        }
-        
-        this.rotateSpd = 0.05;
-        break;
-
-
-      case 'swing':
-        let center = this.targetPoint;
-        
-        this.ropeAngle = Math.atan2(this.targetPoint.y - this.y, this.targetPoint.x - this.x) * 180 / Math.PI;
-        if(this.ropeAngle < 0){
-          this.ropeAngle = 360 + this.ropeAngle
-        }
-        if(this.y + this.vspd > this.ropeLen){
-          while(!this.y > this.ropeLen ){
-            this.y+=1;
-          }
-        }
-        // let radius;
-        // radius = Math.sqrt(Math.pow(center.x - this.x, 2) + Math.pow(center.y - this.y, 2));
-        //to the mathman i never could be:
-        //https://math.stackexchange.com/questions/103202/calculating-the-position-of-a-point-along-an-arc
-        let nextX = (center.x + swingMove + (this.x - center.x + swingMove) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
-        let nextY = (center.y + swingMove + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-        
-        // let nextX = (center.x + radius) * Math.cos(this.ropeAngle) ;
-        // let nextY = (center.y + radius) * Math.sin(this.ropeAngle) ;
-        // debugger
-        // let nextY = (center.y + swingMove + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-
-        //old working-ish
-        // let nextX = (center.x + (this.x - center.x) * Math.cos(this.rotateSpd) + (center.y - this.y) * Math.sin(this.rotateSpd));
-        // let nextY = (center.y + (this.y - center.y) * Math.cos(this.rotateSpd) + (this.x - center.x) * Math.sin(this.rotateSpd));
-
-        this.hspd = nextX - this.x;
-        this.vspd = nextY - this.y;
-        // console.log(this.hspd, this.vspd)
-
-        // if(nextY < this.y && this.vspd > -4){
-        //   this.vspd -= 1;
-        // }
-        let test = Object.assign({}, this, {x: this.x, y: this.y + this.vspd});
-
-
-        if(!this.game.collisionCheck(test)){
-          this.y += this.vspd;
-        } 
-
-        test = Object.assign({}, this, {x: this.x + this.hspd, y: this.y});
-        if(!this.game.collisionCheck(test)){
-          this.x = Math.floor(this.x + this.hspd);
-        }
-
-        else {
-          //slide
-          this.vspd = 0;
-          let testStep = Object.assign({}, this);
-          let sign;
-          if(testStep.hspd > 0){
-            sign = 3;
-          } else {
-            sign = -3;
-          }
-
-          testStep.x += testStep.hspd + sign;
-
-
-          if(!this.game.collisionCheck(testStep)){
-            this.x = Math.floor(this.x + this.hspd);
-          }
-          //add bounce
-        }
-        // this.vspd = 0;
-        this.vspd = this.vspd * 3/10;
-        // console.log(this.vspd)
-        
-        break;
-
-      default:
-        break;
-    }
   }
-    draw(viewPort){
-      this.context.drawImage(this.image, 0, 257, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 28);
-      
-    }
+
 
 }
 
 
-
-
-
-module.exports = Player;
-
+/* harmony default export */ __webpack_exports__["default"] = (Player);
 
 /***/ }),
 
-/***/ "./node_modules/webfontloader/webfontloader.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/webfontloader/webfontloader.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./javascript/ui_entity.js":
+/*!*********************************!*\
+  !*** ./javascript/ui_entity.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var __WEBPACK_AMD_DEFINE_RESULT__;/* Web Font Loader v1.6.28 - (c) Adobe Systems, Google. License: Apache 2.0 */(function(){function aa(a,b,c){return a.call.apply(a.bind,arguments)}function ba(a,b,c){if(!a)throw Error();if(2<arguments.length){var d=Array.prototype.slice.call(arguments,2);return function(){var c=Array.prototype.slice.call(arguments);Array.prototype.unshift.apply(c,d);return a.apply(b,c)}}return function(){return a.apply(b,arguments)}}function p(a,b,c){p=Function.prototype.bind&&-1!=Function.prototype.bind.toString().indexOf("native code")?aa:ba;return p.apply(null,arguments)}var q=Date.now||function(){return+new Date};function ca(a,b){this.a=a;this.o=b||a;this.c=this.o.document}var da=!!window.FontFace;function t(a,b,c,d){b=a.c.createElement(b);if(c)for(var e in c)c.hasOwnProperty(e)&&("style"==e?b.style.cssText=c[e]:b.setAttribute(e,c[e]));d&&b.appendChild(a.c.createTextNode(d));return b}function u(a,b,c){a=a.c.getElementsByTagName(b)[0];a||(a=document.documentElement);a.insertBefore(c,a.lastChild)}function v(a){a.parentNode&&a.parentNode.removeChild(a)}
-function w(a,b,c){b=b||[];c=c||[];for(var d=a.className.split(/\s+/),e=0;e<b.length;e+=1){for(var f=!1,g=0;g<d.length;g+=1)if(b[e]===d[g]){f=!0;break}f||d.push(b[e])}b=[];for(e=0;e<d.length;e+=1){f=!1;for(g=0;g<c.length;g+=1)if(d[e]===c[g]){f=!0;break}f||b.push(d[e])}a.className=b.join(" ").replace(/\s+/g," ").replace(/^\s+|\s+$/,"")}function y(a,b){for(var c=a.className.split(/\s+/),d=0,e=c.length;d<e;d++)if(c[d]==b)return!0;return!1}
-function ea(a){return a.o.location.hostname||a.a.location.hostname}function z(a,b,c){function d(){m&&e&&f&&(m(g),m=null)}b=t(a,"link",{rel:"stylesheet",href:b,media:"all"});var e=!1,f=!0,g=null,m=c||null;da?(b.onload=function(){e=!0;d()},b.onerror=function(){e=!0;g=Error("Stylesheet failed to load");d()}):setTimeout(function(){e=!0;d()},0);u(a,"head",b)}
-function A(a,b,c,d){var e=a.c.getElementsByTagName("head")[0];if(e){var f=t(a,"script",{src:b}),g=!1;f.onload=f.onreadystatechange=function(){g||this.readyState&&"loaded"!=this.readyState&&"complete"!=this.readyState||(g=!0,c&&c(null),f.onload=f.onreadystatechange=null,"HEAD"==f.parentNode.tagName&&e.removeChild(f))};e.appendChild(f);setTimeout(function(){g||(g=!0,c&&c(Error("Script load timeout")))},d||5E3);return f}return null};function B(){this.a=0;this.c=null}function C(a){a.a++;return function(){a.a--;D(a)}}function E(a,b){a.c=b;D(a)}function D(a){0==a.a&&a.c&&(a.c(),a.c=null)};function F(a){this.a=a||"-"}F.prototype.c=function(a){for(var b=[],c=0;c<arguments.length;c++)b.push(arguments[c].replace(/[\W_]+/g,"").toLowerCase());return b.join(this.a)};function G(a,b){this.c=a;this.f=4;this.a="n";var c=(b||"n4").match(/^([nio])([1-9])$/i);c&&(this.a=c[1],this.f=parseInt(c[2],10))}function fa(a){return H(a)+" "+(a.f+"00")+" 300px "+I(a.c)}function I(a){var b=[];a=a.split(/,\s*/);for(var c=0;c<a.length;c++){var d=a[c].replace(/['"]/g,"");-1!=d.indexOf(" ")||/^\d/.test(d)?b.push("'"+d+"'"):b.push(d)}return b.join(",")}function J(a){return a.a+a.f}function H(a){var b="normal";"o"===a.a?b="oblique":"i"===a.a&&(b="italic");return b}
-function ga(a){var b=4,c="n",d=null;a&&((d=a.match(/(normal|oblique|italic)/i))&&d[1]&&(c=d[1].substr(0,1).toLowerCase()),(d=a.match(/([1-9]00|normal|bold)/i))&&d[1]&&(/bold/i.test(d[1])?b=7:/[1-9]00/.test(d[1])&&(b=parseInt(d[1].substr(0,1),10))));return c+b};function ha(a,b){this.c=a;this.f=a.o.document.documentElement;this.h=b;this.a=new F("-");this.j=!1!==b.events;this.g=!1!==b.classes}function ia(a){a.g&&w(a.f,[a.a.c("wf","loading")]);K(a,"loading")}function L(a){if(a.g){var b=y(a.f,a.a.c("wf","active")),c=[],d=[a.a.c("wf","loading")];b||c.push(a.a.c("wf","inactive"));w(a.f,c,d)}K(a,"inactive")}function K(a,b,c){if(a.j&&a.h[b])if(c)a.h[b](c.c,J(c));else a.h[b]()};function ja(){this.c={}}function ka(a,b,c){var d=[],e;for(e in b)if(b.hasOwnProperty(e)){var f=a.c[e];f&&d.push(f(b[e],c))}return d};function M(a,b){this.c=a;this.f=b;this.a=t(this.c,"span",{"aria-hidden":"true"},this.f)}function N(a){u(a.c,"body",a.a)}function O(a){return"display:block;position:absolute;top:-9999px;left:-9999px;font-size:300px;width:auto;height:auto;line-height:normal;margin:0;padding:0;font-variant:normal;white-space:nowrap;font-family:"+I(a.c)+";"+("font-style:"+H(a)+";font-weight:"+(a.f+"00")+";")};function P(a,b,c,d,e,f){this.g=a;this.j=b;this.a=d;this.c=c;this.f=e||3E3;this.h=f||void 0}P.prototype.start=function(){var a=this.c.o.document,b=this,c=q(),d=new Promise(function(d,e){function f(){q()-c>=b.f?e():a.fonts.load(fa(b.a),b.h).then(function(a){1<=a.length?d():setTimeout(f,25)},function(){e()})}f()}),e=null,f=new Promise(function(a,d){e=setTimeout(d,b.f)});Promise.race([f,d]).then(function(){e&&(clearTimeout(e),e=null);b.g(b.a)},function(){b.j(b.a)})};function Q(a,b,c,d,e,f,g){this.v=a;this.B=b;this.c=c;this.a=d;this.s=g||"BESbswy";this.f={};this.w=e||3E3;this.u=f||null;this.m=this.j=this.h=this.g=null;this.g=new M(this.c,this.s);this.h=new M(this.c,this.s);this.j=new M(this.c,this.s);this.m=new M(this.c,this.s);a=new G(this.a.c+",serif",J(this.a));a=O(a);this.g.a.style.cssText=a;a=new G(this.a.c+",sans-serif",J(this.a));a=O(a);this.h.a.style.cssText=a;a=new G("serif",J(this.a));a=O(a);this.j.a.style.cssText=a;a=new G("sans-serif",J(this.a));a=
-O(a);this.m.a.style.cssText=a;N(this.g);N(this.h);N(this.j);N(this.m)}var R={D:"serif",C:"sans-serif"},S=null;function T(){if(null===S){var a=/AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent);S=!!a&&(536>parseInt(a[1],10)||536===parseInt(a[1],10)&&11>=parseInt(a[2],10))}return S}Q.prototype.start=function(){this.f.serif=this.j.a.offsetWidth;this.f["sans-serif"]=this.m.a.offsetWidth;this.A=q();U(this)};
-function la(a,b,c){for(var d in R)if(R.hasOwnProperty(d)&&b===a.f[R[d]]&&c===a.f[R[d]])return!0;return!1}function U(a){var b=a.g.a.offsetWidth,c=a.h.a.offsetWidth,d;(d=b===a.f.serif&&c===a.f["sans-serif"])||(d=T()&&la(a,b,c));d?q()-a.A>=a.w?T()&&la(a,b,c)&&(null===a.u||a.u.hasOwnProperty(a.a.c))?V(a,a.v):V(a,a.B):ma(a):V(a,a.v)}function ma(a){setTimeout(p(function(){U(this)},a),50)}function V(a,b){setTimeout(p(function(){v(this.g.a);v(this.h.a);v(this.j.a);v(this.m.a);b(this.a)},a),0)};function W(a,b,c){this.c=a;this.a=b;this.f=0;this.m=this.j=!1;this.s=c}var X=null;W.prototype.g=function(a){var b=this.a;b.g&&w(b.f,[b.a.c("wf",a.c,J(a).toString(),"active")],[b.a.c("wf",a.c,J(a).toString(),"loading"),b.a.c("wf",a.c,J(a).toString(),"inactive")]);K(b,"fontactive",a);this.m=!0;na(this)};
-W.prototype.h=function(a){var b=this.a;if(b.g){var c=y(b.f,b.a.c("wf",a.c,J(a).toString(),"active")),d=[],e=[b.a.c("wf",a.c,J(a).toString(),"loading")];c||d.push(b.a.c("wf",a.c,J(a).toString(),"inactive"));w(b.f,d,e)}K(b,"fontinactive",a);na(this)};function na(a){0==--a.f&&a.j&&(a.m?(a=a.a,a.g&&w(a.f,[a.a.c("wf","active")],[a.a.c("wf","loading"),a.a.c("wf","inactive")]),K(a,"active")):L(a.a))};function oa(a){this.j=a;this.a=new ja;this.h=0;this.f=this.g=!0}oa.prototype.load=function(a){this.c=new ca(this.j,a.context||this.j);this.g=!1!==a.events;this.f=!1!==a.classes;pa(this,new ha(this.c,a),a)};
-function qa(a,b,c,d,e){var f=0==--a.h;(a.f||a.g)&&setTimeout(function(){var a=e||null,m=d||null||{};if(0===c.length&&f)L(b.a);else{b.f+=c.length;f&&(b.j=f);var h,l=[];for(h=0;h<c.length;h++){var k=c[h],n=m[k.c],r=b.a,x=k;r.g&&w(r.f,[r.a.c("wf",x.c,J(x).toString(),"loading")]);K(r,"fontloading",x);r=null;if(null===X)if(window.FontFace){var x=/Gecko.*Firefox\/(\d+)/.exec(window.navigator.userAgent),xa=/OS X.*Version\/10\..*Safari/.exec(window.navigator.userAgent)&&/Apple/.exec(window.navigator.vendor);
-X=x?42<parseInt(x[1],10):xa?!1:!0}else X=!1;X?r=new P(p(b.g,b),p(b.h,b),b.c,k,b.s,n):r=new Q(p(b.g,b),p(b.h,b),b.c,k,b.s,a,n);l.push(r)}for(h=0;h<l.length;h++)l[h].start()}},0)}function pa(a,b,c){var d=[],e=c.timeout;ia(b);var d=ka(a.a,c,a.c),f=new W(a.c,b,e);a.h=d.length;b=0;for(c=d.length;b<c;b++)d[b].load(function(b,d,c){qa(a,f,b,d,c)})};function ra(a,b){this.c=a;this.a=b}
-ra.prototype.load=function(a){function b(){if(f["__mti_fntLst"+d]){var c=f["__mti_fntLst"+d](),e=[],h;if(c)for(var l=0;l<c.length;l++){var k=c[l].fontfamily;void 0!=c[l].fontStyle&&void 0!=c[l].fontWeight?(h=c[l].fontStyle+c[l].fontWeight,e.push(new G(k,h))):e.push(new G(k))}a(e)}else setTimeout(function(){b()},50)}var c=this,d=c.a.projectId,e=c.a.version;if(d){var f=c.c.o;A(this.c,(c.a.api||"https://fast.fonts.net/jsapi")+"/"+d+".js"+(e?"?v="+e:""),function(e){e?a([]):(f["__MonotypeConfiguration__"+
-d]=function(){return c.a},b())}).id="__MonotypeAPIScript__"+d}else a([])};function sa(a,b){this.c=a;this.a=b}sa.prototype.load=function(a){var b,c,d=this.a.urls||[],e=this.a.families||[],f=this.a.testStrings||{},g=new B;b=0;for(c=d.length;b<c;b++)z(this.c,d[b],C(g));var m=[];b=0;for(c=e.length;b<c;b++)if(d=e[b].split(":"),d[1])for(var h=d[1].split(","),l=0;l<h.length;l+=1)m.push(new G(d[0],h[l]));else m.push(new G(d[0]));E(g,function(){a(m,f)})};function ta(a,b){a?this.c=a:this.c=ua;this.a=[];this.f=[];this.g=b||""}var ua="https://fonts.googleapis.com/css";function va(a,b){for(var c=b.length,d=0;d<c;d++){var e=b[d].split(":");3==e.length&&a.f.push(e.pop());var f="";2==e.length&&""!=e[1]&&(f=":");a.a.push(e.join(f))}}
-function wa(a){if(0==a.a.length)throw Error("No fonts to load!");if(-1!=a.c.indexOf("kit="))return a.c;for(var b=a.a.length,c=[],d=0;d<b;d++)c.push(a.a[d].replace(/ /g,"+"));b=a.c+"?family="+c.join("%7C");0<a.f.length&&(b+="&subset="+a.f.join(","));0<a.g.length&&(b+="&text="+encodeURIComponent(a.g));return b};function ya(a){this.f=a;this.a=[];this.c={}}
-var za={latin:"BESbswy","latin-ext":"\u00e7\u00f6\u00fc\u011f\u015f",cyrillic:"\u0439\u044f\u0416",greek:"\u03b1\u03b2\u03a3",khmer:"\u1780\u1781\u1782",Hanuman:"\u1780\u1781\u1782"},Aa={thin:"1",extralight:"2","extra-light":"2",ultralight:"2","ultra-light":"2",light:"3",regular:"4",book:"4",medium:"5","semi-bold":"6",semibold:"6","demi-bold":"6",demibold:"6",bold:"7","extra-bold":"8",extrabold:"8","ultra-bold":"8",ultrabold:"8",black:"9",heavy:"9",l:"3",r:"4",b:"7"},Ba={i:"i",italic:"i",n:"n",normal:"n"},
-Ca=/^(thin|(?:(?:extra|ultra)-?)?light|regular|book|medium|(?:(?:semi|demi|extra|ultra)-?)?bold|black|heavy|l|r|b|[1-9]00)?(n|i|normal|italic)?$/;
-function Da(a){for(var b=a.f.length,c=0;c<b;c++){var d=a.f[c].split(":"),e=d[0].replace(/\+/g," "),f=["n4"];if(2<=d.length){var g;var m=d[1];g=[];if(m)for(var m=m.split(","),h=m.length,l=0;l<h;l++){var k;k=m[l];if(k.match(/^[\w-]+$/)){var n=Ca.exec(k.toLowerCase());if(null==n)k="";else{k=n[2];k=null==k||""==k?"n":Ba[k];n=n[1];if(null==n||""==n)n="4";else var r=Aa[n],n=r?r:isNaN(n)?"4":n.substr(0,1);k=[k,n].join("")}}else k="";k&&g.push(k)}0<g.length&&(f=g);3==d.length&&(d=d[2],g=[],d=d?d.split(","):
-g,0<d.length&&(d=za[d[0]])&&(a.c[e]=d))}a.c[e]||(d=za[e])&&(a.c[e]=d);for(d=0;d<f.length;d+=1)a.a.push(new G(e,f[d]))}};function Ea(a,b){this.c=a;this.a=b}var Fa={Arimo:!0,Cousine:!0,Tinos:!0};Ea.prototype.load=function(a){var b=new B,c=this.c,d=new ta(this.a.api,this.a.text),e=this.a.families;va(d,e);var f=new ya(e);Da(f);z(c,wa(d),C(b));E(b,function(){a(f.a,f.c,Fa)})};function Ga(a,b){this.c=a;this.a=b}Ga.prototype.load=function(a){var b=this.a.id,c=this.c.o;b?A(this.c,(this.a.api||"https://use.typekit.net")+"/"+b+".js",function(b){if(b)a([]);else if(c.Typekit&&c.Typekit.config&&c.Typekit.config.fn){b=c.Typekit.config.fn;for(var e=[],f=0;f<b.length;f+=2)for(var g=b[f],m=b[f+1],h=0;h<m.length;h++)e.push(new G(g,m[h]));try{c.Typekit.load({events:!1,classes:!1,async:!0})}catch(l){}a(e)}},2E3):a([])};function Ha(a,b){this.c=a;this.f=b;this.a=[]}Ha.prototype.load=function(a){var b=this.f.id,c=this.c.o,d=this;b?(c.__webfontfontdeckmodule__||(c.__webfontfontdeckmodule__={}),c.__webfontfontdeckmodule__[b]=function(b,c){for(var g=0,m=c.fonts.length;g<m;++g){var h=c.fonts[g];d.a.push(new G(h.name,ga("font-weight:"+h.weight+";font-style:"+h.style)))}a(d.a)},A(this.c,(this.f.api||"https://f.fontdeck.com/s/css/js/")+ea(this.c)+"/"+b+".js",function(b){b&&a([])})):a([])};var Y=new oa(window);Y.a.c.custom=function(a,b){return new sa(b,a)};Y.a.c.fontdeck=function(a,b){return new Ha(b,a)};Y.a.c.monotype=function(a,b){return new ra(b,a)};Y.a.c.typekit=function(a,b){return new Ga(b,a)};Y.a.c.google=function(a,b){return new Ea(b,a)};var Z={load:p(Y.load,Y)}; true?!(__WEBPACK_AMD_DEFINE_RESULT__ = (function(){return Z}).call(exports, __webpack_require__, exports, module),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):undefined;}());
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class UIEntitiy {
+  constructor(options) {
+    this.x = options.x;
+    this.y = options.y;
+    this.xLen = options.xLen;
+    this.yLen = options.yLen;
+    this.canvas = document.getElementById('game-canvas');
+    this.defaultColor = options.color || 'yellow'
+    // this.active = options.active
 
+    this.context = options.context;
+
+    this.draw = this.draw.bind(this);
+  }
+
+  draw(viewPort) {
+    //check if sprite, else draw default color box
+    this.context.fillStyle = this.defaultColor;
+    this.context.fillRect(this.x, this.y, this.xLen, this.yLen);
+  }
+
+  update(viewPort) {
+    this.draw(viewPort);
+  }
+
+
+  
+
+  positionMeeting(x, y, obj) {
+    if ((x + this.xLen > obj.x && x < obj.x + obj.xLen) &&
+      (y + this.yLen > obj.y && y < obj.y + obj.yLen)
+    ) {
+      return true;
+    } // end of if
+    return false;
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (UIEntitiy);
 
 /***/ })
 
