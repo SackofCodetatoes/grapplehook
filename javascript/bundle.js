@@ -450,6 +450,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
+const startLives = 5;
 
 
 class Game {
@@ -467,8 +468,12 @@ class Game {
     this.background = background;
     this.keyCodePress = {13: false}
     this.score = 0;
-    
+    this.lives = startLives;
+    this.playerStart = {x: 0, y: 0};
+    this.maxCoins = 0;
+    this.gameover = 0;
     this.gameState = 0;
+
     //state 0 = title screen, state 1 = active, possibly each state represents a level?
     
     this.platforms = [];
@@ -491,6 +496,11 @@ class Game {
     document.addEventListener('keydown', (event) => {
       if(event.keyCode === 13){
         this.keyCodePress['enter'] = true;
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if(event.keyCode === 13){
+        this.keyCodePress['enter'] = false;
       }
     });
     //add keybind to change states
@@ -525,6 +535,8 @@ class Game {
   initialize(){
     // debugSeed(this);
     Object(_levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__["default"])(this);
+    this.maxCoins = this.coins.length;
+    this.playerStart = {x: this.player.x, y: this.player.y};
 
   }
 
@@ -540,6 +552,12 @@ class Game {
     this.entities = Object.values(this.activeEntities)
   }
 
+  resetGame(){
+    this.lives = startLives;
+    this.gameover = 0;
+    this.initialize();
+  }
+
   //main game logic loop
   update(){
     //each game step
@@ -551,6 +569,15 @@ class Game {
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
       this.context.fillText("GrappleHook", 120, 150);
+      
+      
+      this.context.font = "32px Montserrat";
+      this.context.fillText("Press 'A' and 'D' to move Left and Right", 150, 240);
+      this.context.fillText("Press the Space Bar to Jump", 150, 280);
+      this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
+      this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+
+      this.context.fillText("Collect all the Coins to win!", 150, 500);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
@@ -580,6 +607,7 @@ class Game {
 
       //game logic
       case 1: 
+      
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
@@ -608,29 +636,61 @@ class Game {
       //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
       for(let i = 0; i < this.coins.length; i++){
         if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
-            this.score += 10;
+            this.score += 1;
             this.coins[i].active = false;
           }
         }
         //draw in game UI (score)
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
-        this.context.fillText(`Points: ${this.score}`, this.canvas.attributes.width.value - 220, 100);
+        this.context.fillText(`Lives: ${this.lives}`, 100, 100);
+        this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
         
         //draw cursor infront
         this.cursor.draw();
         
-
-        if(this.player.y > 1200){
-          this.initialize();
+        
+        if(this.score === this.maxCoins){
+          this.context.fillStyle = "rgba(0, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`You Win!`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if (this.keyCodePress.enter) {
+            this.resetGame();
+          }
+        }
+        else if(this.player.y > 1100){
+          if(this.lives > 0){
+            this.lives--;
+            // this.initialize();
+            this.player.x = this.playerStart.x;
+            this.player.y = this.playerStart.y;
+          }
+          else {
+            this.gameover = 1;
+          }
+        }
+        if(this.gameover){
+          //dark overlay with gameover and enable press enter to restart
+          this.player.x = 0;
+          this.player.y = 1100
+          this.context.fillStyle = "rgba(200, 200, 200, 0.5)"
+          this.context.fillRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+          this.context.fillStyle = 'white'
+          this.context.fillText(`Game Over`, 400, 300);
+          this.context.fillText(`Press Enter to Restart`, 400, 350);
+          if(this.keyCodePress.enter){
+            this.resetGame();
+          }
         }
         break;
       }
+      
+    }
+
+
     
-  }
-
-
-
   physicsCollision(x, y, obj){
     //check collision with physics objs
     for (let i = 0; i < this.physicsObjs.length; i++) {
@@ -924,6 +984,7 @@ __webpack_require__.r(__webpack_exports__);
 const levelOneSeed = function (game) {
   //give each object an id
   let coinConfig, coin, platformConfig, platform;
+  game.score = 0;
   game.entities = [];
   game.platforms = [];
   game.coins = [];
@@ -1018,7 +1079,7 @@ const levelOneSeed = function (game) {
   game.entities.push(platform);
 
   platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-    x: 2990,
+    x: 2790,
     y: 608,
     xLen: 64,
     yLen: 32,

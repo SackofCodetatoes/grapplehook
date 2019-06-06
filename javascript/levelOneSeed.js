@@ -10,6 +10,7 @@ import Coin from "./coin.js";
 const levelOneSeed = function (game) {
   //give each object an id
   let coinConfig, coin, platformConfig, platform;
+  game.score = 0;
   game.entities = [];
   game.platforms = [];
   game.coins = [];
@@ -104,7 +105,7 @@ const levelOneSeed = function (game) {
   game.entities.push(platform);
 
   platform = new Platform({
-    x: 2990,
+    x: 2790,
     y: 608,
     xLen: 64,
     yLen: 32,
