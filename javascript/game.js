@@ -65,7 +65,7 @@ class Game {
     window.onkeydown = function (event) {
       console.log('prevent input');
       //prevent screen from moving
-      // return (!event.keycode == 32);
+      return (!event.keycode == 32);
     }
     let cursorConfig = {
       x: 300,
