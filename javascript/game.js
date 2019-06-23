@@ -63,10 +63,13 @@ class Game {
     });
     //add keybind to change states
     window.onkeydown = function (event) {
-      console.log('prevent input');
-      //prevent screen from moving
-      return (!event.keycode == 32);
+      //prevent screen from moving      
+      if(!event.keycode == 32) {
+        event.preventDefault();
+      }
     }
+
+    
     let cursorConfig = {
       x: 300,
       y: 300,

@@ -4,6 +4,11 @@ body {
 
 #game-canvas{
   border-radius: 5px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
 #game-canvas:hover {
   cursor: none;
