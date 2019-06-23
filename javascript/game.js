@@ -171,7 +171,7 @@ class Game {
       
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
+      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9, 8192, 1020);
       
       this.applyGravity();
       
