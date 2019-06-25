@@ -25,8 +25,9 @@ class Game {
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
     
-    
     this.audioPlayer = new audioPlayer();
+
+
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -63,6 +64,10 @@ class Game {
       //keycode 77 == m
       if(event.keyCode === 77){
         //add delay from player controls to prevent continuos toggle?
+        //Initial start to music
+        if(!this.audioPlayer.playing){
+          this.audioPlayer.play();
+        }
         this.audioPlayer.toggleMute();
       }
     });
@@ -136,7 +141,7 @@ class Game {
       //start screen
       case 0: 
 
-      this.audioPlayer.playMusic('title');
+      // this.audioPlayer.playMusic('title');
 
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
@@ -159,6 +164,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();
       }

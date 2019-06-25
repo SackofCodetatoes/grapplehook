@@ -99,12 +99,22 @@ class audioPlayer {
 
   constructor(){
     this.audio = {}
-    this.muted = 0;
+    this.muted = 1;
+    this.playing = 0;
+    this.currentBGM;
 
     this.audio['title'] = document.querySelector('audio[data-sound="title"]');
     this.audio['level_1'] = document.querySelector('audio[data-sound="level_1"]');
     this.audio['jump'] = document.querySelector('audio[data-sound="jump"]');
+    this.toggleMute();
     
+    this.currentBGM = this.audio['title'];
+    
+  }
+
+  play(){
+    this.playing = 1;
+    this.currentBGM.play();
   }
 
   playEffect(effect){
@@ -112,10 +122,23 @@ class audioPlayer {
     this.audio[`${effect}`].play();
   }
 
-  playMusic(name){      
+  playMusic(name){  
     this.audio[`${name}`].play();
-    
+  }
 
+  changeMusicTo(name){
+    if (!this.audio[`${name}`]) {
+      return;
+    }
+    if(this.currentBGM){
+      this.currentBGM.pause;
+    }
+
+    this.currentBGM = this.audio[`${name}`];
+    this.currentBGM.currentTime = 0;
+    this.currentBGM.loop = 1;
+    this.currentBGM.play();
+    
   }
 
   toggleMute(){
@@ -518,8 +541,9 @@ class Game {
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
     
-    
     this.audioPlayer = new _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
+
+
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -556,6 +580,10 @@ class Game {
       //keycode 77 == m
       if(event.keyCode === 77){
         //add delay from player controls to prevent continuos toggle?
+        //Initial start to music
+        if(!this.audioPlayer.playing){
+          this.audioPlayer.play();
+        }
         this.audioPlayer.toggleMute();
       }
     });
@@ -629,7 +657,7 @@ class Game {
       //start screen
       case 0: 
 
-      this.audioPlayer.playMusic('title');
+      // this.audioPlayer.playMusic('title');
 
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
@@ -652,6 +680,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();
       }
