@@ -102,10 +102,14 @@ class audioPlayer {
     this.muted = 1;
     this.playing = 0;
     this.currentBGM;
+    this.text = 'unmute';
 
     this.audio['title'] = document.querySelector('audio[data-sound="title"]');
     this.audio['level_1'] = document.querySelector('audio[data-sound="level_1"]');
     this.audio['jump'] = document.querySelector('audio[data-sound="jump"]');
+    this.audio['coin'] = document.querySelector('audio[data-sound="coin"]');
+    this.audio['hurt'] = document.querySelector('audio[data-sound="hurt"]');
+    this.audio['fire'] = document.querySelector('audio[data-sound="fire"]');
     this.toggleMute();
     
     this.currentBGM = this.audio['title'];
@@ -131,7 +135,8 @@ class audioPlayer {
       return;
     }
     if(this.currentBGM){
-      this.currentBGM.pause;
+      console.log('trigger?')
+      this.currentBGM.pause();
     }
 
     this.currentBGM = this.audio[`${name}`];
@@ -143,7 +148,12 @@ class audioPlayer {
 
   toggleMute(){
     this.muted = !this.muted;
-
+    if(!this.muted){
+      this.text = 'unmute';
+    }
+    else{
+      this.text = 'mute';
+    }
     let keys = Object.keys(this.audio);
     for(let i = 0; i < keys.length; i++){
       this.audio[keys[i]].volume = this.muted; 
@@ -671,8 +681,9 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+      this.context.fillText("Press M to mute / unmute", 150, 440);
 
-      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      this.context.fillText("Collect all the Coins to win!", 150, 540);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
@@ -731,6 +742,7 @@ class Game {
       //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
       for(let i = 0; i < this.coins.length; i++){
         if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.audioPlayer.playEffect('coin');
             this.score += 1;
             this.coins[i].active = false;
           }
@@ -744,6 +756,9 @@ class Game {
         this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        this.context.fillText(`M to ${this.audioPlayer.text}`, 100, 640);
+
+        
         
         this.context.shadowOffsetX = 0;
         this.context.shadowOffsetY = 0;
@@ -763,6 +778,7 @@ class Game {
           }
         }
         else if(this.player.y > 1100){
+          this.audioPlayer.playEffect('hurt');
           if(this.lives > 0){
             this.lives--;
             // this.initialize();
@@ -2079,7 +2095,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-
+      this.audioPlayer.playEffect('fire');
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;

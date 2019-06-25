@@ -155,8 +155,9 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+      this.context.fillText("Press M to mute / unmute", 150, 440);
 
-      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      this.context.fillText("Collect all the Coins to win!", 150, 540);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
@@ -215,6 +216,7 @@ class Game {
       //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
       for(let i = 0; i < this.coins.length; i++){
         if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.audioPlayer.playEffect('coin');
             this.score += 1;
             this.coins[i].active = false;
           }
@@ -228,6 +230,9 @@ class Game {
         this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        this.context.fillText(`M to ${this.audioPlayer.text}`, 100, 640);
+
+        
         
         this.context.shadowOffsetX = 0;
         this.context.shadowOffsetY = 0;
@@ -247,6 +252,7 @@ class Game {
           }
         }
         else if(this.player.y > 1100){
+          this.audioPlayer.playEffect('hurt');
           if(this.lives > 0){
             this.lives--;
             // this.initialize();

@@ -86,7 +86,7 @@ class Player extends GameEntity {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-
+      this.audioPlayer.playEffect('fire');
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;

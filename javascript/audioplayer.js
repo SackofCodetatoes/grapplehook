@@ -5,10 +5,14 @@ class audioPlayer {
     this.muted = 1;
     this.playing = 0;
     this.currentBGM;
+    this.text = 'unmute';
 
     this.audio['title'] = document.querySelector('audio[data-sound="title"]');
     this.audio['level_1'] = document.querySelector('audio[data-sound="level_1"]');
     this.audio['jump'] = document.querySelector('audio[data-sound="jump"]');
+    this.audio['coin'] = document.querySelector('audio[data-sound="coin"]');
+    this.audio['hurt'] = document.querySelector('audio[data-sound="hurt"]');
+    this.audio['fire'] = document.querySelector('audio[data-sound="fire"]');
     this.toggleMute();
     
     this.currentBGM = this.audio['title'];
@@ -34,7 +38,8 @@ class audioPlayer {
       return;
     }
     if(this.currentBGM){
-      this.currentBGM.pause;
+      console.log('trigger?')
+      this.currentBGM.pause();
     }
 
     this.currentBGM = this.audio[`${name}`];
@@ -46,7 +51,12 @@ class audioPlayer {
 
   toggleMute(){
     this.muted = !this.muted;
-
+    if(!this.muted){
+      this.text = 'unmute';
+    }
+    else{
+      this.text = 'mute';
+    }
     let keys = Object.keys(this.audio);
     for(let i = 0; i < keys.length; i++){
       this.audio[keys[i]].volume = this.muted; 
