@@ -801,11 +801,7 @@ const levelOneSeed = function (game) {
 
 
 
-
-
-
-
-
+  
   
   //offset is temporary fix to platform placements
   let offset = 150;
@@ -824,6 +820,7 @@ const levelOneSeed = function (game) {
     // addEntity: game.addEntity,  //inteded to add hok atfirst
     deleteEntity: game.deleteEntity,
     image: game.spriteSheet,
+    audioPlayer: game.audioPlayer,
   }
 
   let hookConfig = {

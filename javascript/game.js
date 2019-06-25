@@ -7,6 +7,8 @@ import Cursor from "./cursor.js";
 import Coin from "./coin.js";
 import debugSeed from "./debug.js";
 import levelOneSeed from "./levelOneSeed.js";
+import audioPlayer from "./audioplayer.js";
+
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 const startLives = 5;
 
@@ -16,12 +18,15 @@ class Game {
    //preload 
     const spriteSheet = new Image();
     const background = new Image();
+    
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
     
+    
+    this.audioPlayer = new audioPlayer();
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -54,6 +59,11 @@ class Game {
     document.addEventListener('keydown', (event) => {
       if(event.keyCode === 13){
         this.keyCodePress['enter'] = true;
+      }
+      //keycode 77 == m
+      if(event.keyCode === 77){
+        //add delay from player controls to prevent continuos toggle?
+        this.audioPlayer.toggleMute();
       }
     });
     document.addEventListener('keyup', (event) => {
@@ -125,6 +135,9 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+
+      this.audioPlayer.playMusic('title');
+
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
       this.context.fillStyle = 'white'
@@ -168,7 +181,6 @@ class Game {
 
       //game logic
       case 1: 
-      
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9, 8192, 1020);
@@ -204,9 +216,16 @@ class Game {
         //draw in game UI (score)
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
+        this.context.shadowOffsetX = 3;
+        this.context.shadowOffsetY = 3;
+        this.context.shadowColor = "rgba(0,0,0,0.3)";
+        this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
         
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+
         //draw cursor infront
         this.cursor.draw();
         

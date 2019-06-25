@@ -27,7 +27,8 @@ class Display {
 
   render(){
     //create request animation loop
-    this.context.clearRect(0, 0, 1280, 720);
+    this.context.clearRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+    // this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
     // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 

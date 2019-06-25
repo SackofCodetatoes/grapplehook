@@ -22,10 +22,13 @@ class Player extends GameEntity {
     // this.rotateSpd = 0.05;
     this.rotateSpd = 0.05;
 
+    this.audioPlayer = options.audioPlayer;
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
+    
+
 
     //limit rope length to 300
 
@@ -150,7 +153,11 @@ class Player extends GameEntity {
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.audioPlayer.playEffect('jump');
+       
        this.playerInput.canJump = false;
+
+
      }
      if(this.state === 1){
         this.resetHook();

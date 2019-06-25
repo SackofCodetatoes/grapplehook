@@ -86,6 +86,55 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/audioplayer.js":
+/*!***********************************!*\
+  !*** ./javascript/audioplayer.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class audioPlayer {
+
+  constructor(){
+    this.audio = {}
+    this.muted = 0;
+
+    this.audio['title'] = document.querySelector('audio[data-sound="title"]');
+    this.audio['level_1'] = document.querySelector('audio[data-sound="level_1"]');
+    this.audio['jump'] = document.querySelector('audio[data-sound="jump"]');
+    
+  }
+
+  playEffect(effect){
+    this.audio[`${effect}`].currentTime = 0;
+    this.audio[`${effect}`].play();
+  }
+
+  playMusic(name){      
+    this.audio[`${name}`].play();
+    
+
+  }
+
+  toggleMute(){
+    this.muted = !this.muted;
+
+    let keys = Object.keys(this.audio);
+    for(let i = 0; i < keys.length; i++){
+      this.audio[keys[i]].volume = this.muted; 
+    }
+  }
+
+
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (audioPlayer);
+
+/***/ }),
+
 /***/ "./javascript/camera.js":
 /*!******************************!*\
   !*** ./javascript/camera.js ***!
@@ -106,7 +155,7 @@ class Camera extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   draw(){
     this.context.beginPath();
-    this.context.rect(0, 0, 1280, 720);
+    this.context.rect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
     this.context.stroke();
   }
 }
@@ -406,7 +455,8 @@ class Display {
 
   render(){
     //create request animation loop
-    this.context.clearRect(0, 0, 1280, 720);
+    this.context.clearRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+    // this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
     // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
@@ -440,6 +490,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./debug.js */ "./javascript/debug.js");
 /* harmony import */ var _levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./levelOneSeed.js */ "./javascript/levelOneSeed.js");
+/* harmony import */ var _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./audioplayer.js */ "./javascript/audioplayer.js");
+
+
 
 
 
@@ -458,12 +511,15 @@ class Game {
    //preload 
     const spriteSheet = new Image();
     const background = new Image();
+    
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
     background.src = "./images/city_background_night.png";
     
+    
+    this.audioPlayer = new _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -496,6 +552,11 @@ class Game {
     document.addEventListener('keydown', (event) => {
       if(event.keyCode === 13){
         this.keyCodePress['enter'] = true;
+      }
+      //keycode 77 == m
+      if(event.keyCode === 77){
+        //add delay from player controls to prevent continuos toggle?
+        this.audioPlayer.toggleMute();
       }
     });
     document.addEventListener('keyup', (event) => {
@@ -567,6 +628,9 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
+
+      this.audioPlayer.playMusic('title');
+
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
       this.context.fillStyle = 'white'
@@ -610,7 +674,6 @@ class Game {
 
       //game logic
       case 1: 
-      
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
       this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9, 8192, 1020);
@@ -646,9 +709,16 @@ class Game {
         //draw in game UI (score)
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
+        this.context.shadowOffsetX = 3;
+        this.context.shadowOffsetY = 3;
+        this.context.shadowColor = "rgba(0,0,0,0.3)";
+        this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
         
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+
         //draw cursor infront
         this.cursor.draw();
         
@@ -1778,11 +1848,7 @@ const levelOneSeed = function (game) {
 
 
 
-
-
-
-
-
+  
   
   //offset is temporary fix to platform placements
   let offset = 150;
@@ -1801,6 +1867,7 @@ const levelOneSeed = function (game) {
     // addEntity: game.addEntity,  //inteded to add hok atfirst
     deleteEntity: game.deleteEntity,
     image: game.spriteSheet,
+    audioPlayer: game.audioPlayer,
   }
 
   let hookConfig = {
@@ -1919,10 +1986,13 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // this.rotateSpd = 0.05;
     this.rotateSpd = 0.05;
 
+    this.audioPlayer = options.audioPlayer;
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
+    
+
 
     //limit rope length to 300
 
@@ -2047,7 +2117,11 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.audioPlayer.playEffect('jump');
+       
        this.playerInput.canJump = false;
+
+
      }
      if(this.state === 1){
         this.resetHook();
