@@ -122,6 +122,10 @@ class Player extends GameEntity {
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
     if(this.vspd !== 0){
       this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }

@@ -4,6 +4,7 @@ class audioPlayer {
     this.audio = {}
     this.muted = 1;
     this.playing = 0;
+    // this.volume = 0;
     this.currentBGM;
     this.text = 'unmute';
 
@@ -48,15 +49,32 @@ class audioPlayer {
     this.currentBGM.play();
     
   }
-
+  toggleVolume(){
+  }
+  
   toggleMute(){
-    this.muted = !this.muted;
-    if(!this.muted){
-      this.text = 'unmute';
+    if(!this.playing){return}
+    switch(this.muted){
+      case 1: 
+        this.muted = 0.5;
+        this.text = "Low"
+        break;
+      case 0.5: 
+        this.muted = 0;
+        this.text = "Muted"
+        break;
+      case 0:
+        this.muted = 1;
+        this.text = 'High'
+        break;
     }
-    else{
-      this.text = 'mute';
-    }
+    // this.muted = !this.muted;
+    // if(!this.muted){
+    //   this.text = 'unmute';
+    // }
+    // else{
+    //   this.text = 'mute';
+    // }
     let keys = Object.keys(this.audio);
     for(let i = 0; i < keys.length; i++){
       this.audio[keys[i]].volume = this.muted; 

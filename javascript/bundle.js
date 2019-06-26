@@ -101,6 +101,7 @@ class audioPlayer {
     this.audio = {}
     this.muted = 1;
     this.playing = 0;
+    // this.volume = 0;
     this.currentBGM;
     this.text = 'unmute';
 
@@ -145,15 +146,32 @@ class audioPlayer {
     this.currentBGM.play();
     
   }
-
+  toggleVolume(){
+  }
+  
   toggleMute(){
-    this.muted = !this.muted;
-    if(!this.muted){
-      this.text = 'unmute';
+    if(!this.playing){return}
+    switch(this.muted){
+      case 1: 
+        this.muted = 0.5;
+        this.text = "Low"
+        break;
+      case 0.5: 
+        this.muted = 0;
+        this.text = "Muted"
+        break;
+      case 0:
+        this.muted = 1;
+        this.text = 'High'
+        break;
     }
-    else{
-      this.text = 'mute';
-    }
+    // this.muted = !this.muted;
+    // if(!this.muted){
+    //   this.text = 'unmute';
+    // }
+    // else{
+    //   this.text = 'mute';
+    // }
     let keys = Object.keys(this.audio);
     for(let i = 0; i < keys.length; i++){
       this.audio[keys[i]].volume = this.muted; 
@@ -549,7 +567,7 @@ class Game {
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
-    background.src = "./images/city_background_night.png";
+    background.src = "./images/city_background_night_big.png";
     
     this.audioPlayer = new _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
 
@@ -592,9 +610,12 @@ class Game {
         //add delay from player controls to prevent continuos toggle?
         //Initial start to music
         if(!this.audioPlayer.playing){
+          this.audioPlayer.muted = 1;
           this.audioPlayer.play();
         }
-        this.audioPlayer.toggleMute();
+        else{
+          this.audioPlayer.toggleMute();
+        }
       }
     });
     document.addEventListener('keyup', (event) => {
@@ -669,7 +690,7 @@ class Game {
 
       // this.audioPlayer.playMusic('title');
 
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x, -this.viewPort.y - 850, 8192, 2324);
 
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
@@ -681,7 +702,7 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
-      this.context.fillText("Press M to mute / unmute", 150, 440);
+      this.context.fillText("Press M to toggle Volume", 150, 440);
 
       this.context.fillText("Collect all the Coins to win!", 150, 540);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
@@ -716,7 +737,7 @@ class Game {
       case 1: 
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9 - 850, 8192, 2324);
       
       this.applyGravity();
       
@@ -756,7 +777,7 @@ class Game {
         this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
-        this.context.fillText(`M to ${this.audioPlayer.text}`, 100, 640);
+        this.context.fillText(`M to toggle Volume: ${this.audioPlayer.text}`, 100, 640);
 
         
         
@@ -1116,16 +1137,7 @@ const levelOneSeed = function (game) {
   // };
   // ===============================================================
   //Seed Platforms
-  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-    x: 0,
-    y: 992,
-    xLen: 2336,
-    yLen: 64,
-    context: game.context
-  })
-  game.platforms.push(platform);
-  game.entities.push(platform);
-
+  
   platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
     x: 1152,
     y: 800,
@@ -1146,6 +1158,15 @@ const levelOneSeed = function (game) {
   game.platforms.push(platform);
   game.entities.push(platform);
   
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
   platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
     x: 1728,
     y: 928,
@@ -1893,7 +1914,7 @@ const levelOneSeed = function (game) {
 
 
 
-  
+
   
   //offset is temporary fix to platform placements
   let offset = 150;
@@ -1989,7 +2010,17 @@ class Platform extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     super(options);
   }
 
+  draw(viewPort){
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
 
+    this.context.fillStyle = this.defaultColor;
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.xLen, this.yLen);
+    this.context.shadowOffsetX = 0;
+    this.context.shadowOffsetY = 0;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Platform);
@@ -2131,6 +2162,10 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
     if(this.vspd !== 0){
       this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }

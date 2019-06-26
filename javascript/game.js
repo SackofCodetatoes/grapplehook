@@ -23,7 +23,7 @@ class Game {
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
-    background.src = "./images/city_background_night.png";
+    background.src = "./images/city_background_night_big.png";
     
     this.audioPlayer = new audioPlayer();
 
@@ -66,9 +66,12 @@ class Game {
         //add delay from player controls to prevent continuos toggle?
         //Initial start to music
         if(!this.audioPlayer.playing){
+          this.audioPlayer.muted = 1;
           this.audioPlayer.play();
         }
-        this.audioPlayer.toggleMute();
+        else{
+          this.audioPlayer.toggleMute();
+        }
       }
     });
     document.addEventListener('keyup', (event) => {
@@ -143,7 +146,7 @@ class Game {
 
       // this.audioPlayer.playMusic('title');
 
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x, -this.viewPort.y - 850, 8192, 2324);
 
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
@@ -155,7 +158,7 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
-      this.context.fillText("Press M to mute / unmute", 150, 440);
+      this.context.fillText("Press M to toggle Volume", 150, 440);
 
       this.context.fillText("Collect all the Coins to win!", 150, 540);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
@@ -190,7 +193,7 @@ class Game {
       case 1: 
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9 - 850, 8192, 2324);
       
       this.applyGravity();
       
@@ -230,7 +233,7 @@ class Game {
         this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
-        this.context.fillText(`M to ${this.audioPlayer.text}`, 100, 640);
+        this.context.fillText(`M to toggle Volume: ${this.audioPlayer.text}`, 100, 640);
 
         
         
