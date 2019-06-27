@@ -697,6 +697,8 @@ class Game {
       this.context.fillText("Press M to toggle Volume", 150, 440);
 
       this.context.fillText("Collect all the Coins to win!", 150, 540);
+
+      this.context.fillText("Credits + Info in HTML elements! Chrome: CTRL + SHIFT + I", 150, 580);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
