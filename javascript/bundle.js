@@ -146,8 +146,6 @@ class audioPlayer {
     this.currentBGM.play();
     
   }
-  toggleVolume(){
-  }
   
   toggleMute(){
     if(!this.playing){return}
@@ -165,13 +163,7 @@ class audioPlayer {
         this.text = 'High'
         break;
     }
-    // this.muted = !this.muted;
-    // if(!this.muted){
-    //   this.text = 'unmute';
-    // }
-    // else{
-    //   this.text = 'mute';
-    // }
+
     let keys = Object.keys(this.audio);
     for(let i = 0; i < keys.length; i++){
       this.audio[keys[i]].volume = this.muted; 
