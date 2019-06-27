@@ -22,10 +22,13 @@ class Player extends GameEntity {
     // this.rotateSpd = 0.05;
     this.rotateSpd = 0.05;
 
+    this.audioPlayer = options.audioPlayer;
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
+    
+
 
     //limit rope length to 300
 
@@ -83,7 +86,7 @@ class Player extends GameEntity {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-
+      this.audioPlayer.playEffect('fire');
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
@@ -119,6 +122,10 @@ class Player extends GameEntity {
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
     if(this.vspd !== 0){
       this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
@@ -150,7 +157,11 @@ class Player extends GameEntity {
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.audioPlayer.playEffect('jump');
+       
        this.playerInput.canJump = false;
+
+
      }
      if(this.state === 1){
         this.resetHook();

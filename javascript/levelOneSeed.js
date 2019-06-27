@@ -24,16 +24,7 @@ const levelOneSeed = function (game) {
   // };
   // ===============================================================
   //Seed Platforms
-  platform = new Platform({
-    x: 0,
-    y: 992,
-    xLen: 2336,
-    yLen: 64,
-    context: game.context
-  })
-  game.platforms.push(platform);
-  game.entities.push(platform);
-
+  
   platform = new Platform({
     x: 1152,
     y: 800,
@@ -54,6 +45,15 @@ const levelOneSeed = function (game) {
   game.platforms.push(platform);
   game.entities.push(platform);
   
+  platform = new Platform({
+    x: 0,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
   platform = new Platform({
     x: 1728,
     y: 928,
@@ -802,10 +802,6 @@ const levelOneSeed = function (game) {
 
 
 
-
-
-
-
   
   //offset is temporary fix to platform placements
   let offset = 150;
@@ -824,6 +820,7 @@ const levelOneSeed = function (game) {
     // addEntity: game.addEntity,  //inteded to add hok atfirst
     deleteEntity: game.deleteEntity,
     image: game.spriteSheet,
+    audioPlayer: game.audioPlayer,
   }
 
   let hookConfig = {

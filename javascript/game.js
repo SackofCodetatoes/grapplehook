@@ -7,6 +7,8 @@ import Cursor from "./cursor.js";
 import Coin from "./coin.js";
 import debugSeed from "./debug.js";
 import levelOneSeed from "./levelOneSeed.js";
+import audioPlayer from "./audioplayer.js";
+
 const PLAYER_KEYS = ['a', 'd', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '];
 const startLives = 5;
 
@@ -16,12 +18,16 @@ class Game {
    //preload 
     const spriteSheet = new Image();
     const background = new Image();
+    
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
-    background.src = "./images/city_background_night.png";
+    background.src = "./images/city_background_night_big.png";
     
+    this.audioPlayer = new audioPlayer();
+
+
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -55,6 +61,18 @@ class Game {
       if(event.keyCode === 13){
         this.keyCodePress['enter'] = true;
       }
+      //keycode 77 == m
+      if(event.keyCode === 77){
+        //add delay from player controls to prevent continuos toggle?
+        //Initial start to music
+        if(!this.audioPlayer.playing){
+          this.audioPlayer.muted = 1;
+          this.audioPlayer.play();
+        }
+        else{
+          this.audioPlayer.toggleMute();
+        }
+      }
     });
     document.addEventListener('keyup', (event) => {
       if(event.keyCode === 13){
@@ -63,10 +81,13 @@ class Game {
     });
     //add keybind to change states
     window.onkeydown = function (event) {
-      console.log('prevent input');
-      //prevent screen from moving
-      return (!event.keycode == 32);
+      //prevent screen from moving      
+      if(!event.keycode == 32) {
+        event.preventDefault();
+      }
     }
+
+    
     let cursorConfig = {
       x: 300,
       y: 300,
@@ -122,7 +143,10 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
+      // this.audioPlayer.playMusic('title');
+
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x, -this.viewPort.y - 850, 8192, 2324);
 
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
@@ -134,8 +158,11 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+      this.context.fillText("Press M to toggle Volume", 150, 440);
 
-      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      this.context.fillText("Collect all the Coins to win!", 150, 540);
+
+      this.context.fillText("Credits + Info in HTML elements! Chrome: CTRL + SHIFT + I", 150, 580);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
@@ -143,6 +170,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();
       }
@@ -165,10 +193,9 @@ class Game {
 
       //game logic
       case 1: 
-      
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9 - 850, 8192, 2324);
       
       this.applyGravity();
       
@@ -194,6 +221,7 @@ class Game {
       //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
       for(let i = 0; i < this.coins.length; i++){
         if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.audioPlayer.playEffect('coin');
             this.score += 1;
             this.coins[i].active = false;
           }
@@ -201,9 +229,19 @@ class Game {
         //draw in game UI (score)
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
+        this.context.shadowOffsetX = 3;
+        this.context.shadowOffsetY = 3;
+        this.context.shadowColor = "rgba(0,0,0,0.3)";
+        this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        this.context.fillText(`M to toggle Volume: ${this.audioPlayer.text}`, 100, 640);
+
         
+        
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+
         //draw cursor infront
         this.cursor.draw();
         
@@ -219,6 +257,7 @@ class Game {
           }
         }
         else if(this.player.y > 1100){
+          this.audioPlayer.playEffect('hurt');
           if(this.lives > 0){
             this.lives--;
             // this.initialize();

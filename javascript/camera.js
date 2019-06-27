@@ -8,7 +8,7 @@ class Camera extends GameEntity {
 
   draw(){
     this.context.beginPath();
-    this.context.rect(0, 0, 1280, 720);
+    this.context.rect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
     this.context.stroke();
   }
 }

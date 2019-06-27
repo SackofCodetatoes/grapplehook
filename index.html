@@ -6,30 +6,35 @@
   <link rel="stylesheet" href="./style/style.css" type="text/css">
   <link rel="icon" type="image/png" href="images/player.png" />
   <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-  
+
+  <audio data-sound="global" class="muted" src=""></audio>
+  <audio data-sound="title" src="sounds/bensound-straight.mp3"></audio>
+  <audio data-sound="jump" src="sounds/jalastram_sfx-jump-14.wav"></audio>
+  <audio data-sound="level_1" src="sounds/bensound-badass.mp3"></audio>
+  <audio data-sound="coin" src="sounds/projectsu012__coins-1.wav"></audio>
+  <audio data-sound="hurt" src="sounds/341681__sharesynth__hurt04.wav"></audio>
+  <audio data-sound="fire" src="sounds/361636__josepharaoh99__8-bit-slam.mp3"></audio>
+
   <title>GrappleHook</title>
 </head>
 <body>
-<div>
-  <h1 class='title'>Grapple Hook</h1>
-</div>
-<div class="controls-div">
-  <label>Controls</label> 
-  <ul>
-    <li>Move with A and D</li>
-    <li>Jump with Space</li>
-    <li>Aim with your mouse!</li>
-    <li>Fire and Grapple by Left Mouse Click and Hold!</li>
-    <li>Release by letting go Left Mouse Button</li>
-  </ul>
-  <br>
-  <labe>Instructions</label>
-    <p>Maneuver and swing your way to the end!</p>
-</div>
+<!-- 
+  Asset + Sound Sources:
+* City Background from [OpenGameArt.org](https://opengameart.org/content/city-background-repetitive-3)
+* Character from [16x16 Industrial Tile Set](https://0x72.itch.io/16x16-industrial-tileset)
+* Title and Background Music from [bensound.com](www.bensound.com)
+* Sound effects from [freesound.org](https://freesound.org/) 
+-->
+<label style="display:none" for="Checkout the Github!">https://github.com/SackofCodetatoes/grapplehook</label>
+<label style="display:none" for="City Background">https://opengameart.org/content/city-background-repetitive-3</label>
+<label style="display:none" for="Character">https://0x72.itch.io/16x16-industrial-tileset</label>
+<label style="display:none" for="Music">www.bensound.com</label>
+<label style="display:none" for="Sounds Effects">https://freesound.org</label>
+
+
+
 <canvas id="game-canvas" width='1280' height='720'></canvas>
-<div class='text'>
-  <div class="description">Description: Oh no! You're running late to aA, swing through or face the strikes! <br>Swing as high as you want, but dont fall through the cracks! </div>
-</div>
+
 </body>
 <script type="application/javascript" src="javascript/bundle.js"></script>
 </html>

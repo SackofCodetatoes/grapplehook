@@ -86,6 +86,98 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./javascript/audioplayer.js":
+/*!***********************************!*\
+  !*** ./javascript/audioplayer.js ***!
+  \***********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class audioPlayer {
+
+  constructor(){
+    this.audio = {}
+    this.muted = 1;
+    this.playing = 0;
+    // this.volume = 0;
+    this.currentBGM;
+    this.text = 'unmute';
+
+    this.audio['title'] = document.querySelector('audio[data-sound="title"]');
+    this.audio['level_1'] = document.querySelector('audio[data-sound="level_1"]');
+    this.audio['jump'] = document.querySelector('audio[data-sound="jump"]');
+    this.audio['coin'] = document.querySelector('audio[data-sound="coin"]');
+    this.audio['hurt'] = document.querySelector('audio[data-sound="hurt"]');
+    this.audio['fire'] = document.querySelector('audio[data-sound="fire"]');
+    this.toggleMute();
+    
+    this.currentBGM = this.audio['title'];
+    
+  }
+
+  play(){
+    this.playing = 1;
+    this.currentBGM.play();
+  }
+
+  playEffect(effect){
+    this.audio[`${effect}`].currentTime = 0;
+    this.audio[`${effect}`].play();
+  }
+
+  playMusic(name){  
+    this.audio[`${name}`].play();
+  }
+
+  changeMusicTo(name){
+    if (!this.audio[`${name}`]) {
+      return;
+    }
+    if(this.currentBGM){
+      console.log('trigger?')
+      this.currentBGM.pause();
+    }
+
+    this.currentBGM = this.audio[`${name}`];
+    this.currentBGM.currentTime = 0;
+    this.currentBGM.loop = 1;
+    this.currentBGM.play();
+    
+  }
+  
+  toggleMute(){
+    if(!this.playing){return}
+    switch(this.muted){
+      case 1: 
+        this.muted = 0.5;
+        this.text = "Low"
+        break;
+      case 0.5: 
+        this.muted = 0;
+        this.text = "Muted"
+        break;
+      case 0:
+        this.muted = 1;
+        this.text = 'High'
+        break;
+    }
+
+    let keys = Object.keys(this.audio);
+    for(let i = 0; i < keys.length; i++){
+      this.audio[keys[i]].volume = this.muted; 
+    }
+  }
+
+
+
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (audioPlayer);
+
+/***/ }),
+
 /***/ "./javascript/camera.js":
 /*!******************************!*\
   !*** ./javascript/camera.js ***!
@@ -106,7 +198,7 @@ class Camera extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
 
   draw(){
     this.context.beginPath();
-    this.context.rect(0, 0, 1280, 720);
+    this.context.rect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
     this.context.stroke();
   }
 }
@@ -406,7 +498,8 @@ class Display {
 
   render(){
     //create request animation loop
-    this.context.clearRect(0, 0, 1280, 720);
+    this.context.clearRect(0, 0, this.canvas.attributes.width.value, this.canvas.attributes.height.value);
+    // this.context.clearRect(0, 0, 1280, 720);
     //draw UI (title screen, instructions, game)
     // this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
 
@@ -440,6 +533,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _coin_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./coin.js */ "./javascript/coin.js");
 /* harmony import */ var _debug_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./debug.js */ "./javascript/debug.js");
 /* harmony import */ var _levelOneSeed_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./levelOneSeed.js */ "./javascript/levelOneSeed.js");
+/* harmony import */ var _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./audioplayer.js */ "./javascript/audioplayer.js");
+
+
 
 
 
@@ -458,12 +554,16 @@ class Game {
    //preload 
     const spriteSheet = new Image();
     const background = new Image();
+    
     this.canvas = options.canvas;
     this.context = options.context;
     this.viewPort = options.viewPort;
     spriteSheet.src = "./images/industrial.v2.png";
-    background.src = "./images/city_background_night.png";
+    background.src = "./images/city_background_night_big.png";
     
+    this.audioPlayer = new _audioplayer_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
+
+
     this.spriteSheet = spriteSheet;
     this.background = background;
     this.keyCodePress = {13: false}
@@ -497,6 +597,18 @@ class Game {
       if(event.keyCode === 13){
         this.keyCodePress['enter'] = true;
       }
+      //keycode 77 == m
+      if(event.keyCode === 77){
+        //add delay from player controls to prevent continuos toggle?
+        //Initial start to music
+        if(!this.audioPlayer.playing){
+          this.audioPlayer.muted = 1;
+          this.audioPlayer.play();
+        }
+        else{
+          this.audioPlayer.toggleMute();
+        }
+      }
     });
     document.addEventListener('keyup', (event) => {
       if(event.keyCode === 13){
@@ -505,10 +617,13 @@ class Game {
     });
     //add keybind to change states
     window.onkeydown = function (event) {
-      console.log('prevent input');
-      //prevent screen from moving
-      // return (!event.keycode == 32);
+      //prevent screen from moving      
+      if(!event.keycode == 32) {
+        event.preventDefault();
+      }
     }
+
+    
     let cursorConfig = {
       x: 300,
       y: 300,
@@ -564,7 +679,10 @@ class Game {
     switch(this.gameState){
       //start screen
       case 0: 
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x, -this.viewPort.y, 8192, 1020);
+
+      // this.audioPlayer.playMusic('title');
+
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x, -this.viewPort.y - 850, 8192, 2324);
 
       this.context.fillStyle = 'white'
       this.context.font = "bold 64px Montserrat";
@@ -576,8 +694,11 @@ class Game {
       this.context.fillText("Press the Space Bar to Jump", 150, 280);
       this.context.fillText("Use the mouse to aim and Left Click to fire a Hook", 150, 320);
       this.context.fillText("While Swinging, Jump or fire a Hook to cancel.", 150, 400);
+      this.context.fillText("Press M to toggle Volume", 150, 440);
 
-      this.context.fillText("Collect all the Coins to win!", 150, 500);
+      this.context.fillText("Collect all the Coins to win!", 150, 540);
+
+      this.context.fillText("Credits + Info in HTML elements! Chrome: CTRL + SHIFT + I", 150, 580);
       // this.context.fillText("GrappleHook", this.canvas.attributes.width.value / 2 - (30 * 6), this.canvas.attributes.height.value / 2 - 10);
       this.context.font = "32px Montserrat";
       this.context.fillText("Press Enter to Start", this.canvas.attributes.width.value - 400, this.canvas.attributes.height.value - 50);
@@ -585,6 +706,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();
       }
@@ -607,10 +729,9 @@ class Game {
 
       //game logic
       case 1: 
-      
       this.viewPort.x = this.player.x - (this.canvas.attributes.width.value / 2);
       this.viewPort.y = this.player.y - (this.canvas.attributes.height.value / 2);
-      this.context.drawImage(this.background, 0, 300, 8192, 1020, -this.viewPort.x * 0.3, -this.viewPort.y * 0.9, 8192, 1020);
+      this.context.drawImage(this.background, 0, 0, 8192, 2324, -this.viewPort.x * 0.3 - 500, -this.viewPort.y * 0.9 - 850, 8192, 2324);
       
       this.applyGravity();
       
@@ -636,6 +757,7 @@ class Game {
       //coins can either be implemented thorugh the object itself checking reference and updating the game, or do the check from the game object;
       for(let i = 0; i < this.coins.length; i++){
         if(this.player.positionMeeting(this.player.x, this.player.y, this.coins[i]) && this.coins[i].active){
+            this.audioPlayer.playEffect('coin');
             this.score += 1;
             this.coins[i].active = false;
           }
@@ -643,9 +765,19 @@ class Game {
         //draw in game UI (score)
         this.context.fillStyle = 'white'
         this.context.font = "bold 32px Montserrat";
+        this.context.shadowOffsetX = 3;
+        this.context.shadowOffsetY = 3;
+        this.context.shadowColor = "rgba(0,0,0,0.3)";
+        this.shadowBlur = 4;
         this.context.fillText(`Lives: ${this.lives}`, 100, 100);
         this.context.fillText(`Coins: ${this.score} / ${this.maxCoins}`, this.canvas.attributes.width.value - 220, 100);
+        this.context.fillText(`M to toggle Volume: ${this.audioPlayer.text}`, 100, 640);
+
         
+        
+        this.context.shadowOffsetX = 0;
+        this.context.shadowOffsetY = 0;
+
         //draw cursor infront
         this.cursor.draw();
         
@@ -661,6 +793,7 @@ class Game {
           }
         }
         else if(this.player.y > 1100){
+          this.audioPlayer.playEffect('hurt');
           if(this.lives > 0){
             this.lives--;
             // this.initialize();
@@ -998,16 +1131,7 @@ const levelOneSeed = function (game) {
   // };
   // ===============================================================
   //Seed Platforms
-  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
-    x: 0,
-    y: 992,
-    xLen: 2336,
-    yLen: 64,
-    context: game.context
-  })
-  game.platforms.push(platform);
-  game.entities.push(platform);
-
+  
   platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
     x: 1152,
     y: 800,
@@ -1028,6 +1152,15 @@ const levelOneSeed = function (game) {
   game.platforms.push(platform);
   game.entities.push(platform);
   
+  platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
+    x: 0,
+    y: 992,
+    xLen: 2336,
+    yLen: 64,
+    context: game.context
+  })
+  game.platforms.push(platform);
+  game.entities.push(platform);
   platform = new _platform_js__WEBPACK_IMPORTED_MODULE_4__["default"]({
     x: 1728,
     y: 928,
@@ -1776,10 +1909,6 @@ const levelOneSeed = function (game) {
 
 
 
-
-
-
-
   
   //offset is temporary fix to platform placements
   let offset = 150;
@@ -1798,6 +1927,7 @@ const levelOneSeed = function (game) {
     // addEntity: game.addEntity,  //inteded to add hok atfirst
     deleteEntity: game.deleteEntity,
     image: game.spriteSheet,
+    audioPlayer: game.audioPlayer,
   }
 
   let hookConfig = {
@@ -1874,7 +2004,17 @@ class Platform extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     super(options);
   }
 
+  draw(viewPort){
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
 
+    this.context.fillStyle = this.defaultColor;
+    this.context.fillRect(this.x - viewPort.x, this.y - viewPort.y, this.xLen, this.yLen);
+    this.context.shadowOffsetX = 0;
+    this.context.shadowOffsetY = 0;
+  }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Platform);
@@ -1916,10 +2056,13 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // this.rotateSpd = 0.05;
     this.rotateSpd = 0.05;
 
+    this.audioPlayer = options.audioPlayer;
     //state 0 = not-swinging, state 1 = swinging
     this.ropeLength = 0;
     this.state = 0;
     this.spinDir = -1;
+    
+
 
     //limit rope length to 300
 
@@ -1977,7 +2120,7 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
       this.playerInput.mouseDown = true;
 
       this.hook.updateTarget(this.playerInput.targetPoint, {x: this.x, y: this.y});
-
+      this.audioPlayer.playEffect('fire');
     })
     canvas.addEventListener('mouseup', (event) => {
       this.playerInput.mouseDown = false;
@@ -2013,6 +2156,10 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     // void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
     //Draw sprite
+    this.context.shadowOffsetX = 3;
+    this.context.shadowOffsetY = 3;
+    this.context.shadowColor = "rgba(0,0,0,0.3)";
+    this.shadowBlur = 4;
     if(this.vspd !== 0){
       this.context.drawImage(this.image, 0, 273, 14, 16, this.x - viewPort.x, this.y - viewPort.y, 30, 30);
     }
@@ -2044,7 +2191,11 @@ class Player extends _game_entity_js__WEBPACK_IMPORTED_MODULE_0__["default"] {
     if(this.playerInput[' ']){
      if(this.playerInput.canJump || this.state === 1){
        this.vspd = this.jumpSpd * -this.game.gravDir;
+       this.audioPlayer.playEffect('jump');
+       
        this.playerInput.canJump = false;
+
+
      }
      if(this.state === 1){
         this.resetHook();
