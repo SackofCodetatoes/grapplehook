@@ -111,7 +111,12 @@ class audioPlayer {
     this.audio['coin'] = document.querySelector('audio[data-sound="coin"]');
     this.audio['hurt'] = document.querySelector('audio[data-sound="hurt"]');
     this.audio['fire'] = document.querySelector('audio[data-sound="fire"]');
-    this.toggleMute();
+
+    let keys = Object.keys(this.audio);
+    for (let i = 0; i < keys.length; i++) {
+      this.audio[keys[i]].volume = 0;
+    }
+    // this.toggleMute();
     
     this.currentBGM = this.audio['title'];
     
@@ -119,6 +124,8 @@ class audioPlayer {
 
   play(){
     this.playing = 1;
+    this.muted = 0;
+    this.toggleMute()
     this.currentBGM.play();
   }
 
@@ -136,7 +143,6 @@ class audioPlayer {
       return;
     }
     if(this.currentBGM){
-      console.log('trigger?')
       this.currentBGM.pause();
     }
 
@@ -148,7 +154,7 @@ class audioPlayer {
   }
   
   toggleMute(){
-    if(!this.playing){return}
+    // if(this.playing){return}
     switch(this.muted){
       case 1: 
         this.muted = 0.5;
@@ -602,10 +608,11 @@ class Game {
         //add delay from player controls to prevent continuos toggle?
         //Initial start to music
         if(!this.audioPlayer.playing){
-          this.audioPlayer.muted = 1;
+          // this.audioPlayer.muted = 1;
           this.audioPlayer.play();
         }
         else{
+          console.log('waduhek')
           this.audioPlayer.toggleMute();
         }
       }
@@ -706,6 +713,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        console.log(this.audioPlayer.muted)
         this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();

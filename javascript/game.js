@@ -66,10 +66,11 @@ class Game {
         //add delay from player controls to prevent continuos toggle?
         //Initial start to music
         if(!this.audioPlayer.playing){
-          this.audioPlayer.muted = 1;
+          // this.audioPlayer.muted = 1;
           this.audioPlayer.play();
         }
         else{
+          console.log('waduhek')
           this.audioPlayer.toggleMute();
         }
       }
@@ -170,6 +171,7 @@ class Game {
       
       if(this.keyCodePress['enter'] === true){
         this.gameState = 1;
+        console.log(this.audioPlayer.muted)
         this.audioPlayer.changeMusicTo('level_1');
         clearInterval(this.preview);
         this.initialize();
